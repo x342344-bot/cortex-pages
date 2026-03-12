@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EIGEN — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.page-hero { padding: 64px 20px 44px; border-bottom: 1px solid var(--border); }
+.breadcrumb { font-size: 13px; color: var(--fg-dim); margin-bottom: 16px; }
+.breadcrumb a { color: var(--fg-muted); }
+.page-labels { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.page-title { font-size: 52px; font-weight: 900; line-height: 1; margin-bottom: 14px; }
+.page-subtitle { font-size: 20px; color: var(--fg-muted); max-width: 760px; }
+.page-grid { display:grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+.stack { display:grid; gap:16px; }
+.kv-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
+.kv { background: rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.12); border-radius: var(--radius-sm); padding:14px; }
+.kv-label { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--fg-dim); margin-bottom:6px; }
+.kv-value { font-size:15px; color:var(--fg); font-weight:700; }
+.list { display:grid; gap:10px; margin-top:12px; }
+.list-item { padding:12px 14px; border:1px solid var(--border); border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); }
+.list-item strong { color: var(--fg); display:block; margin-bottom:4px; }
+.note { font-size:14px; color:var(--fg-muted); }
+.two-col { display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; }
+.mini-flow { display:grid; gap:12px; }
+.flow-box { padding:14px 16px; border:1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-card); }
+.flow-box h4 { font-size:13px; text-transform: uppercase; letter-spacing:.05em; margin-bottom:6px; }
+.flow-box p { font-size:14px; color:var(--fg-muted); }
+@media (max-width: 860px) {
+  .page-grid, .two-col, .kv-grid { grid-template-columns: 1fr; }
+  .page-title { font-size: 38px; }
+  .page-subtitle { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#universe">Universe</a></li>
+      <li><a href="#thesis">Thesis</a></li>
+      <li><a href="#hypotheses">Hypotheses</a></li>
+      <li><a href="#monitoring">Monitoring</a></li>
+    </ul>
+  </div>
+</nav>
+<section class="page-hero"><div class="container">
+  <div class="breadcrumb"><a href="../index.html">首页</a> / <a href="../index.html#universe">Universe</a> / EIGEN</div>
+  <div class="page-labels"><span class="tag tag-asset">Review / Watch</span><span class="tag tag-sector">Restaking / Infra</span></div>
+  <h1 class="page-title">EIGEN</h1>
+  <p class="page-subtitle">高 TVL 不等于高价值，EIGEN 的核心问题是价值捕获失败。</p>
+</div></section>
+<section class="section"><div class="container page-grid"><div class="stack">
+  <div class="card" id="thesis"><div class="section-tag">Why This Matters</div><h2 class="section-title">本质</h2><p class="section-desc">EIGEN 是 EigenLayer 生态的权益映射，但当前市场不相信 TVL 能转成 token 现金流。</p><div class="formula-box"><span class="hl">一句话：</span>这不是“兑现太慢”，而是“机制上还没证明能捕获价值”。</div></div>
+  <div class="card"><div class="section-tag">Thesis</div><h2 class="section-title">核心判断</h2><div class="list"><div class="list-item"><strong>多头逻辑</strong>如果 ELIP-12 或后续改革真正建立回购/费用回流机制，EIGEN 会从叙事资产转向有现金流锚点的资产。</div><div class="list-item"><strong>市场还没定价的点</strong>市场可能低估治理改革一旦成功后带来的 re-rating 弹性。</div><div class="list-item"><strong>当前限制</strong>巨量 TVL 长期不转化为协议收入，叠加大额未解锁供给，价格会持续被压制。</div></div></div>
+  <div class="card" id="framework"><div class="section-tag">Three-Layer View</div><h2 class="section-title">三层结论</h2><div class="mini-flow"><div class="flow-box l1"><h4>Conviction</h4><p>Token 的价值来自现金流权利和价值捕获，不来自 vanity TVL。</p></div><div class="flow-box l2"><h4>赛道假设</h4><p>Restaking 作为基础设施仍然可能成立，但只有把服务收入回流给 token，权益层才有价值。</p></div><div class="flow-box l3"><h4>标的判断</h4><p>在价值捕获机制没打通前，EIGEN 更像观察仓或等待验证标的，不适合作为高 conviction 核心仓位。</p></div></div></div>
+  <div class="card" id="hypotheses"><div class="section-tag">Hypothesis Mapping</div><h2 class="section-title">假设映射</h2><div class="list"><div class="list-item"><strong>EL-H1</strong>EigenLayer 能否把 AVS / 服务收入转成 token 层价值。<br><span class="note">role: primary · state: open</span></div><div class="list-item"><strong>EL-H2</strong>Restaking 是否是可持续基础设施，而不是 TVL 驱动的阶段性叙事。<br><span class="note">role: secondary · state: mixed</span></div><div class="list-item"><strong>EL-H3</strong>ELIP-12 改革能否真正改变价值捕获路径。<br><span class="note">role: secondary · state: open</span></div></div><p class="note">如果核心假设失效，判断必须一起变，不许嘴硬。</p></div>
+</div><div class="stack">
+  <div class="card"><div class="section-tag">Snapshot</div><h2 class="section-title">快照</h2><div class="kv-grid"><div class="kv"><div class="kv-label">状态</div><div class="kv-value">Review / Watch</div></div><div class="kv"><div class="kv-label">赛道</div><div class="kv-value">Restaking / Infra</div></div><div class="kv"><div class="kv-label">类型</div><div class="kv-value">Token</div></div><div class="kv"><div class="kv-label">更新日期</div><div class="kv-value">2026-03-11</div></div></div></div>
+  <div class="card"><div class="section-tag">Key Metrics</div><h2 class="section-title">定量快照</h2><div class="kv-grid"><div class="kv"><div class="kv-label">TVL</div><div class="kv-value">$9.6B</div><div class="note">规模很大，但不代表 token 有价值</div></div><div class="kv"><div class="kv-label">Market Cap</div><div class="kv-value">$141M</div><div class="note">明显低于 TVL，市场不信其变现能力</div></div><div class="kv"><div class="kv-label">Price Drawdown</div><div class="kv-value">~84%</div><div class="note">从 ~$1.10 到 ~$0.18</div></div><div class="kv"><div class="kv-label">Unlocked Supply</div><div class="kv-value">33%</div><div class="note">约 67% 仍未解锁</div></div></div></div>
+  <div class="card"><div class="section-tag">Inflection Points</div><h2 class="section-title">关键拐点</h2><div class="list"><div class="list-item">ELIP-12 是否真正建立 token 回流机制。</div><div class="list-item">AVS / EigenCloud 是否出现可验证收入而不只是概念扩张。</div><div class="list-item">战略是否收敛，还是继续在多个赛道之间摊大饼。</div></div></div>
+</div></div></section>
+<section class="section"><div class="container two-col"><div class="card" id="monitoring"><div class="section-tag">Monitoring</div><h2 class="section-title">监控指标</h2><div class="list"><div class="list-item"><strong>ELIP-12 进展</strong>当前：待验证<br>bull：回购/费用回流机制落地<br>bear：改革落空或只有治理口号<br><span class="note">这是价值捕获重估的核心触发器</span></div><div class="list-item"><strong>协议收入 / 服务费</strong>当前：弱<br>bull：出现持续、可归属的收入<br>bear：TVL 高但收入长期缺失<br><span class="note">证明 TVL 能否转成 token 价值</span></div><div class="list-item"><strong>解锁压力</strong>当前：高<br>bull：释放节奏可被需求吸收<br>bear：供给持续压制价格<br><span class="note">决定 re-rating 能否落地到价格</span></div></div></div><div class="card" id="change-mind"><div class="section-tag">Bayesian Update</div><h2 class="section-title">什么会让我改观</h2><div class="list"><div class="list-item"><strong>会更 bullish</strong>收入回流机制落地，且开始出现可持续服务收入。</div><div class="list-item"><strong>会更 bearish</strong>继续高 TVL 低收入，外加大额解锁把所有改善都压掉。</div><div class="list-item"><strong>证伪条件</strong>价值捕获机制长期建立不起来，说明 token 本身并不是生态增长的权益载体。</div><div class="list-item"><strong>假设失效后的动作</strong>如果 ELIP-12 最终无效，且收入回流始终建立不起来，应把“等待价值回归”判断降为“结构性放弃”。</div></div><p class="note">这个页面来自 Cortex 的 `page.md`，只展示人工筛选后的公开内容。</p></div></div></section>
+<section class="section"><div class="container two-col"><div class="card"><div class="section-tag">Valuation / Framework</div><h2 class="section-title">估值或判断框架</h2><div class="formula-box">Token Value ≠ TVL<br>Token Value = 可归属收入 × 可持续乘数 × 净供给压力调整<br><br>先看 P/Revenue，再看回购/费用回流，再看解锁供给。<br></div></div><div class="card"><div class="section-tag">Related</div><h2 class="section-title">关联内容</h2><div class="list"><div class="list-item"><strong>相关赛道页</strong>Restaking / Infra</div><div class="list-item"><strong>相关洞见</strong>TVL 是 vanity metric，要先问 TVL 怎么变成 token 收入。</div><div class="list-item"><strong>公开策略</strong>展示 worldview，不暴露完整内部 tracking 和执行节奏。</div></div></div></div></section>
+<footer class="footer"><div class="footer-inner"><div class="footer-text">🧠 Cortex · EIGEN</div><ul class="footer-links"><li><a href="../index.html">首页</a></li><li><a href="../index.html#universe">Universe</a></li></ul></div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

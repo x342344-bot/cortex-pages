@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex — Fred's Investment Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="#universe">Universe</a></li>
+      <li><a href="#methodology">方法论</a></li>
+      <li><a href="#focus">当前关注</a></li>
+      <li><a href="#insights">Insights</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">Investment Research System</div>
+    <h1>
+      <span class="accent">Cortex</span>
+    </h1>
+    <p class="hero-desc">
+      人工精选的投研首页。不是把 Cortex 全量倒出来，
+      只展示当前值得被看见的方法论、赛道、标的和洞见。<br>
+      所有结论分三层 — Conviction / 假设 / 标的判断。
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">3</div>
+        <div class="hero-stat-label">方法论模块</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">2</div>
+        <div class="hero-stat-label">精选赛道</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">6</div>
+        <div class="hero-stat-label">精选标的</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">9</div>
+        <div class="hero-stat-label">精选洞见</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSE -->
+<section class="section" id="universe">
+  <div class="container">
+    <div class="section-tag">Universe</div>
+    <h2 class="section-title">赛道 & 标的</h2>
+    <p class="section-desc">
+      每个赛道有完整的假设树和拐点追踪。标的判断标注依赖哪个假设 — 假设变，判断跟着变。<br>
+      <strong style="color:var(--accent)">贝叶斯更新：</strong>新证据出现 → 更新假设概率 → 联动调整所有依赖该假设的标的判断。Conviction 没变就不改仓位。
+    </p>
+
+    <!-- 赛道报告 -->
+    <div class="card-grid grid-2" style="margin-bottom: 24px;">
+
+      <!-- Prediction Markets -->
+      <a class="card" href="./universe/prediction-markets.html">
+        <span class="tag tag-sector">赛道报告</span>
+        <div class="card-title">Prediction Markets</div>
+        <div class="card-desc">
+          预测市场正从投机赌场变成信息金融基础设施。
+        </div>
+        <div class="formula-box" style="margin-top: 12px;">
+          <span class="hl">Why now</span> = 监管、分发和流动性三件事第一次开始同时成熟，预测市场从边缘玩法走向主流基础设施的窗口正在打开。<br>
+          <span class="hl">关键拐点</span> = 巡回法院判决是否确认联邦管辖权优先。
+        </div>
+        <div class="card-meta">
+          <span>📅 2026-03-11</span>
+          <span>📊 4 个假设</span>
+          <span>点击进入赛道页</span>
+        </div>
+      </a>
+
+      <!-- Crypto AI Agents -->
+      <div class="card">
+        <span class="tag tag-sector">赛道报告</span>
+        <div class="card-title">Crypto × AI Agents</div>
+        <div class="card-desc">
+          AI agent 链上经济基础设施。ERC-8004（身份） + x402（支付）是核心协议。Stripe/Visa/Mastercard 已入场。赛道评级 C+。
+        </div>
+        <div class="formula-box" style="margin-top: 12px;">
+          <span class="hl">核心竞赛</span> = x402 (crypto) vs Agent Pay (传统)<br>
+          <span class="hl">价值捕获</span> = 协议层 > 平台层 > 应用层
+        </div>
+        <div class="card-meta">
+          <span>📅 2026-03-05</span>
+          <span>📊 3 个假设</span>
+          <span class="rating-badge rating-mid">C+ 谨慎观望</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 标的卡片 -->
+    <div class="card-grid grid-3">
+
+      <div class="card">
+        <span class="tag tag-asset">Watchlist</span>
+        <div class="card-title">HOOD (Robinhood)</div>
+        <div class="card-desc">PM 赛道最佳美股标的。目标入场 $35-38，等 MIAXdx 进展确认。</div>
+        <div class="card-meta"><span>赛道: Prediction Markets</span></div>
+      </div>
+
+      <div class="card">
+        <span class="tag tag-asset">Watchlist</span>
+        <div class="card-title">Kalshi</div>
+        <div class="card-desc">PM 赛道 #1。Feb volume $9.8B，IPO 预计 H2 2026。Pre-IPO 估值 $11B。</div>
+        <div class="card-meta"><span>赛道: Prediction Markets</span></div>
+      </div>
+
+      <div class="card">
+        <span class="tag tag-asset">观察</span>
+        <div class="card-title">TAO (Bittensor)</div>
+        <div class="card-desc">去中心化推理市场。Subnet 使用量 WoW +34%。唯一有真实使用信号的 AI agent 标的。</div>
+        <div class="card-meta"><span>赛道: Crypto AI Agents</span></div>
+      </div>
+
+      <div class="card">
+        <span class="tag tag-asset">Holdings</span>
+        <div class="card-title">AZTEC</div>
+        <div class="card-desc">TGE 2/12。10.35B supply，954M staked，15.7% APR。≥200K 必须 stake。</div>
+        <div class="card-meta"><span>链上</span></div>
+      </div>
+
+
+      <div class="card">
+        <span class="tag tag-asset">已评</span>
+        <div class="card-title">BLOCK (XYZ)</div>
+        <div class="card-desc">偏多。P/S ~1.38x，利润化拐点。深度研报 2/26。</div>
+        <div class="card-meta"><span>支付/Fintech</span></div>
+      </div>
+
+      <a class="card" href="./universe/eigen.html">
+        <span class="tag tag-asset">Schema Page</span>
+        <div class="card-title">EIGEN</div>
+        <div class="card-desc">高 TVL 不等于高价值，EIGEN 的核心问题是价值捕获失败。</div>
+        <div class="card-meta">
+          <span>Restaking / Infra</span>
+          <span>3 个关联假设</span>
+          <span>点击进入标的页</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section class="section" id="methodology">
+  <div class="container">
+    <div class="section-tag">Methodology</div>
+    <h2 class="section-title">方法论</h2>
+    <p class="section-desc">
+      所有投研产出遵循统一框架。不是新闻摘要 — 每篇报告必须有分析框架、量化推导、三层结论。
+    </p>
+
+    <!-- Three Layer Flow -->
+    <div class="layer-flow">
+      <div class="layer-box l1">
+        <h4>Layer 1 · Conviction</h4>
+        <p>物理事实，不变信念。被证伪 → 全部离场。</p>
+      </div>
+      <div class="layer-arrow">→</div>
+      <div class="layer-box l2">
+        <h4>Layer 2 · 赛道假设</h4>
+        <p>可证伪的预测。有验证指标、拐点、检查日期。</p>
+      </div>
+      <div class="layer-arrow">→</div>
+      <div class="layer-box l3">
+        <h4>Layer 3 · 标的判断</h4>
+        <p>具体操作。标注依赖哪个假设，假设变判断变。</p>
+      </div>
+    </div>
+
+    <!-- Method Cards -->
+    <div class="method-grid" style="margin-top: 32px;">
+      <div class="method-card">
+        <div class="method-icon">🎯</div>
+        <h4>TAM × 利润率 × 市占率</h4>
+        <p>自上而下量化。赛道有多大，谁能吃多少，利润怎么分。</p>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🏰</div>
+        <h4>AI 时代护城河</h4>
+        <p>四标准：物理稀缺性、数据活性、切换成本深度、标准制定权。</p>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🔄</div>
+        <h4>贝叶斯更新</h4>
+        <p>新证据 → 更新假设概率 → 调整判断。Conviction 没变就不改。</p>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🎰</div>
+        <h4>赔率 > 胜率</h4>
+        <p>不追求高胜率，追求高赔率。用 99% 置信度最大亏损算仓位。</p>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">📊</div>
+        <h4>信号灯系统</h4>
+        <p>🟢正常 / 🟡冻结 / 🔴分 3 次减仓。不在压力下决策。</p>
+      </div>
+      <div class="method-card">
+        <div class="method-icon">🔍</div>
+        <h4>复盘框架</h4>
+        <p>好机会没参与 → 为什么错过。坏机会参与了 → 为什么误判。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRENT FOCUS -->
+<section class="section" id="focus">
+  <div class="container">
+    <div class="section-tag">Current Focus</div>
+    <h2 class="section-title">当前关注</h2>
+    <p class="section-desc">
+      这里只放当前最值得盯的拐点，不展示全量假设台账。完整追踪留在 Cortex 内部。
+    </p>
+
+    <div class="card-grid grid-3">
+      <div class="card">
+        <span class="tag tag-hypothesis">监管拐点</span>
+        <div class="card-title">Prediction Markets 体育合约合法性</div>
+        <div class="card-desc">真正要看的不是噪音，而是联邦管辖权能不能压过州监管。这决定赛道能不能从边缘玩法变成主流基础设施。</div>
+        <div class="card-meta">
+          <span>来源: Prediction Markets</span>
+          <span>检查: 2026-06-30</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag tag-hypothesis">流动性拐点</span>
+        <div class="card-title">Prediction Markets 非体育品类能否做出深度</div>
+        <div class="card-desc">如果非体育市场始终起不来，行业上限就会被锁死在博彩替代品，而不是通用信息市场。</div>
+        <div class="card-meta">
+          <span>来源: Prediction Markets</span>
+          <span>检查: 2026-09-30</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag tag-hypothesis">价值验证</span>
+        <div class="card-title">Crypto × AI Agents 是否有真实经济价值</div>
+        <div class="card-desc">核心不是叙事，而是有没有持续、可验证、非投机的使用与付费信号。没有这个，赛道评级就上不去。</div>
+        <div class="card-meta">
+          <span>来源: Crypto × AI Agents</span>
+          <span>检查: 2026-09-30</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section class="section" id="insights">
+  <div class="container">
+    <div class="section-tag">Insights</div>
+    <h2 class="section-title">投研洞见</h2>
+    <p class="section-desc">
+      从失败和成功中提炼的教训。每条洞见都来自真实交易或研究过程。
+    </p>
+
+    <div class="card-grid grid-3">
+      <div class="card">
+        <span class="tag tag-insight">教训</span>
+        <div class="card-title">投研报告要有分析框架，不是新闻摘要</div>
+        <div class="card-desc">TAM × 利润率 × 市占率。First-principles 推导。结论和拐点放最前面。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">教训</span>
+        <div class="card-title">耳朵软的时候会亏钱</div>
+        <div class="card-desc">Conviction 没变就不改。别人的判断是数据点，不是你的决策。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">认知</span>
+        <div class="card-title">板块轮动不是崩盘</div>
+        <div class="card-desc">区分系统性风险和板块轮动。恐慌减仓最容易发生在这个误判里。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">认知</span>
+        <div class="card-title">叙事工程 vs 真 Builder</div>
+        <div class="card-desc">能区分"会讲故事"和"真在建东西"，是 crypto 投研的核心能力。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">认知</span>
+        <div class="card-title">社区分配与 VC 结构信号</div>
+        <div class="card-desc">Token 分配结构决定了价格动态。VC 解锁节奏是最重要的供给侧变量。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">框架</span>
+        <div class="card-title">AI 时代护城河标准</div>
+        <div class="card-desc">物理稀缺性 > 数据活性 > 切换成本深度 > 标准制定权。AI 让构建能力贬值。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">框架</span>
+        <div class="card-title">宏观周期保险模型</div>
+        <div class="card-desc">黄灯时买 OTM Put，每季度 1-2%。不是赌方向，是买保险。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">方法</span>
+        <div class="card-title">调研公司要搜"别人怎么说"</div>
+        <div class="card-desc">用户评价、KOL 争议、竞品对比。不信官方宣传。</div>
+      </div>
+      <div class="card">
+        <span class="tag tag-insight">原则</span>
+        <div class="card-title">指令越短，信任越深</div>
+        <div class="card-desc">Fred 风格：一个名字就够，不解释背景。系统必须能 handle 极短指令。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-text">🧠 Cortex · Fred's Investment Research System · 2026</div>
+    <ul class="footer-links">
+      <li><a href="#universe">Universe</a></li>
+      <li><a href="#methodology">方法论</a></li>
+      <li><a href="#focus">当前关注</a></li>
+      <li><a href="#insights">Insights</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="./assets/app.js"></script>
+</body>
+</html>

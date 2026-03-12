@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prediction Markets — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.page-hero { padding: 64px 20px 44px; border-bottom: 1px solid var(--border); }
+.breadcrumb { font-size: 13px; color: var(--fg-dim); margin-bottom: 16px; }
+.breadcrumb a { color: var(--fg-muted); }
+.page-labels { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.page-title { font-size: 52px; font-weight: 900; line-height: 1; margin-bottom: 14px; }
+.page-subtitle { font-size: 20px; color: var(--fg-muted); max-width: 800px; }
+.page-grid { display:grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+.stack { display:grid; gap:16px; }
+.kv-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
+.kv { background: rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.12); border-radius: var(--radius-sm); padding:14px; }
+.kv-label { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--fg-dim); margin-bottom:6px; }
+.kv-value { font-size:15px; color:var(--fg); font-weight:700; }
+.list { display:grid; gap:10px; margin-top:12px; }
+.list-item { padding:12px 14px; border:1px solid var(--border); border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); }
+.list-item strong { color: var(--fg); display:block; margin-bottom:4px; }
+.note { font-size:14px; color:var(--fg-muted); }
+.two-col { display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; }
+@media (max-width: 860px) {
+  .page-grid, .two-col, .kv-grid { grid-template-columns: 1fr; }
+  .page-title { font-size: 38px; }
+  .page-subtitle { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#universe">Universe</a></li>
+      <li><a href="#thesis">Thesis</a></li>
+      <li><a href="#hypotheses">Hypotheses</a></li>
+      <li><a href="#monitoring">Monitoring</a></li>
+    </ul>
+  </div>
+</nav>
+<section class="page-hero"><div class="container">
+  <div class="breadcrumb"><a href="../index.html">首页</a> / <a href="../index.html#universe">Universe</a> / Prediction Markets</div>
+  <div class="page-labels"><span class="tag tag-sector">High Conviction</span></div>
+  <h1 class="page-title">Prediction Markets</h1>
+  <p class="page-subtitle">预测市场正从投机赌场变成信息金融基础设施。</p>
+</div></section>
+<section class="section"><div class="container page-grid"><div class="stack">
+  <div class="card" id="thesis"><div class="section-tag">Why Now</div><h2 class="section-title">为什么现在看</h2><p class="section-desc">监管、分发和流动性三件事第一次开始同时成熟，预测市场从边缘玩法走向主流基础设施的窗口正在打开。</p><div class="formula-box"><span class="hl">核心 thesis：</span>交易所模式在成本结构上碾压传统博彩，长期会吃到更大的信息聚合市场，而不只是博彩替代份额。</div></div>
+  <div class="card"><div class="section-tag">Market Structure</div><h2 class="section-title">竞争格局</h2><p class="section-desc">分发渠道强 + 网络效应深 + 合规先行的平台会胜出。技术本身不是护城河，流动性、分发和监管位才是。</p></div>
+  <div class="card" id="hypotheses"><div class="section-tag">Hypotheses</div><h2 class="section-title">核心假设</h2><div class="list"><div class="list-item"><strong>PM-H1</strong>PM 从传统博彩抢到 &gt;10% 市占率<br><span class="note">state: open</span></div><div class="list-item"><strong>PM-H2</strong>非体育品类能发展出足够流动性<br><span class="note">state: mixed</span></div><div class="list-item"><strong>PM-H3</strong>联邦管辖权压过州<br><span class="note">state: mixed</span></div><div class="list-item"><strong>PM-H4</strong>内幕交易不触发行业级立法<br><span class="note">state: open</span></div></div></div>
+</div><div class="stack">
+  <div class="card"><div class="section-tag">Snapshot</div><h2 class="section-title">赛道快照</h2><div class="kv-grid"><div class="kv"><div class="kv-label">状态</div><div class="kv-value">High Conviction</div></div><div class="kv"><div class="kv-label">更新日期</div><div class="kv-value">2026-03-11</div></div></div></div>
+  <div class="card"><div class="section-tag">Key Metrics</div><h2 class="section-title">关键数据</h2><div class="kv-grid"><div class="kv"><div class="kv-label">行业月 Volume</div><div class="kv-value">$23.4B</div><div class="note">2026 年 2 月，历史高位附近</div></div><div class="kv"><div class="kv-label">头部集中度</div><div class="kv-value">~79%</div><div class="note">Kalshi + Polymarket winner-take-most</div></div><div class="kv"><div class="kv-label">体育 / 非体育</div><div class="kv-value">~90 / 10</div><div class="note">非体育深度仍是核心短板</div></div></div></div>
+  <div class="card"><div class="section-tag">Inflection Points</div><h2 class="section-title">关键拐点</h2><div class="list"><div class="list-item">巡回法院判决是否确认联邦管辖权优先。</div><div class="list-item">非体育品类能否从边缘流动性走向真实深度。</div><div class="list-item">行业月度 volume 与头部集中度是否继续证明 winner-take-most。</div></div></div>
+</div></div></section>
+<section class="section"><div class="container two-col"><div class="card" id="monitoring"><div class="section-tag">Monitoring</div><h2 class="section-title">监控指标</h2><div class="list"><div class="list-item"><strong>非体育 OI 占比</strong>当前：~10-15%<br>bull：&gt;30%<br>bear：&lt;15% 持续<br><span class="note">这是 PMF 是否成立的关键检验</span></div><div class="list-item"><strong>巡回法院判决</strong>当前：待判<br>bull：联邦优先<br>bear：州优先<br><span class="note">决定体育合约天花板</span></div><div class="list-item"><strong>国会 / CFTC 动向</strong>当前：开放倾向<br>bull：维持开放 + 个案处理<br>bear：行业级立法打压<br><span class="note">决定监管是否从顺风转逆风</span></div></div></div><div class="card"><div class="section-tag">Bayesian Update</div><h2 class="section-title">什么会证实 / 证伪</h2><div class="list"><div class="list-item"><strong>会证实</strong>非体育品类长期做大，监管没有反转，行业继续沿着信息基础设施方向演进。</div><div class="list-item"><strong>会破坏 thesis</strong>体育合约长期受阻，非体育品类始终起不来，行业被锁死在博彩替代叙事。</div></div><p class="note">赛道页聚焦假设、结构和监控，不展开具体执行细节。</p></div></div></section>
+<section class="section"><div class="container"><div class="card"><div class="section-tag">Related Assets</div><h2 class="section-title">相关标的</h2><div class="list"><div class="list-item">HOOD</div><div class="list-item">Kalshi</div><div class="list-item">Polymarket</div><div class="list-item">FLUT / DKNG</div></div></div></div></section>
+<footer class="footer"><div class="footer-inner"><div class="footer-text">🧠 Cortex · Prediction Markets</div><ul class="footer-links"><li><a href="../index.html">首页</a></li><li><a href="../index.html#universe">Universe</a></li></ul></div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>
