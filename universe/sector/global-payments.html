@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #09100d;
+  --bg2: #111916;
+  --bg3: #17211d;
+  --bg4: #203029;
+  --bg-soft: #0d1512;
+  --panel: rgba(20, 31, 27, .92);
+  --border: rgba(112, 143, 128, .22);
+  --border-strong: rgba(141, 180, 160, .38);
+  --border-w: 1px;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 22px 48px rgba(0, 0, 0, .34);
+  --shadow-sm: 0 12px 28px rgba(0, 0, 0, .24);
+  --text: #edf4ee;
+  --text2: #bcc9c0;
+  --text3: #789082;
+  --red: #d44a32;
+  --blue: #4d8dff;
+  --yellow: #d8b85e;
+  --green: #52c78c;
+  --green-strong: #7de2a9;
+  --green-soft: rgba(82, 199, 140, .12);
+  --orange: #d69552;
+  --purple: #b39bff;
+  --cyan: #22d3ee;
+  --white: #FFFFFF;
+  --font: 'Outfit', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'SF Mono', 'Menlo', 'Consolas', monospace;
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:var(--font);
+  background:
+    radial-gradient(circle at top left, rgba(82,199,140,.1), transparent 28%),
+    radial-gradient(circle at top right, rgba(216,184,94,.06), transparent 24%),
+    linear-gradient(180deg, #0b120f 0%, var(--bg) 100%);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a { color:var(--green-strong); text-decoration:none; }
+a:hover { text-decoration:underline; }
+.mono { font-family:var(--mono); }
+
+.dashboard { max-width:1280px; margin:0 auto; padding:24px 24px 48px; }
+
+/* Header */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding:0 0 14px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.header h1 {
+  font-size:clamp(26px, 4vw, 36px);
+  font-weight:700;
+  line-height:.94;
+  letter-spacing:-.03em;
+  text-transform:uppercase;
+  color:var(--white);
+}
+.header-sub {
+  font-size:11px;
+  color:var(--text3);
+  margin-top:6px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-weight:700;
+}
+.header-right { display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+
+/* Rating circle */
+.rating-circle {
+  width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900; font-family:var(--mono);
+  border:3px solid;
+}
+
+/* Badges */
+.b {
+  font-size:9px;
+  padding:4px 8px;
+  border-radius:999px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+  border:1px solid transparent;
+}
+.b::before { display:none; }
+.b-g { background:rgba(82,199,140,.16); color:var(--green-strong); border-color:rgba(82,199,140,.28); }
+.b-y { background:rgba(216,184,94,.14); color:var(--yellow); border-color:rgba(216,184,94,.24); }
+.b-r { background:rgba(212,74,50,.14); color:#ef8f7d; border-color:rgba(212,74,50,.24); }
+.b-b { background:rgba(77,141,255,.14); color:#9db8ff; border-color:rgba(77,141,255,.24); }
+.b-p { background:rgba(179,155,255,.14); color:#c8b8ff; border-color:rgba(179,155,255,.22); }
+.b-o { background:rgba(214,149,82,.14); color:#ebb175; border-color:rgba(214,149,82,.24); }
+.b-gr { background:rgba(120,144,130,.12); color:var(--text3); border-color:rgba(120,144,130,.18); }
+
+/* Tabs */
+.tabs {
+  display:flex;
+  gap:12px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.tab {
+  padding:8px 14px;
+  font-family:var(--font);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--text3);
+  background:rgba(19, 28, 24, .82);
+  border:var(--border-w) solid var(--border);
+  border-radius:999px;
+  box-shadow:none;
+  cursor:pointer;
+  transition:all .18s ease;
+  position:relative;
+  backdrop-filter:blur(8px);
+}
+.tab:hover { color:var(--text); border-color:rgba(125,226,169,.34); background:rgba(24, 35, 30, .95); }
+.tab.active { color:var(--bg); background:linear-gradient(135deg, var(--green-strong), var(--green)); border-color:transparent; box-shadow:0 10px 24px rgba(82,199,140,.22); }
+
+/* Page toggle */
+.page-panel { display:none; }
+.page-panel.active { display:block; }
+
+/* Section stack */
+.section-stack { display:flex; flex-direction:column; gap:10px; }
+
+/* Cards */
+.card {
+  background:linear-gradient(180deg, rgba(22, 33, 29, .96), rgba(15, 24, 20, .96));
+  border:var(--border-w) solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:14px 16px 12px;
+  position:relative;
+  overflow:hidden;
+}
+.card::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.card-title {
+  font-size:11px;
+  font-weight:800;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  margin-bottom:8px;
+}
+.card-body { display:flex; flex-direction:column; gap:8px; }
+.split-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; }
+
+/* Eyebrow */
+.eyebrow {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:10px;
+  color:var(--green-strong);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.eyebrow::before { content:''; width:18px; height:2px; background:var(--green); }
+
+/* Quote block */
+.quote-block {
+  border-left:4px solid var(--green);
+  padding:12px 16px;
+  font-size:14px;
+  line-height:1.75;
+  color:var(--text);
+  background:rgba(82,199,140,.04);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Key metric grid */
+.km-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:2px; }
+.km-item { background:rgba(255,255,255,.03); padding:10px 12px; }
+.km-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.12em; font-weight:800; }
+.km-value { font-family:var(--mono); font-weight:700; font-size:14px; color:var(--text); margin-top:6px; }
+.km-note { font-size:11px; color:var(--text3); margin-top:4px; }
+
+/* Collapsible */
+.collapsible { background:linear-gradient(180deg, rgba(22, 33, 29, .96), rgba(15, 24, 20, .96)); border:var(--border-w) solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); }
+.collapsible-head {
+  padding:10px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  user-select:none;
+}
+.collapsible-head:hover { background:rgba(255,255,255,.02); }
+.collapsible-body { padding:0 16px 14px; display:none; }
+.collapsible.open .collapsible-body { display:block; }
+.collapsible-title { font-size:15px; font-weight:800; color:var(--text); }
+.arrow { font-size:14px; color:var(--text3); transition:transform .2s; }
+.collapsible.open .arrow { transform:rotate(180deg); }
+
+/* Tipping point dot */
+.tp-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; border:2px solid; transition:all .2s; display:inline-block; vertical-align:middle; }
+.tp-dot.watching { background:transparent; border-color:var(--text3); }
+.tp-dot.weakening { background:rgba(208,32,32,.3); border-color:var(--red); }
+.tp-dot.approaching { background:var(--yellow); border-color:var(--yellow); box-shadow:0 0 0 3px rgba(216,184,94,.14); }
+.tp-dot.strong { background:rgba(82,199,140,.5); border-color:var(--green); box-shadow:0 0 0 3px rgba(82,199,140,.14); }
+.tp-dot.confirmed { background:var(--green); border-color:var(--green); box-shadow:0 0 6px rgba(82,199,140,.4); position:relative; }
+.tp-dot.confirmed::after { content:'\2713'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:7px; color:#000; font-weight:700; }
+.tp-dot.failing { background:var(--red); border-color:var(--red); box-shadow:0 0 6px rgba(208,32,32,.4); }
+
+/* Table */
+.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:16px; background:rgba(12, 20, 17, .92); }
+.data-tbl { width:100%; border-collapse:collapse; font-size:12px; min-width:680px; }
+.data-tbl th, .data-tbl td { padding:8px 10px; text-align:left; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:top; }
+.data-tbl th {
+  font-size:10px;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-weight:900;
+  background:rgba(255,255,255,.025);
+}
+.data-tbl tbody tr:hover { background:rgba(82,199,140,.04); }
+
+/* Timeline */
+.timeline { position:relative; display:flex; flex-direction:column; gap:8px; padding-left:22px; }
+.timeline::before { content:''; position:absolute; left:4px; top:6px; bottom:6px; width:2px; background:linear-gradient(180deg, rgba(125,226,169,.8), rgba(82,199,140,.18)); }
+.tl-item { display:flex; gap:14px; padding-left:20px; position:relative; font-size:13px; }
+.tl-item::before {
+  content:'';
+  position:absolute;
+  left:-1px;
+  top:6px;
+  width:10px;
+  height:10px;
+  border:2px solid var(--green);
+  background:var(--bg-soft);
+  border-radius:50%;
+}
+.tl-date { color:var(--text3); min-width:80px; font-family:var(--mono); font-size:12px; flex-shrink:0; }
+.tl-content { color:var(--text2); flex:1; }
+
+/* Asset quick card row */
+.asset-scroll { display:flex; gap:16px; overflow-x:auto; padding:4px 0 12px; }
+.asset-qcard {
+  flex:0 0 180px;
+  padding:12px;
+  background:linear-gradient(180deg, rgba(22, 33, 29, .96), rgba(15, 24, 20, .96));
+  border:var(--border-w) solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);
+}
+.asset-qcard-symbol { font-size:16px; font-weight:900; font-family:var(--mono); letter-spacing:-.02em; }
+.asset-qcard-action { margin-top:8px; }
+.asset-qcard-meta { margin-top:10px; font-size:11px; color:var(--text3); line-height:1.7; }
+
+/* TAM bars */
+.tam-bar-wrap { display:flex; flex-direction:column; gap:10px; }
+.tam-bar-row { display:flex; align-items:center; gap:12px; }
+.tam-bar-label { min-width:50px; font-size:12px; font-weight:700; color:var(--text2); text-align:right; }
+.tam-bar { height:22px; border-radius:6px; display:flex; align-items:center; padding:0 12px; font-size:12px; font-family:var(--mono); font-weight:600; transition:width .3s ease; min-width:60px; }
+
+/* Tier colors */
+.tier-t1 { border-left:4px solid var(--green); }
+.tier-t2 { border-left:4px solid var(--blue); }
+.tier-t3 { border-left:4px solid var(--yellow); }
+.tier-t4 { border-left:4px solid var(--red); }
+
+/* Heatmap cell */
+.heatmap-cell { font-family:var(--mono); font-weight:700; font-size:14px; text-align:center; padding:8px 12px; border-radius:6px; }
+.hm-5 { background:rgba(82,199,140,.22); color:var(--green-strong); }
+.hm-4 { background:rgba(82,199,140,.12); color:var(--green); }
+.hm-3 { background:rgba(216,184,94,.14); color:var(--yellow); }
+.hm-2 { background:rgba(214,149,82,.14); color:var(--orange); }
+.hm-1 { background:rgba(212,74,50,.14); color:#ef8f7d; }
+
+/* Scenario matrix cells */
+.scenario-green { background:rgba(82,199,140,.1); }
+.scenario-yellow { background:rgba(216,184,94,.08); }
+.scenario-red { background:rgba(212,74,50,.08); }
+
+/* Note card */
+.note-card {
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:rgba(21, 31, 27, .88);
+  box-shadow:var(--shadow-sm);
+}
+.note-card-date { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.14em; font-weight:900; margin-bottom:6px; }
+
+/* Responsive */
+@media (max-width:1080px) {
+  .split-grid { grid-template-columns:1fr; }
+  .km-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width:768px) {
+  .dashboard { padding:20px 16px 56px; }
+  .header { align-items:flex-start; }
+  .header h1 { max-width:none; }
+  .header-right { justify-content:flex-start; }
+  .km-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .tabs { overflow-x:auto; flex-wrap:nowrap; padding-bottom:8px; }
+  .tab { flex:0 0 auto; }
+}
+</style>
+</head>
+<body>
+<div class="dashboard" id="app"></div>
+<script>
+const D = {"title": "全球支付", "slug": "global-payments", "status": "growing", "conviction_level": "", "updated_at": "2026-04-22", "one_liner": "支付利润来自基础设施租金——规则权/编排权/分发权决定谁赚钱", "what_it_is": "", "core_summary": "", "why_now": "GENIUS Act 7月最终规则 + EPI A2A上线 + PYUSD $4.3B = 利润归属即将初步固化", "core_thesis": "**$2.5T收入池从单轨走向三轨并存**（卡/A2A/稳定币），核心问题不是哪条轨道赢，而是**利润最终沉淀在哪层节点**。\n- **规则层**(V/MA): 有定价权但增长靠VAS转型\n- **编排层**(PYPL/Stripe/Adyen): 跨轨道受益者但竞争激烈\n- **跨境层**(WISE/Remitly): 被稳定币+A2A双重挤压\n- **发行层**(CRCL/Tether): 利润三重挤压，走向公用事业\n", "market_structure": "规则层双寡头(V/MA) → 编排层3-4家(Stripe/PYPL/Adyen) → 跨境层2-3家(WISE/Remitly) → 发行层走向银行化碎片", "what_confirms": "V/MA VAS持续>15%增速覆盖interchange压缩; 编排层take rate稳定+多轨路由落地; 数字支付渗透率持续提升(46%→55%+); 跨境数字化加速($150T B2B可寻址)", "what_breaks": "A2A全球消费渗透>40%且编排层无法抽成; 全行业利润率被监管压到公用事业水平(\u003c10% op margin); 支付基础设施商品化(规则权/编排权均失去定价能力)", "conviction": "", "hypotheses": [{"id": "GP-RB1", "title": "支付利润来自基础设施租金", "layer": "riverbank", "statement": "支付利润来自基础设施租金", "why": "决定谁在支付链中有定价权。如果利润不是基础设施租金，则 V/MA 护城河被高估。", "status": "open", "confidence": "83", "state": "active", "tipping_points": []}, {"id": "GP-RB2", "title": "数字支付替代现金不可逆", "layer": "riverbank", "statement": "数字支付不可逆替代现金", "why": "整个赛道增长的底层驱动力。如果现金反弹，赛道 TAM 缩小。", "status": "open", "confidence": "95", "state": "active", "tipping_points": []}, {"id": "GP-RB3", "title": "跨境/B2B结算是效率最低利润最厚的环节", "layer": "riverbank", "statement": "稳定币在可见投资期限内作为结算轨道持续存在", "why": "决定了稳定币等新轨道最先吃掉哪块市场。效率差 = 重构机会。", "status": "open", "confidence": "93", "state": "active", "tipping_points": []}, {"id": "GP-H1", "title": "稳定币先重构跨境与B2B结算", "layer": "river", "statement": "稳定币重构跨境和B2B结算（真实支付占比\u003c2%→10%+）", "why": "决定赛道重构方向和跨境层出清速度", "status": "open", "confidence": "65", "state": "active", "tipping_points": [{"id": "GP-H1-TP1", "event": "稳定币年度交易量趋势", "current": "稳定币2026年3月全口径结算量达$7.5T（MoneyCheck报道，匹配ACH网络），较2月$7.2T环比增长4.2%，年化run rate约$90T（原始口径）。Q1总供应量$315B（CEX Insights）。2025年全年交易量$33T（Stablecoin Insider）。USDC以太坊单链3月>$1.8T创历史新高。调整后真实支付占比约10%（麦肯锡估计），2026年Q1过滤口径数据仍缺失。Aave流动性事件（4/18-19）根源为Kelp DAO LayerZero桥漏洞（$2.92亿exploit），非稳定币系统性问题。", "quantitative": "年度交易量突破$50T且真实支付>10%", "qualitative": "主流商户直接接受稳定币", "data_source": "https://app.artemis.xyz/stablecoins", "if_triggered": "加仓PYPL稳定币叙事", "if_failed": "降低稳定币标的权重", "weight": "40", "score_status": "strong", "tp_type": "threshold"}, {"id": "GP-H1-TP3", "event": "Stripe Bridge稳定币结算规模", "current": "Stripe Bridge年化结算量仍无官方披露。Circle CCTP V1自2023年4月起累计处理$37B+跨链USDC转账（200万+笔，Circle官方确认），CCTP V2已发布为升级版。社交来源报告USDC Bridge上线\u003c4h处理$500M，结合CCTP V1累计$37B量级并非不合理，但产品主体（Circle CCTP V2 vs Stripe Bridge）仍未确认", "quantitative": "Bridge年化结算量突破$50B", "qualitative": "Stripe财报单独披露稳定币指标", "data_source": "Stripe官方博客", "if_triggered": "验证商户端可行性", "if_failed": "商户端渗透慢于预期", "weight": "25", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "GP-H2", "title": "规则网络层吸收新rail", "layer": "river", "statement": "卡网保持消费主导但VAS是增长引擎", "why": "决定V/MA是否继续作为高质量底仓", "status": "open", "confidence": "40", "state": "active", "tipping_points": [{"id": "GP-H2-TP1", "event": "A2A实时支付在发达国家渗透", "current": "FedNow 2025年1-8月: 5,140,518笔交易; Q2 2025: $245B交易额(YoY +49,000%); 2025全年交易价值$853.4B; 平均支付$101,435; 1,600+家金融机构接入(Federal Register 2025-12-09, Digital Transactions, Finzly)", "quantitative": "FedNow年交易量突破$1T", "qualitative": "消费者主动选择A2A", "data_source": "https://www.federalreserve.gov/paymentsystems/fednow.htm", "if_triggered": "降低V/MA仓位", "if_failed": "维持V/MA底仓", "weight": "50", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H2-TP2", "event": "Interchange限价立法", "current": "Durbin仅限借记卡", "quantitative": "美国信用卡interchange被限\u003c0.5%", "qualitative": "两党法案获委员会通过", "data_source": "https://www.congress.gov", "if_triggered": "V/MA利润率结构性压缩", "if_failed": "V/MA定价权维持", "weight": "50", "score_status": "watching", "tp_type": "event"}]}, {"id": "GP-H3", "title": "处理与编排层拿走新增权利", "layer": "river", "statement": "编排层节点平台受益于多轨化", "why": "PYPL成为赛道最佳投资表达的核心逻辑", "status": "open", "confidence": "40", "state": "active", "tipping_points": [{"id": "GP-H3-TP1", "event": "Fed Funds Rate路径", "current": "4.25-4.5%", "quantitative": "降至\u003c3%→承压;\u003c2%→危机", "qualitative": "FOMC转向更激进降息", "data_source": "https://fred.stlouisfed.org/series/FEDFUNDS", "if_triggered": "降低CRCL配置", "if_failed": "高利率维持,稳定币利润丰厚", "weight": "60", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H3-TP2", "event": "Circle净利润率变化", "current": "~9%", "quantitative": "连续2季\u003c5%或转亏", "qualitative": "Circle开始交易费变现", "data_source": "Circle季报(NYSE:CRCL)", "if_triggered": "确认利率敏感性", "if_failed": "Circle利润稳定", "weight": "40", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "GP-H4", "title": "纯发行层租金被压缩", "layer": "river", "statement": "纯发行层利润被三重挤压", "why": "决定CRCL只能作为beta而非核心仓位", "status": "open", "confidence": "72", "state": "active", "tipping_points": []}, {"id": "GP-H1-F1", "title": "GENIUS Act 立法进程", "layer": "fork", "statement": "GENIUS Act最终规则2026-07落地", "why": "稳定币合规框架是 GP-H1（稳定币重构跨境结算）的关键催化剂。通过 = 加速采用，搁置 = 进度放缓。", "status": "open", "confidence": "47", "state": "open", "tipping_points": [{"id": "GP-H1-TP2", "event": "GENIUS Act银行牌照申请", "current": "GENIUS Act (S.1582) 参议院已通过。GovTrack和Congress.gov均确认法案在119th Congress追踪中，但众议院审议/投票时间表仍未公布。Top10银行稳定币发行牌照申请数仍为0", "quantitative": "≥3家Top10银行申请稳定币发行牌照", "qualitative": "银行公开表态拥抱稳定币", "data_source": "https://www.occ.gov", "if_triggered": "确认制度拐点", "if_failed": "制度拐点延迟", "weight": "35", "score_status": "approaching", "tp_type": "event"}, {"id": "GP-H1-F1-TP1", "event": "众议院金融服务委员会审议进度", "current": "委员会已通过，等全院排期", "quantitative": "全院投票排入日程", "qualitative": "两党委员公开支持度", "data_source": "", "if_triggered": "GP-H1-F1 路径 A 概率上升", "if_failed": "GP-H1-F1 路径 B 概率上升", "weight": "35", "score_status": "watching", "tp_type": "event"}, {"id": "GP-H1-F1-TP2", "event": "总统/白宫对稳定币立法的表态", "current": "白宫一般性支持加密监管框架", "quantitative": "明确签署意愿表态", "qualitative": "行政命令或公开演讲提及", "data_source": "", "if_triggered": "GP-H1-F1 路径 A 概率大幅上升", "if_failed": "GP-H1-F1 路径 C 概率上升（限制性）", "weight": "25", "score_status": "watching", "tp_type": "event"}]}, {"id": "GP-H2-F1", "title": "Wero商户端上线及渗透", "layer": "fork", "statement": "Wero 2027电商+POS上线后渗透速度", "why": "决定V/MA欧洲收入是否被显著侵蚀", "status": "open", "confidence": "50", "state": "open", "tipping_points": [{"id": "GP-H2-F1-TP1", "event": "Wero电商商户上线数", "current": "尚未上线(2027计划)", "quantitative": "100K+商户 = approaching", "qualitative": "", "data_source": "EPI官方公告", "if_triggered": "路径A概率上升", "if_failed": "路径C概率上升", "weight": "50", "score_status": "watching", "tp_type": "event"}, {"id": "GP-H2-F1-TP2", "event": "V/MA VAS增速vs interchange压缩", "current": "VAS+23% vs interchange稳定", "quantitative": "VAS增速>15%且interchange降幅\u003c5% = strong", "qualitative": "", "data_source": "V/MA季报", "if_triggered": "路径B/C概率上升", "if_failed": "路径A概率上升", "weight": "50", "score_status": "approaching", "tp_type": "threshold"}]}, {"id": "GP-H3-F1", "title": "PYPL多轨编排验证", "layer": "fork", "statement": "PYPL branded checkout稳住+PYUSD $10B", "why": "PYPL作为赛道#1推荐的核心验证", "status": "open", "confidence": "40", "state": "open", "tipping_points": [{"id": "GP-H3-F1-TP1", "event": "PYPL branded checkout QoQ增速", "current": "+1% QoQ", "quantitative": "连续2季>+3% = approaching路径A", "qualitative": "", "data_source": "PYPL季报10-Q", "if_triggered": "路径A概率上升", "if_failed": "路径C概率上升", "weight": "40", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H3-F1-TP2", "event": "PYUSD流通量", "current": "$4.3B(2026-03)", "quantitative": "$10B+ = approaching路径A", "qualitative": "", "data_source": "PayPal IR/Etherscan", "if_triggered": "路径A概率上升", "if_failed": "路径C概率上升", "weight": "35", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H3-F1-TP3", "event": "Apple Pay Gen Z branded checkout替代效应", "current": "Apple Pay渗透持续上升", "quantitative": "PYPL branded连续2季负增长 = 路径C approaching", "qualitative": "", "data_source": "PYPL季报+eMarketer", "if_triggered": "路径C概率上升", "if_failed": "路径A概率上升", "weight": "25", "score_status": "watching", "tp_type": "event"}]}], "asset_judgment": [{"symbol": "PYPL", "action": "买入", "position_type": "核心候选", "depends_on": ["GP-H3-F1", "GP-H1-F1"], "valuation_range": "bear $30-35 / base $65-70 / bull $85-95"}, {"symbol": "V", "action": "买入", "position_type": "核心", "depends_on": ["GP-H2-F1"], "valuation_range": "bear $260 / base $360 / bull $420"}, {"symbol": "MA", "action": "买入", "position_type": "卫星", "depends_on": ["GP-H2-F1"], "valuation_range": "bear $400 / base $660 / bull $900"}, {"symbol": "WISE", "action": "买入", "position_type": "卫星", "depends_on": ["GP-H1"], "valuation_range": "bear GBP 7.5 / base GBP 12 / bull GBP 16"}, {"symbol": "ADYEN", "action": "观望", "position_type": null, "depends_on": ["GP-H2-F1"], "valuation_range": "bear EUR 700 / base EUR 1050 / bull EUR 1300"}, {"symbol": "CRCL", "action": "观望", "position_type": null, "depends_on": ["GP-H1-F1", "GP-H4"], "valuation_range": "bear $47 / base $80-90 / bull $120-180"}], "bull_case": "", "main_risk": "", "key_metrics": [{"label": "全球支付收入池", "value": "$2.5T (2024)", "note": "4% CAGR → $3.0T (2029)"}, {"label": "稳定币年度交易量", "value": "$33T (2025)", "note": "+72% YoY，但真实支付\u003c10%"}, {"label": "V fwd P/E", "value": "~24x", "note": "5年均值30x，处于历史低位"}, {"label": "PYPL P/E", "value": "~8x", "note": "三重期权(PYUSD+Venmo+Braintree)未在估值中体现"}, {"label": "USDC流通", "value": "$78B", "note": "+73% YoY，占合规稳定币64%调整后交易量"}, {"label": "欧洲A2A电商占比", "value": "~17%", "note": "Wero 2027电商+POS上线是关键拐点"}], "rating": "B+", "review_date": "2026-07-20", "essence": "支付行业的本质是**信息流+资金流的基础设施租金**。三条轨道并存，按场景分工：\n- **卡网络**: 消费者要争议保护\n- **A2A**: 商户要低费率\n- **稳定币**: 企业要效率和可编程性\n核心 alpha 不在\"支付好不好\"（$2.5T收入池+4% CAGR），而在**增长后利润落在哪层**的判断准确度。\n", "tam": [{"label": "全球支付收入池 (TAM)", "value": "~$2.5T/年 (2024)", "growth": "4% CAGR → $3.0T (2029)", "source": "McKinsey GPR"}, {"label": "稳定币+A2A可寻址市场 (SAM)", "value": "~$400-500B/年", "growth": "8-12%", "source": "综合估算"}, {"label": "5年可实现份额 (SOM)", "value": "~$60-90B/年", "growth": "", "source": "综合估算"}, {"label": "增长驱动", "value": "数字支付渗透率46%持续提升 + 跨境数字化($900B汇款+$150T B2B) + 新兴市场移动支付爆发", "growth": "", "source": ""}], "business_models": [{"layer": "规则网络", "representative": "V/MA", "margin": "净利率53%(V) / 45.7%(MA)", "profit_quality": "最高——零资产负债表风险，纯规则税", "core_risk": "A2A侵蚀interchange"}, {"layer": "编排层", "representative": "PYPL/Adyen/Stripe", "margin": "运营利润率19%(PYPL) / EBITDA 53%(Adyen)", "profit_quality": "中等——竞争激烈但可规模化", "core_risk": "费率压缩 + Apple/Google侵蚀"}, {"layer": "跨境分发", "representative": "WISE/WU", "margin": "PBT 21%(WISE) / 运营利润率19%(WU)", "profit_quality": "中低——费率透明化持续进行", "core_risk": "稳定币off-ramp替代"}, {"layer": "稳定币发行", "representative": "CRCL/Tether", "margin": "高波动（利率敏感）", "profit_quality": "最低——99%收入来自外部不可控变量(联储利率)，61%被分发渠道吃掉", "core_risk": "降息 + 银行竞争 + 分发侵蚀"}], "role_table": [{"role": "规则制定者", "function": "制定网络规则，收取scheme fee", "representative": "V($40B) / MA($30.2B)", "revenue_scale": "最大", "margin": "50%+净利率", "义务": "网络可用性/标准维护/争议仲裁框架", "权利不对等": "权利极大(定价权+标准权) vs 义务有限(不承担信用风险)"}, {"role": "编排者", "function": "路由/授权/清结算/风控", "representative": "PYPL($33.2B) / Stripe(~$30B) / Adyen(EUR 2.4B)", "revenue_scale": "大", "margin": "19-53%", "义务": "商户风控/争议处理/合规/多轨路由", "权利不对等": "承担争议处理成本(含稳定币轨道) vs 费率受上下游挤压"}, {"role": "发卡行", "function": "承担信用风险，收取interchange", "representative": "JPM/BAC", "revenue_scale": "绝对值最大", "margin": "低（含信用损失）", "义务": "信用风险承担/客户服务/KYC", "权利不对等": "interchange收入丰厚 vs 承担全部信用违约风险"}, {"role": "跨境分发", "function": "跨走廊价值转移", "representative": "WISE(GBP1.65B) / WU($4.05B) / RELY($1.64B)", "revenue_scale": "中", "margin": "13-21%", "义务": "合规/汇率风险管理/通道维护", "权利不对等": "中性"}, {"role": "稳定币发行", "function": "发行+储备管理", "representative": "CRCL($3.1B年化) / Tether", "revenue_scale": "中", "margin": "高波动", "义务": "储备透明/合规/赎回保障", "权利不对等": "收入依赖外部利率 vs 必须维持1:1储备"}, {"role": "终端硬件", "function": "POS/读卡器", "representative": "Clover(FI)/Square(XYZ)", "revenue_scale": "小", "margin": "低", "义务": "硬件维护/软件更新", "权利不对等": "低利润 vs 高接触商户（数据价值未充分变现）"}], "transaction_paths": [{"name": "传统卡支付", "flow": "消费者 → 商户POS/线上 → 编排(Stripe/PYPL/Adyen) → 卡网络(V/MA) → 发卡行", "total_cost": "~2.5-3.5% / $100交易", "value_split": {"发卡行interchange": "$1.50-2.00", "卡网络scheme_fee": "$0.10-0.15", "编排处理费": "$0.20-0.60"}, "dispute": "V/MA规则框架 + 发卡行执行chargeback"}, {"name": "A2A (Wero/PIX/UPI)", "flow": "消费者银行 → 即时清算系统 → 商户银行", "total_cost": "~$0.15-0.45 / $100交易", "value_split": {"A2A基础设施": "$0.10-0.30"}, "dispute": "无内建chargeback机制，无中间件", "missing": "争议保护 / 信用设施"}, {"name": "稳定币结算", "flow": "付款方 → 链上转账(USDC/PYUSD) → 收款方 → off-ramp(Circle Mint/Bridge)", "total_cost": "~$0.60-3.50 / $100交易（含on/off-ramp）", "value_split": {"编排处理费": "$0.10-0.30", "稳定币on_off_ramp": "$0.50-3.20"}, "dispute": "无链上原生chargeback → 编排层(PYPL/Stripe)必须提供争议保护 → 编排层核心增值点", "note": "24/7即时 + 可编程"}], "competition_layers": [{"layer": "规则网络", "stability": "极稳定", "cr2": "~90%（V+MA）", "moat_score": "24-25 / 25", "key_dynamic": "- **估值**: V fwd P/E 24x（5年低点） vs MA fwd P/E 26x\n- **国际收入占比**: V 53% vs MA 67%（MA 对 A2A 冲击敞口更大）\n- **格局**: 双寡头极稳定，护城河评分近满分（25分制）\n"}, {"layer": "编排层", "stability": "中度碎片化，加速整合", "cr2": "无明确双寡头", "moat_score": "", "key_dynamic": "- **估值离散**: PYPL fwd P/E 8x vs Adyen fwd P/E 24x（3倍差距）\n- **稳定币布局**: PYPL 有 PYUSD，Stripe 收购 Bridge，其他玩家缺位\n- **关键缺失**: Stripe 为该层最大玩家（私有），报告深度不足\n"}, {"layer": "跨境分发", "stability": "分散但快速分化", "cr2": "", "moat_score": "", "key_dynamic": "- **WISE**: 平台化转型，85+ API 合作伙伴，杠杆扩展模式\n- **RELY**: 移民走廊深度，90% 用户留存率\n- **WU**: 价值陷阱信号，CMT（跨境汇款量）-8% YoY\n"}, {"layer": "稳定币发行", "stability": "双寡头（USDT 58% + USDC 25%）", "cr2": "83%", "moat_score": "", "key_dynamic": "- **Circle 核心问题**: 99% 收入来自储备利息，非储备收入仅 $15M\n- **利润锁定**: Coinbase 分走 USDC 分销收入的 51%\n- **竞争威胁**: Stripe Tempo 链 vs Circle Arc 链，编排层纵向吞噬发行层\n"}], "tier_ranking": [{"tier": "Tier 1: 核心仓位 (15-20%配置)", "targets": [{"symbol": "PYPL", "rationale": "8x P/E极端错误定价，三重期权价值$10-15/股被忽略"}, {"symbol": "V", "rationale": "53%净利率, $21.6B FCF, 24x是5年低点"}]}, {"tier": "Tier 2: 卫星仓位 (3-5%每个)", "targets": [{"symbol": "MA", "rationale": "V的增长加速器，VAS 40%，BVNK稳定币收购"}, {"symbol": "WISE", "rationale": "唯一杠杆扩展型跨境玩家，Platform 85+伙伴"}]}, {"tier": "Tier 3: 观望 (等催化剂或回调)", "targets": [{"symbol": "Adyen", "rationale": "编排层最佳质量(53% EBITDA)但24x无安全边际"}, {"symbol": "RELY", "rationale": "PEG 0.75, 90%留存, FCF $283M, 但增速放缓风险"}, {"symbol": "CRCL", "rationale": "唯一纯稳定币发行商但公允估值$12-18B(当前$30.3B)"}, {"symbol": "GPN", "rationale": "合并后6M商户+5.5x P/E有条件价值, 但$29B债务+整合风险"}]}, {"tier": "Tier 4: 回避", "targets": [{"symbol": "WU", "rationale": "价值陷阱，负conviction"}, {"symbol": "PAYO", "rationale": "公允估值，无edge"}, {"symbol": "FI", "rationale": "低增长(1-3%有机)+$29B债务"}, {"symbol": "XYZ", "rationale": "双引擎有趣但BTC P&L波动+CEO争议"}]}], "scoring_matrix": [{"symbol": "V", "valuation": 4, "moat": 5, "management": 4, "growth": 4, "downside": "低", "upside": "中"}, {"symbol": "MA", "valuation": 3, "moat": 5, "management": 4, "growth": 4, "downside": "低-中", "upside": "中-高"}, {"symbol": "PYPL", "valuation": 5, "moat": 3, "management": 3, "growth": 2, "downside": "中", "upside": "高"}, {"symbol": "Adyen", "valuation": 2, "moat": 4, "management": 4, "growth": 4, "downside": "低", "upside": "中"}, {"symbol": "WISE", "valuation": 2, "moat": 3.5, "management": 3.5, "growth": 3.5, "downside": "中", "upside": "中-高"}, {"symbol": "RELY", "valuation": 4, "moat": 3, "management": 3, "growth": 3, "downside": "中", "upside": "中-高"}, {"symbol": "CRCL", "valuation": 1, "moat": 2, "management": 3, "growth": 2, "downside": "高", "upside": "高(有上限)"}, {"symbol": "WU", "valuation": 3, "moat": 1.5, "management": 3, "growth": 1, "downside": "高", "upside": "无"}], "scenario_matrix": {"paths": [{"path": "路径1: 卡+VAS主导", "probability": 45, "description": "A2A缓慢，稳定币保持后台角色", "impact": "V/MA大赢, PYPL小赢", "portfolio_return": "+22%"}, {"path": "路径2: A2A快速侵蚀+多轨编排", "probability": 35, "description": "A2A快速普及，智能路由胜出", "impact": "PYPL大赢, V中性偏负, Adyen赢", "portfolio_return": "+28%"}, {"path": "路径3: 稳定币全面渗透消费支付", "probability": 20, "description": "稳定币结构性去中介化", "impact": "PYPL赢, V/MA大输, CRCL赢但利润被分走", "portfolio_return": "+10%"}], "expected_return": "概率加权 +21%"}, "edge_conclusion": "Alpha来源不在\"支付好不好\"，而在\"哪层吃到利润\"的判断准确度：\n- 编排层跨路径受益正确 → PYPL最大赢家 (8x→14-16x = +75-100%)\n- 规则层VAS转型正确 → V最稳赢家 (24x→28-30x = +20-30%)\n- 发行层利润被挤正确 → 通过PYPL vs CRCL的相对定价表达\n- 全部判断错误(A2A>40% + 稳定币绕过编排 + 政府公用事业化) → 全赛道退出，V/MA最后卖\n", "contrarian": [{"reason": "稳定币增长是幻觉（90%仍是crypto原生，真实支付增长慢）", "probability": 25, "impact": "GP-H1失败, PYUSD/Bridge期权价值归零"}, {"reason": "V/MA完美吸收所有威胁（VAS +25%持续5年，A2A变成V/MA多轨）", "probability": 20, "impact": "编排层多轨溢价瓦解，PYPL不重估"}, {"reason": "PYPL branded checkout彻底死亡（Apple Pay/Google Pay永久替代）", "probability": 20, "impact": "8x变6x, PYPL变成另一个Fiserv"}, {"reason": "政府强制公用事业级回报（全行业\u003c10%运营利润率）", "probability": 5, "impact": "RB1 failure test触发"}, {"reason": "AI Agent绕过所有基础设施（自主稳定币/A2A路由，不需要V/MA）", "probability": 5, "impact": "最高影响——整个价值链在新协议上重建"}], "catalysts": [{"date": "2026-04-30", "event": "MA Q1财报", "targets": ["MA", "V"], "expected_impact": "VAS验证——若>20%增速 → 利好规则层"}, {"date": "2026-05-06", "event": "RELY/PAYO Q1", "targets": ["RELY", "PAYO"], "expected_impact": "增长稳定性检查(RELY 20%+ / PAYO B2B 25%+)"}, {"date": "2026-05-11", "event": "WISE Nasdaq双重上市 + CRCL Q1", "targets": ["WISE", "CRCL"], "expected_impact": "WISE: 美国机构资金催化; CRCL: USDC增长+利率影响"}, {"date": "2026-07-18", "event": "GENIUS Act最终规则截止", "targets": ["PYPL", "CRCL", "V", "MA"], "expected_impact": "银行稳定币框架确定——利好合规确定性"}, {"date": "2026-H2", "event": "PYPL新CEO策略日", "targets": ["PYPL"], "expected_impact": "多轨路线图清晰化——branded数据+PYUSD进展"}, {"date": 2027, "event": "Wero电商+POS上线", "targets": ["V", "MA", "PYPL", "Adyen"], "expected_impact": "A2A威胁具象化——6个月渗透率是关键信号"}], "risks": [{"risk": "联储降息>200bp", "probability": 25, "impact": "CRCL收入-30-40%, 其他温和利好", "most_impacted": "CRCL", "hedge": "V/MA(低利率刺激消费)"}, {"risk": "A2A欧洲快速渗透", "probability": 35, "impact": "V/MA欧洲收入-10-15%", "most_impacted": "MA(67%国际)", "hedge": "编排层多轨受益"}, {"risk": "PYPL branded持续衰退", "probability": 40, "impact": "PYPL牛市情景失效", "most_impacted": "PYPL", "hedge": "若发生 → bear $30-35"}, {"risk": "稳定币真实支付不及预期", "probability": 30, "impact": "GP-H1整体降级", "most_impacted": "CRCL, PYPL", "hedge": "V/MA不受影响"}, {"risk": "全球经济衰退", "probability": 20, "impact": "所有支付量下降", "most_impacted": "PYPL, 跨境", "hedge": "V/MA最具韧性"}], "evolution": [{"period": "2026 H2", "event": "GENIUS Act最终规则 + 2-3家银行提交稳定币申请", "probability": 75, "investment_impact": "利好V/MA(确定性), PYPL(PYUSD锁定), CRCL中性(合规vs银行竞争)"}, {"period": "2026 H2", "event": "PYPL新CEO首次策略日明确多轨路线图", "probability": 65, "investment_impact": "若清晰+branded未恶化 → PYPL P/E扩张开始"}, {"period": "2027 H1", "event": "Wero电商+POS上线，商户数据可见", "probability": 70, "investment_impact": "强采用 → V/MA欧洲承压; 弱采用 → 威胁被中和"}, {"period": "2027 H1", "event": "首个银行稳定币企业级上线", "probability": 50, "investment_impact": "CRCL机构市场份额开始侵蚀(GP-H4进一步验证)"}, {"period": "2027-2028", "event": "AI Agent支付月度volume达$1B+", "probability": 30, "investment_impact": "赢家吃纯增量; 标准竞争是变量"}, {"period": "2028-2029", "event": "稳定币真实支付>5%跨境", "probability": 55, "investment_impact": "GP-H1验证门槛——达成意味着共识接受稳定币结算轨道"}, {"period": "2029-2031", "event": "欧洲A2A电商25-35%, 美国A2A\u003c10%; V/MA VAS收入超过interchange下降", "probability": 50, "investment_impact": "V/MA平台转型成功=估值30x+; VAS不足=长期压制22-25x"}], "terminal_state": "**5年后(2031)稳态**：单轨→多轨共存，编排层做动态路由。\n- **规则层**(V/MA): 最有利可图，从\"支付税\"→\"商业智能平台\"，利润源从interchange→VAS+多轨费用\n- **编排层**: 新价值枢纽，智能路由卡/A2A/稳定币=新\"支付OS\"。3-4全栈平台共存(Stripe/PYPL/Adyen+1-2新玩家)\n- **跨境分发**: 被压缩，稳定币吃B2B、A2A吃本地。WISE平台化→\"跨境金融AWS\"，纯汇款工具死亡\n- **稳定币发行**: 银行化，3-5合规+USDT离岸。纯发行利润→公用事业水平\n**竞争终局**：寡头分层共存。规则双寡头 / 编排3-4家 / 跨境2-3家 / 发行碎片化\n", "exit_framework": [{"type": "结构性失败", "trigger": "A2A全球渗透>40%消费 + V/MA VAS无法覆盖interchange损失 → 规则网络模型被颠覆", "targets": ["V", "MA"], "action": "必须卖出，不论盈亏"}, {"type": "结构性失败", "trigger": "稳定币被主要经济体(US+EU+UK)立法禁止 / CBDC完全替代私有发行", "targets": ["CRCL", "PYPL(PYUSD部分)"], "action": "必须卖出，不论盈亏"}, {"type": "权利剥夺", "trigger": "Coinbase自发稳定币或分成比例51%→60%+ / CPN未达$100M收入3年", "targets": ["CRCL"], "action": "降至卫星/投机仓，设6个月观察期"}, {"type": "权利剥夺", "trigger": "PYPL branded连续4季负增长 + PYUSD流量见顶反转", "targets": ["PYPL"], "action": "降至卫星/投机仓，设6个月观察期"}, {"type": "组织断裂", "trigger": "PYPL新CEO战略不清 / 2年内第2次换CEO", "targets": ["PYPL"], "action": "降至卫星/投机仓，设6个月观察期"}, {"type": "组织断裂", "trigger": "V/MA核心管理层变动 + 新战略放弃VAS/多轨方向", "targets": ["V", "MA"], "action": "降至卫星/投机仓，设6个月观察期"}, {"type": "期权过期", "trigger": "PYUSD流量第3年仍\u003c$5B / Venmo商业化3年无进展", "targets": ["PYPL"], "action": "渐进退出"}, {"type": "期权过期", "trigger": "WISE Platform第3年仍\u003c10%份额", "targets": ["WISE"], "action": "渐进退出"}, {"type": "赔率反转", "trigger": "V回到32x+ fwd P/E + VAS增速\u003c15% / PYPL回到18x+ P/E", "targets": ["V", "PYPL"], "action": "渐进退出"}], "discussion_notes": "[S5→S4修正摘要]\n- MA估值区间上调: S4 bear $420→S5 bear $400, base $580→$730(S5发现VAS 40%+BVNK稳定币被低估)。Challenge修正: base $730→$660，BVNK待条件验证后再上调\n- CRCL估值区间下调: S4 base $110→S5 base $80-90($30.3B vs 公允$12-18B = 严重高估)\n- GPN新增观望标的(S4未覆盖，S5发现合并后6M商户+5.5x P/E有条件价值)\n\n[Challenge Review修正记录]\n- C-1: PYPL bear case加标~15%联合概率\n- C-2: MA base $730→$660(BVNK待条件验证保守处理)\n- C-3: CRCL bull $250→$120-180($250作为极端牛市\u003c10%)\n- C-4: GP-RB1 p=92→83(TP计算70, override≤15)\n- C-5: GP-H1 p=62→55(正面A级证据仅PYUSD流量, 真实支付证据B级+负面)\n- C-6: GP-H3-F1 路径C 25%→30%, 路径A 35%→30%(branded +1% QoQ是\"ICU心跳\"不是稳定)\n- C-7: PYPL三重期权 $10-25→$10-15(当前)/$20-25(催化后)\n- C-8: GP-RB3 \"永久\"→\"可见投资期限内(5-10年)\"\n\n[2026-04-22讨论]\n- 角色功能表缺少义务/权利不对等两列 — 已补全\n- 稳定币链路无原生chargeback → 编排层(PYPL/Stripe)必须自己提供争议保护 → 编排层在稳定币轨道value capture可能比卡轨道更大\n- S6 merge-not-summarize规则确立：压缩≠整合，必须用反例约束(缩写/砍列/概括)\n- S6章节重构：旧七~十二(6章) → 新七(标的综合7.1-7.6) + 新八(催化剂/风险/演变/终态8.1-8.4)\n"};
+const $ = id => document.getElementById(id);
+function e(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function md(s) {
+  let h = e(s);
+  h = h.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fff;font-weight:600">$1</strong>');
+  h = h.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;font-size:0.92em">$1</code>');
+  h = h.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  return h;
+}
+const STATUS_CN = {confirmed:'已验证',strong:'趋势向好',approaching:'接近触发',watching:'观察中',weakening:'转弱',failing:'已失败'};
+function statusCn(s) { return STATUS_CN[(s||'').toLowerCase()] || s || '—'; }
+function ipState(ip) {
+  if (ip.score_status) {
+    const s = String(ip.score_status).toLowerCase();
+    if (['confirmed','strong','approaching','watching','weakening','failing'].includes(s)) return s;
+  }
+  if (ip.status) {
+    const s = String(ip.status).toLowerCase();
+    if (s.includes('trigger') || s.includes('confirmed')) return 'confirmed';
+    if (s.includes('fail') || s.includes('negative')) return 'failing';
+    if (s.includes('approach') || s.includes('partial')) return 'approaching';
+    if (s.includes('strong')) return 'strong';
+    if (s.includes('weak')) return 'weakening';
+  }
+  return 'watching';
+}
+function nl2br(s) { return (s || '').replace(/\n/g, '<br>'); }
+
+// Rich text block renderer: handles \n, bullet lists (- ), numbered context
+function renderBlock(s) {
+  if (!s) return '';
+  var lines = String(s).split('\n');
+  var out = '';
+  var inList = false;
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (!line) { if (inList) { out += '</ul>'; inList = false; } continue; }
+    if (line.match(/^[-•]\s/)) {
+      if (!inList) { out += '<ul style="margin:4px 0;padding-left:18px;line-height:1.7">'; inList = true; }
+      out += '<li style="margin:2px 0">' + md(line.replace(/^[-•]\s*/, '')) + '</li>';
+    } else {
+      if (inList) { out += '</ul>'; inList = false; }
+      out += '<p style="margin:4px 0;line-height:1.7">' + md(line) + '</p>';
+    }
+  }
+  if (inList) out += '</ul>';
+  return out;
+}
+
+// Semicolon/Chinese-semicolon separated string → bullet list
+function renderList(s) {
+  if (!s) return '';
+  var items = String(s).split(/[;；]/).map(function(x) { return x.trim(); }).filter(Boolean);
+  if (items.length <= 1) return '<div style="line-height:1.7">' + md(s) + '</div>';
+  var out = '<ul style="margin:0;padding-left:16px;line-height:1.8">';
+  for (var i = 0; i < items.length; i++) {
+    out += '<li style="margin:2px 0;color:var(--text2)">' + md(items[i]) + '</li>';
+  }
+  return out + '</ul>';
+}
+
+// Normalize hypotheses
+function normalizeHypotheses() {
+  if ((D.hypotheses || []).length) {
+    return D.hypotheses.map(function(h, idx) {
+      return {
+        id: h.id || ('H' + (idx + 1)),
+        title: h.title || h.id || ('Hypothesis ' + (idx + 1)),
+        layer: h.layer || 'river',
+        statement: h.statement || '',
+        status: h.status || 'open',
+        confidence: h.confidence || '',
+        tipping_points: h.tipping_points || []
+      };
+    });
+  }
+  return [];
+}
+var hypotheses = normalizeHypotheses();
+var allTippingPoints = hypotheses.flatMap(function(h) {
+  return (h.tipping_points || []).map(function(tp) {
+    return Object.assign({}, tp, { hypothesis_id: h.id, hypothesis_title: h.title });
+  });
+});
+
+// Normalize asset_judgment: support both string and array
+function normalizeAssetJudgment() {
+  if (Array.isArray(D.asset_judgment)) return D.asset_judgment;
+  return [];
+}
+var assetJudgments = normalizeAssetJudgment();
+var assetJudgmentStr = typeof D.asset_judgment === 'string' ? D.asset_judgment : '';
+
+// Rating color
+function ratingColor(rating) {
+  if (!rating) return 'var(--text3)';
+  var r = String(rating).toUpperCase();
+  if (r.startsWith('A')) return 'var(--green)';
+  if (r.startsWith('B')) return 'var(--blue)';
+  if (r.startsWith('C')) return 'var(--yellow)';
+  if (r.startsWith('D')) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+// Action badge
+function actionBadge(action) {
+  if (!action) return '';
+  var a = String(action);
+  var cls = 'b-gr';
+  if (a.includes('买入') || a.includes('buy') || a.includes('加仓')) cls = 'b-g';
+  else if (a.includes('观望') || a.includes('hold') || a.includes('wait')) cls = 'b-y';
+  else if (a.includes('回避') || a.includes('sell') || a.includes('avoid') || a.includes('减仓')) cls = 'b-r';
+  return '<span class="b ' + cls + '">' + e(a) + '</span>';
+}
+
+// Tier color
+function tierColor(tier) {
+  var t = String(tier || '').toUpperCase();
+  if (t === 'T1') return 'var(--green)';
+  if (t === 'T2') return 'var(--blue)';
+  if (t === 'T3') return 'var(--yellow)';
+  if (t === 'T4') return 'var(--red)';
+  return 'var(--text3)';
+}
+
+// Heatmap class for score 1-5
+function hmClass(val) {
+  var n = parseInt(val);
+  if (n >= 5) return 'hm-5';
+  if (n === 4) return 'hm-4';
+  if (n === 3) return 'hm-3';
+  if (n === 2) return 'hm-2';
+  if (n <= 1) return 'hm-1';
+  return '';
+}
+
+// Scenario cell class
+function scenarioClass(text) {
+  var t = String(text || '');
+  if (t.includes('\u2705')) return 'scenario-green';
+  if (t.includes('\u26A0')) return 'scenario-yellow';
+  if (t.includes('\u274C')) return 'scenario-red';
+  return '';
+}
+
+// Probability color
+function probColor(prob) {
+  var p = parseFloat(prob);
+  if (isNaN(p)) {
+    var s = String(prob || '').toLowerCase();
+    if (s.includes('high') || s.includes('\u9AD8')) return 'var(--red)';
+    if (s.includes('med') || s.includes('\u4E2D')) return 'var(--yellow)';
+    return 'var(--green)';
+  }
+  if (p > 30) return 'var(--red)';
+  if (p >= 15) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+// Parse valuation range "bear $X / base $Y / bull $Z"
+function parseValRange(str) {
+  if (!str) return null;
+  var parts = String(str).split('/').map(function(s) { return s.trim(); });
+  var result = {};
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    var m = p.match(/(bear|base|bull|low|mid|high)[\s:]*\$?([\d,.]+)/i);
+    if (m) {
+      var key = m[1].toLowerCase();
+      if (key === 'low') key = 'bear';
+      if (key === 'mid') key = 'base';
+      if (key === 'high') key = 'bull';
+      result[key] = parseFloat(m[2].replace(/,/g, ''));
+    }
+  }
+  if (result.bear !== undefined || result.base !== undefined || result.bull !== undefined) return result;
+  return null;
+}
+
+// ---- BUILD HTML ----
+var h = '';
+
+// Header
+var rc = ratingColor(D.rating);
+h += '<header class="header">';
+h += '<div>';
+h += '<div class="eyebrow">Sector Dashboard</div>';
+h += '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">';
+h += '<h1>' + e(D.title) + '</h1>';
+if (D.rating) {
+  h += '<div class="rating-circle" style="color:' + rc + ';border-color:' + rc + '">' + e(D.rating) + '</div>';
+}
+h += '</div>';
+var subParts = [];
+if (D.review_date) subParts.push('Review ' + e(D.review_date));
+if (D.updated_at) subParts.push('Updated ' + e(D.updated_at));
+if (subParts.length) h += '<div class="header-sub">' + subParts.join(' \u00B7 ') + '</div>';
+h += '</div>';
+h += '<div class="header-right"></div>';
+h += '</header>';
+
+// Tabs
+h += '<div class="tabs">';
+h += '<button class="tab active" onclick="showTab(\'overview\',this)">\u603B\u89C8</button>';
+h += '<button class="tab" onclick="showTab(\'industry\',this)">\u884C\u4E1A</button>';
+h += '<button class="tab" onclick="showTab(\'assets\',this)">\u6807\u7684</button>';
+h += '<button class="tab" onclick="showTab(\'monitor\',this)">\u76D1\u63A7</button>';
+h += '</div>';
+
+// ========== TAB 1: OVERVIEW ==========
+h += '<div id="overview" class="page-panel active">';
+h += '<div class="section-stack">';
+
+// 1. Core Thesis
+if (D.core_thesis) {
+  h += '<div class="quote-block">' + renderBlock(D.core_thesis) + '</div>';
+}
+
+// 2. Confirms / Breaks
+if (D.what_confirms || D.what_breaks) {
+  h += '<div class="split-grid">';
+  h += '<div class="card" style="border-left:4px solid var(--green)">';
+  h += '<div class="card-title" style="color:var(--green)">\u2705 \u786E\u8BA4\u6761\u4EF6 (Confirms)</div>';
+  h += '<div class="card-body" style="font-size:13px;color:var(--text2)">' + renderList(D.what_confirms || '\u2014') + '</div>';
+  h += '</div>';
+  h += '<div class="card" style="border-left:4px solid var(--red)">';
+  h += '<div class="card-title" style="color:#ef8f7d">\u274C \u7834\u574F\u6761\u4EF6 (Breaks)</div>';
+  h += '<div class="card-body" style="font-size:13px;color:var(--text2)">' + renderList(D.what_breaks || '\u2014') + '</div>';
+  h += '</div>';
+  h += '</div>';
+}
+
+// 3. Key Metrics
+if ((D.key_metrics || []).length) {
+  h += '<div class="card"><div class="card-title">\u6838\u5FC3\u6307\u6807</div>';
+  h += '<div class="km-grid">';
+  for (var mi = 0; mi < D.key_metrics.length; mi++) {
+    var m = D.key_metrics[mi];
+    h += '<div class="km-item">';
+    h += '<div class="km-label">' + e(m.label) + '</div>';
+    h += '<div class="km-value">' + md(m.value) + '</div>';
+    if (m.note) h += '<div class="km-note">' + md(m.note) + '</div>';
+    h += '</div>';
+  }
+  h += '</div></div>';
+}
+
+// 4. River Model
+var layerGroups = { riverbank: [], river: [], fork: [] };
+for (var hi = 0; hi < hypotheses.length; hi++) {
+  var layer = (hypotheses[hi].layer || 'river').toLowerCase();
+  if (layer === 'riverbank') layerGroups.riverbank.push(hypotheses[hi]);
+  else if (layer === 'fork') layerGroups.fork.push(hypotheses[hi]);
+  else layerGroups.river.push(hypotheses[hi]);
+}
+if (hypotheses.length) {
+  h += '<div class="card"><div class="card-title">\u6CB3\u6D41\u6A21\u578B</div>';
+  // Summary badges
+  h += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">';
+  h += '<span class="b b-p">' + layerGroups.riverbank.length + ' \u6CB3\u5CB8</span>';
+  h += '<span class="b b-g">' + layerGroups.river.length + ' \u6CB3\u6D41</span>';
+  h += '<span class="b b-o">' + layerGroups.fork.length + ' \u5206\u53C9</span>';
+  h += '</div>';
+  // Render each layer group
+  var layerDefs = [
+    { key: 'riverbank', label: '\u6CB3\u5CB8 Riverbank', desc: '\u7ED3\u6784\u6027\u4FE1\u5FF5\uFF0CP\u226590%', color: 'var(--purple)' },
+    { key: 'river', label: '\u6CB3\u6D41 River', desc: '\u53EF\u8BC1\u4F2A\u5047\u8BBE', color: 'var(--green)' },
+    { key: 'fork', label: '\u5206\u53C9 Fork', desc: '\u4E92\u65A5\u8DEF\u5F84\u4E8B\u4EF6', color: 'var(--orange)' }
+  ];
+  for (var li = 0; li < layerDefs.length; li++) {
+    var ld = layerDefs[li];
+    var items = layerGroups[ld.key];
+    if (!items.length) continue;
+    h += '<div style="margin-bottom:10px">';
+    h += '<div style="font-size:11px;font-weight:700;color:' + ld.color + ';margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">' + ld.label + ' <span style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0">\u2014 ' + ld.desc + '</span></div>';
+    for (var ii = 0; ii < items.length; ii++) {
+      var item = items[ii];
+      var conf = item.confidence || '';
+      var confNum = parseInt(conf);
+      var confColor = confNum >= 80 ? 'var(--green)' : confNum >= 50 ? 'var(--yellow)' : 'var(--red)';
+      h += '<div style="display:flex;align-items:baseline;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+      h += '<span class="mono" style="font-size:11px;color:' + ld.color + ';min-width:70px;flex-shrink:0">' + e(item.id) + '</span>';
+      h += '<span style="font-size:12px;color:var(--text2);flex:1">' + md(item.statement) + '</span>';
+      if (conf) h += '<span class="mono" style="font-size:11px;color:' + confColor + ';flex-shrink:0">' + e(conf) + '%</span>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+}
+
+// 5. Market Structure
+if (D.market_structure) {
+  h += '<div class="card"><div class="card-title">\u5E02\u573A\u7ED3\u6784</div>';
+  h += '<div class="card-body" style="font-size:13px;color:var(--text2)">' + renderBlock(D.market_structure) + '</div>';
+  h += '</div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end overview
+
+// ========== TAB 2: INDUSTRY ==========
+h += '<div id="industry" class="page-panel">';
+h += '<div class="section-stack">';
+
+// 1. Essence
+if (D.essence) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u672C\u8D28 (Essence)</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div style="font-size:13px;color:var(--text2)">' + renderBlock(D.essence) + '</div>';
+  h += '</div></div>';
+}
+
+// 2. TAM (supports both object {total,sam,som,cagr} and array [{label,value,growth,source},...])
+if (D.tam) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">TAM / SAM / SOM</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  if (Array.isArray(D.tam)) {
+    h += '<div class="table-wrap"><table class="data-tbl" style="min-width:500px"><thead><tr>';
+    h += '<th>\u6307\u6807</th><th>\u89C4\u6A21</th><th>\u589E\u901F</th><th>\u6570\u636E\u6E90</th>';
+    h += '</tr></thead><tbody>';
+    for (var tami = 0; tami < D.tam.length; tami++) {
+      var tamItem = D.tam[tami];
+      h += '<tr>';
+      h += '<td style="font-weight:600;color:var(--text)">' + e(tamItem.label) + '</td>';
+      h += '<td class="mono" style="color:var(--green-strong)">' + e(tamItem.value || '\u2014') + '</td>';
+      h += '<td style="color:var(--text2)">' + e(tamItem.growth || '\u2014') + '</td>';
+      h += '<td style="color:var(--text3);font-size:11px">' + e(tamItem.source || '\u2014') + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+  } else {
+    var tam = D.tam;
+    var tamTotal = parseFloat(tam.total) || 0;
+    var tamSam = parseFloat(tam.sam) || 0;
+    var tamSom = parseFloat(tam.som) || 0;
+    h += '<div class="tam-bar-wrap">';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">TAM</div>';
+    h += '<div class="tam-bar" style="width:100%;background:rgba(82,199,140,.15);color:var(--green-strong)">' + e(tam.total || '\u2014') + '</div>';
+    h += '</div>';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">SAM</div>';
+    var samPct = tamTotal > 0 ? Math.max(15, (tamSam / tamTotal * 100)) : 60;
+    h += '<div class="tam-bar" style="width:' + samPct + '%;background:rgba(77,141,255,.15);color:#9db8ff">' + e(tam.sam || '\u2014') + '</div>';
+    h += '</div>';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">SOM</div>';
+    var somPct = tamTotal > 0 ? Math.max(10, (tamSom / tamTotal * 100)) : 30;
+    h += '<div class="tam-bar" style="width:' + somPct + '%;background:rgba(179,155,255,.15);color:#c8b8ff">' + e(tam.som || '\u2014') + '</div>';
+    h += '</div>';
+    if (tam.cagr) {
+      h += '<div style="margin-top:8px;font-size:13px;color:var(--text3)">CAGR: <span class="mono" style="color:var(--green-strong);font-weight:700">' + e(tam.cagr) + '</span></div>';
+    }
+    h += '</div>';
+  }
+  h += '</div></div>';
+}
+
+// 3. Business Models
+if ((D.business_models || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u5546\u4E1A\u6A21\u5F0F</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+  h += '<th>\u5C42\u7EA7</th><th>\u4EE3\u8868</th><th>\u5229\u6DA6\u7387</th><th>\u5229\u6DA6\u8D28\u91CF</th><th>\u6838\u5FC3\u98CE\u9669</th>';
+  h += '</tr></thead><tbody>';
+  for (var bi = 0; bi < D.business_models.length; bi++) {
+    var bm = D.business_models[bi];
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text);white-space:nowrap">' + e(bm.layer) + '</td>';
+    h += '<td>' + md(bm.representative || bm.example || '\u2014') + '</td>';
+    h += '<td class="mono" style="color:var(--green-strong);white-space:nowrap">' + e(bm.margin || '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:11px">' + md(bm.profit_quality || bm.revenue_source || '\u2014') + '</td>';
+    h += '<td style="color:#ef8f7d;font-size:11px">' + md(bm.core_risk || bm.risk || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div>';
+  h += '</div></div>';
+}
+
+// 4. Role Table
+if ((D.role_table || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u89D2\u8272\u529F\u80FD\u8868</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  var roleFields = [];
+  var roleFieldLabels = {
+    role: '\u89D2\u8272', companies: '\u4EE3\u8868\u516C\u53F8', representative: '\u4EE3\u8868\u516C\u53F8', function: '\u529F\u80FD', revenue_source: '\u6536\u5165\u6765\u6E90',
+    revenue_scale: '\u6536\u5165\u89C4\u6A21', margin: '\u5229\u6DA6\u7387', risk: '\u98CE\u9669',
+    obligations: '\u4E49\u52A1', '\u4E49\u52A1': '\u4E49\u52A1', parity: '\u5BF9\u7B49\u6027', '\u6743\u5229\u4E0D\u5BF9\u7B49': '\u6743\u5229\u4E0D\u5BF9\u7B49', moat: '\u62A4\u57CE\u6CB3',
+    replaceable: '\u53EF\u66FF\u4EE3\u6027', trend: '\u8D8B\u52BF'
+  };
+  var allRoleKeys = ['role','companies','representative','function','revenue_source','revenue_scale','margin','risk','obligations','\u4E49\u52A1','parity','\u6743\u5229\u4E0D\u5BF9\u7B49','moat','replaceable','trend'];
+  for (var ki = 0; ki < allRoleKeys.length; ki++) {
+    var k = allRoleKeys[ki];
+    for (var ri = 0; ri < D.role_table.length; ri++) {
+      if (D.role_table[ri][k] !== undefined && D.role_table[ri][k] !== '') {
+        roleFields.push(k);
+        break;
+      }
+    }
+  }
+  var layerColors = ['var(--green)', 'var(--blue)', 'var(--purple)', 'var(--orange)', 'var(--cyan)', 'var(--yellow)', 'var(--red)'];
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:' + (roleFields.length * 100) + 'px"><thead><tr>';
+  for (var fi = 0; fi < roleFields.length; fi++) {
+    h += '<th>' + e(roleFieldLabels[roleFields[fi]] || roleFields[fi]) + '</th>';
+  }
+  h += '</tr></thead><tbody>';
+  for (var ri2 = 0; ri2 < D.role_table.length; ri2++) {
+    var row = D.role_table[ri2];
+    var lc = layerColors[ri2 % layerColors.length];
+    h += '<tr style="border-left:3px solid ' + lc + '">';
+    for (var fi2 = 0; fi2 < roleFields.length; fi2++) {
+      var val = row[roleFields[fi2]];
+      var cellVal = val !== undefined && val !== '' ? String(val) : '\u2014';
+      if (roleFields[fi2] === 'margin') {
+        h += '<td class="mono" style="color:var(--green-strong)">' + e(cellVal) + '</td>';
+      } else if (roleFields[fi2] === 'risk') {
+        h += '<td style="color:#ef8f7d">' + md(cellVal) + '</td>';
+      } else if (roleFields[fi2] === 'parity') {
+        h += '<td>' + e(cellVal) + '</td>';
+      } else {
+        h += '<td>' + md(cellVal) + '</td>';
+      }
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div>';
+  h += '</div></div>';
+}
+
+// 5. Transaction Paths
+if ((D.transaction_paths || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u4EA4\u6613\u94FE\u8DEF\u5BF9\u6BD4</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  var pathCount = D.transaction_paths.length;
+  var pathCols = pathCount <= 3 ? 'repeat(' + pathCount + ', 1fr)' : 'repeat(auto-fill, minmax(240px, 1fr))';
+  h += '<div style="display:grid;grid-template-columns:' + pathCols + ';gap:8px">';
+  for (var pi = 0; pi < D.transaction_paths.length; pi++) {
+    var tp = D.transaction_paths[pi];
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px">';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+    h += '<span style="font-size:14px;font-weight:700;color:var(--text)">' + e(tp.name) + '</span>';
+    if (tp.total_cost) h += '<span class="b b-y">' + e(tp.total_cost) + '</span>';
+    h += '</div>';
+    if (tp.flow) {
+      h += '<div style="font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.7">' + md(tp.flow) + '</div>';
+    }
+    if ((tp.steps || []).length) {
+      h += '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">';
+      for (var si = 0; si < tp.steps.length; si++) {
+        h += '<div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2)">';
+        h += '<span style="color:var(--text3);flex-shrink:0;font-weight:700;font-family:var(--mono)">' + (si + 1) + '</span>';
+        h += '<span>' + md(tp.steps[si]) + '</span>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    if (tp.value_split && typeof tp.value_split === 'object') {
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;margin-bottom:8px">';
+      var vsKeys = Object.keys(tp.value_split);
+      for (var vsi = 0; vsi < vsKeys.length; vsi++) {
+        h += '<span style="color:var(--text3)">' + e(vsKeys[vsi]) + '</span>';
+        h += '<span class="mono" style="color:var(--green-strong)">' + e(tp.value_split[vsKeys[vsi]]) + '</span>';
+      }
+      h += '</div>';
+    }
+    h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">';
+    if (tp.settlement) h += '<span style="color:var(--text3)">\u7ED3\u7B97</span><span style="color:var(--text2)">' + e(tp.settlement) + '</span>';
+    if (tp.dispute) h += '<span style="color:var(--text3)">\u4E89\u8BAE</span><span style="color:var(--text2)">' + md(tp.dispute) + '</span>';
+    if (tp.missing) h += '<span style="color:var(--text3)">\u7F3A\u5931</span><span style="color:#ef8f7d">' + md(tp.missing) + '</span>';
+    if (tp.note) h += '<span style="color:var(--text3)">\u5907\u6CE8</span><span style="color:var(--text2)">' + md(tp.note) + '</span>';
+    h += '</div></div>';
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+// 6. Competition Layers
+if ((D.competition_layers || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u7ADE\u4E89\u683C\u5C40</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div style="display:flex;flex-direction:column;gap:16px">';
+  for (var ci = 0; ci < D.competition_layers.length; ci++) {
+    var cl = D.competition_layers[ci];
+    var clCr = cl.cr2 || cl.cr || '';
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;border-left:3px solid ' + ['var(--green)','var(--blue)','var(--purple)','var(--orange)'][ci % 4] + '">';
+    // Header line: layer name + badges
+    h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">';
+    h += '<span style="font-size:13px;font-weight:700;color:var(--text)">' + e(cl.layer) + '</span>';
+    if (cl.stability) h += '<span class="b b-gr" style="font-size:9px;padding:2px 6px">\u7A33\u5B9A\u6027: ' + e(cl.stability) + '</span>';
+    if (clCr) h += '<span class="b b-b" style="font-size:9px;padding:2px 6px">Top 2 \u96C6\u4E2D\u5EA6: ' + e(clCr) + '</span>';
+    if (cl.moat_score) h += '<span class="b b-g" style="font-size:9px;padding:2px 6px">\u62A4\u57CE\u6CB3: ' + e(cl.moat_score) + '</span>';
+    h += '</div>';
+    // Key dynamic
+    if (cl.key_dynamic) {
+      h += '<div style="font-size:12px;color:var(--text2);line-height:1.6">' + renderBlock(cl.key_dynamic) + '</div>';
+    }
+    // Players table (if provided)
+    if ((cl.players || []).length) {
+      var playerFields = ['symbol','revenue','growth','margin','moat_score','pe'];
+      var playerLabels = { symbol:'\u6807\u7684', revenue:'\u6536\u5165', growth:'\u589E\u901F', margin:'\u5229\u6DA6\u7387', moat_score:'\u62A4\u57CE\u6CB3', pe:'PE' };
+      var activePFields = [];
+      for (var pfi = 0; pfi < playerFields.length; pfi++) {
+        var pf = playerFields[pfi];
+        for (var pli = 0; pli < cl.players.length; pli++) {
+          if (cl.players[pli][pf] !== undefined && cl.players[pli][pf] !== '') { activePFields.push(pf); break; }
+        }
+      }
+      if (activePFields.length) {
+        h += '<div class="table-wrap" style="margin-top:6px"><table class="data-tbl"><thead><tr>';
+        for (var pfi2 = 0; pfi2 < activePFields.length; pfi2++) {
+          h += '<th>' + e(playerLabels[activePFields[pfi2]] || activePFields[pfi2]) + '</th>';
+        }
+        h += '</tr></thead><tbody>';
+        for (var pli2 = 0; pli2 < cl.players.length; pli2++) {
+          var player = cl.players[pli2];
+          h += '<tr>';
+          for (var pfi3 = 0; pfi3 < activePFields.length; pfi3++) {
+            var pval = player[activePFields[pfi3]];
+            var pcell = pval !== undefined && pval !== '' ? String(pval) : '\u2014';
+            if (activePFields[pfi3] === 'symbol') h += '<td style="font-weight:700;color:var(--text)">' + e(pcell) + '</td>';
+            else h += '<td class="mono">' + e(pcell) + '</td>';
+          }
+          h += '</tr>';
+        }
+        h += '</tbody></table></div>';
+      }
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end industry
+
+// ========== TAB 3: ASSETS ==========
+h += '<div id="assets" class="page-panel">';
+h += '<div class="section-stack">';
+
+// 1. Tier Ranking
+if ((D.tier_ranking || []).length) {
+  var tiers = {};
+  var tierOrder = ['T1','T2','T3','T4'];
+  for (var ti = 0; ti < D.tier_ranking.length; ti++) {
+    var tr = D.tier_ranking[ti];
+    var tierKey = String(tr.tier || 'T4').toUpperCase();
+    if (!tiers[tierKey]) tiers[tierKey] = [];
+    tiers[tierKey].push(tr);
+  }
+  for (var toi = 0; toi < tierOrder.length; toi++) {
+    var tKey = tierOrder[toi];
+    if (!tiers[tKey] || !tiers[tKey].length) continue;
+    var tc = tierColor(tKey);
+    h += '<div class="card tier-' + tKey.toLowerCase() + '">';
+    h += '<div class="card-title" style="color:' + tc + '">' + e(tKey) + ' \u6807\u7684</div>';
+    h += '<div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px">';
+    for (var tri = 0; tri < tiers[tKey].length; tri++) {
+      var asset = tiers[tKey][tri];
+      h += '<div style="padding:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-sm);border-left:3px solid ' + tc + '">';
+      h += '<div style="font-size:20px;font-weight:900;font-family:var(--mono);color:var(--text)">' + e(asset.symbol) + '</div>';
+      if (asset.position) h += '<div style="font-size:12px;color:var(--text3);margin-top:6px">\u4ED3\u4F4D: ' + e(asset.position) + '</div>';
+      if (asset.edge) h += '<div style="font-size:13px;color:var(--text2);margin-top:8px;line-height:1.7">' + md(asset.edge) + '</div>';
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:11px;margin-top:10px">';
+      if (asset.entry) h += '<span style="color:var(--green)">\u5165\u573A</span><span style="color:var(--text2)">' + md(asset.entry) + '</span>';
+      if (asset.exit) h += '<span style="color:var(--red)">\u9000\u51FA</span><span style="color:var(--text2)">' + md(asset.exit) + '</span>';
+      h += '</div></div>';
+    }
+    h += '</div></div>';
+  }
+}
+
+// 2. Scoring Matrix
+if ((D.scoring_matrix || []).length) {
+  h += '<div class="card"><div class="card-title">\u8BC4\u5206\u77E9\u9635</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:700px"><thead><tr>';
+  h += '<th>\u6807\u7684</th><th>\u4F30\u503C</th><th>\u62A4\u57CE\u6CB3</th><th>\u7BA1\u7406\u5C42</th><th>\u589E\u957F</th><th>\u4E0B\u884C</th><th>\u4E0A\u884C</th>';
+  h += '</tr></thead><tbody>';
+  for (var smi = 0; smi < D.scoring_matrix.length; smi++) {
+    var sm = D.scoring_matrix[smi];
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text)">' + e(sm.symbol) + '</td>';
+    var numFields = ['valuation','moat','management','growth'];
+    for (var nfi = 0; nfi < numFields.length; nfi++) {
+      var nfv = sm[numFields[nfi]];
+      var nfn = parseInt(nfv);
+      if (!isNaN(nfn) && nfn >= 1 && nfn <= 5) {
+        h += '<td><span class="heatmap-cell ' + hmClass(nfn) + '">' + e(nfv) + '</span></td>';
+      } else {
+        h += '<td class="mono">' + e(nfv !== undefined ? nfv : '\u2014') + '</td>';
+      }
+    }
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(sm.downside || '\u2014') + '</td>';
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(sm.upside || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 3. Asset Judgment Table (replaces valuation bar chart — different currencies/scales can't share one axis)
+if (assetJudgments.length) {
+  h += '<div class="card"><div class="card-title">\u6807\u7684\u5224\u65AD</div>';
+  h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+  h += '<th>\u6807\u7684</th><th>\u884C\u52A8</th><th>\u4ED3\u4F4D</th><th>\u4F30\u503C\u533A\u95F4</th><th>\u4F9D\u8D56\u5047\u8BBE</th>';
+  h += '</tr></thead><tbody>';
+  for (var aji = 0; aji < assetJudgments.length; aji++) {
+    var aj2 = assetJudgments[aji];
+    h += '<tr>';
+    h += '<td style="font-weight:700;font-family:var(--mono);font-size:14px;color:var(--text)">' + e(aj2.symbol) + '</td>';
+    h += '<td>' + actionBadge(aj2.action) + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + e(aj2.position_type || '\u2014') + '</td>';
+    if (aj2.valuation_range) {
+      // Parse and color-code bear/base/bull
+      var vrParts = String(aj2.valuation_range).split('/').map(function(s) { return s.trim(); });
+      h += '<td class="mono" style="font-size:12px;white-space:nowrap">';
+      for (var vpi = 0; vpi < vrParts.length; vpi++) {
+        var vp = vrParts[vpi];
+        var vpColor = 'var(--text2)';
+        if (vp.toLowerCase().indexOf('bear') >= 0) vpColor = 'var(--red)';
+        else if (vp.toLowerCase().indexOf('base') >= 0) vpColor = 'var(--text)';
+        else if (vp.toLowerCase().indexOf('bull') >= 0) vpColor = 'var(--green)';
+        if (vpi > 0) h += ' <span style="color:var(--text3)">/</span> ';
+        h += '<span style="color:' + vpColor + '">' + e(vp) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    if (aj2.depends_on && aj2.depends_on.length) {
+      h += '<td style="font-size:11px">';
+      for (var dpi = 0; dpi < aj2.depends_on.length; dpi++) {
+        if (dpi > 0) h += ' ';
+        h += '<span class="b b-g" style="font-size:9px;padding:2px 6px">' + e(aj2.depends_on[dpi]) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 4. Scenario Matrix (supports both {paths:[...], expected_return} and flat array)
+var smPaths = Array.isArray(D.scenario_matrix) ? D.scenario_matrix : (D.scenario_matrix && D.scenario_matrix.paths ? D.scenario_matrix.paths : []);
+var smExpRet = D.scenario_matrix && D.scenario_matrix.expected_return ? D.scenario_matrix.expected_return : '';
+if (smPaths.length) {
+  h += '<div class="card"><div class="card-title">\u60C5\u666F\u77E9\u9635</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:600px"><thead><tr>';
+  h += '<th>\u8DEF\u5F84</th><th>\u6982\u7387</th><th>\u63CF\u8FF0</th><th>\u5F71\u54CD</th><th>\u7EC4\u5408\u56DE\u62A5</th>';
+  h += '</tr></thead><tbody>';
+  for (var sci2 = 0; sci2 < smPaths.length; sci2++) {
+    var scenario = smPaths[sci2];
+    var pColor = probColor(scenario.probability);
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text)">' + md(scenario.path) + '</td>';
+    h += '<td class="mono" style="color:' + pColor + ';font-weight:700">' + e(scenario.probability ? scenario.probability + '%' : '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + md(scenario.description || '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + md(scenario.impact || '\u2014') + '</td>';
+    h += '<td class="mono" style="color:var(--green);font-weight:600">' + e(scenario.portfolio_return || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  if (smExpRet) {
+    h += '<tr style="border-top:2px solid rgba(255,255,255,.1)"><td colspan="4" style="font-weight:700;color:var(--text);text-align:right">\u671F\u671B\u56DE\u62A5</td>';
+    h += '<td class="mono" style="font-weight:700;color:var(--green);font-size:16px">' + e(smExpRet) + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 5. Edge Conclusion
+if (D.edge_conclusion) {
+  h += '<div class="quote-block" style="border-color:var(--green);margin-top:6px">' + renderBlock(D.edge_conclusion) + '</div>';
+}
+
+// 6. Contrarian
+if ((D.contrarian || []).length) {
+  h += '<div class="card" style="border-left:4px solid var(--red)"><div class="card-title" style="color:#ef8f7d">\u53CD\u5411\u8BBA\u8BC1</div>';
+  h += '<div class="card-body">';
+  for (var cti = 0; cti < D.contrarian.length; cti++) {
+    var ct = D.contrarian[cti];
+    var ctReason = typeof ct === 'string' ? ct : (ct.reason || '');
+    var ctProb = typeof ct === 'object' ? ct.probability : '';
+    var ctImpact = typeof ct === 'object' ? ct.impact : '';
+    h += '<div style="padding:8px 12px;background:rgba(212,74,50,.06);border:1px solid rgba(212,74,50,.15);border-radius:8px;display:flex;gap:12px;align-items:flex-start">';
+    if (ctProb) h += '<span class="mono" style="color:var(--red);font-weight:700;font-size:13px;flex-shrink:0;min-width:32px">' + e(ctProb) + '%</span>';
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div style="font-size:13px;font-weight:600;color:#ef8f7d;line-height:1.5">' + md(ctReason) + '</div>';
+    if (ctImpact) h += '<div style="font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5">\u2192 ' + md(ctImpact) + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end assets
+
+// ========== TAB 4: MONITOR ==========
+h += '<div id="monitor" class="page-panel">';
+
+// Status legend
+h += '<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em">';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot confirmed" style="width:8px;height:8px"></span>\u5DF2\u9A8C\u8BC1</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot strong" style="width:8px;height:8px"></span>\u8D8B\u52BF\u5411\u597D</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot approaching" style="width:8px;height:8px"></span>\u63A5\u8FD1\u89E6\u53D1</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot watching" style="width:8px;height:8px"></span>\u89C2\u5BDF\u4E2D</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot weakening" style="width:8px;height:8px"></span>\u8F6C\u5F31</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot failing" style="width:8px;height:8px"></span>\u8BC1\u4F2A</span>';
+h += '</div>';
+
+h += '<div class="section-stack">';
+
+// 1. Tipping Points Table
+if (allTippingPoints.length) {
+  h += '<div class="card"><div class="card-title">\u62D0\u70B9\u76D1\u63A7</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:780px"><thead><tr>';
+  h += '<th>\u62D0\u70B9</th><th>\u5F53\u524D</th><th>\u9608\u503C</th><th>\u5047\u8BBE</th><th>\u6743\u91CD</th><th>\u6570\u636E\u6E90</th><th>\u72B6\u6001</th>';
+  h += '</tr></thead><tbody>';
+  for (var tpi = 0; tpi < allTippingPoints.length; tpi++) {
+    var ip = allTippingPoints[tpi];
+    var state = ipState(ip);
+    var dotHtml = '<span class="tp-dot ' + state + '" style="width:8px;height:8px;margin-right:6px"></span>';
+    var ds = ip.data_source || '';
+    var isUrl = /^https?:\/\//.test(ds);
+    var dsHtml = isUrl
+      ? '<a href="' + e(ds) + '" target="_blank" rel="noopener noreferrer" style="color:var(--purple);font-size:11px">' + e(ds.replace(/^https?:\/\/(www\.)?/, '').split('/').slice(0, 2).join('/')) + '</a>'
+      : '<span style="color:var(--text3);font-size:11px">' + e(ds || '\u2014') + '</span>';
+    h += '<tr>';
+    h += '<td style="font-weight:600">' + e(ip.event) + '</td>';
+    h += '<td class="mono" style="color:var(--green-strong)">' + e(ip.current || '\u2014') + '</td>';
+    h += '<td>' + e(ip.quantitative || ip.qualitative || '\u2014') + '</td>';
+    h += '<td style="color:var(--green);white-space:nowrap">' + (ip.hypothesis_id ? e(ip.hypothesis_id) : '\u2014') + '</td>';
+    h += '<td class="mono">' + e(ip.weight || '\u2014') + '</td>';
+    h += '<td>' + dsHtml + '</td>';
+    h += '<td style="white-space:nowrap">' + dotHtml + statusCn(state) + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 2. Catalysts Timeline
+if ((D.catalysts || []).length) {
+  h += '<div class="card"><div class="card-title">\u50AC\u5316\u5242\u65F6\u95F4\u7EBF</div>';
+  h += '<div class="timeline">';
+  var sortedCatalysts = D.catalysts.slice().sort(function(a, b) {
+    return (a.date || '') < (b.date || '') ? -1 : (a.date || '') > (b.date || '') ? 1 : 0;
+  });
+  for (var cai = 0; cai < sortedCatalysts.length; cai++) {
+    var cat = sortedCatalysts[cai];
+    h += '<div class="tl-item">';
+    h += '<span class="tl-date">' + e(cat.date) + '</span>';
+    h += '<div class="tl-content">';
+    h += '<div style="font-weight:600;color:var(--text)">' + md(cat.event) + '</div>';
+    if (cat.targets) {
+      var assetList = Array.isArray(cat.targets) ? cat.targets : String(cat.targets).split(',').map(function(s) { return s.trim(); });
+      h += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">';
+      for (var ali = 0; ali < assetList.length; ali++) {
+        h += '<span class="b b-g" style="font-size:9px;padding:3px 8px">' + e(assetList[ali]) + '</span>';
+      }
+      h += '</div>';
+    }
+    if (cat.expected_impact) h += '<div style="font-size:12px;color:var(--text3);margin-top:4px">' + md(cat.expected_impact) + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 3. Risks Table
+if ((D.risks || []).length) {
+  h += '<div class="card"><div class="card-title">\u98CE\u9669\u8BC4\u4F30</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:700px"><thead><tr>';
+  h += '<th>\u98CE\u9669</th><th>\u6982\u7387</th><th>\u5F71\u54CD</th><th>\u6CE2\u53CA\u6807\u7684</th><th>\u5BF9\u51B2</th>';
+  h += '</tr></thead><tbody>';
+  for (var rki = 0; rki < D.risks.length; rki++) {
+    var risk = D.risks[rki];
+    var pColor = probColor(risk.probability);
+    h += '<tr>';
+    h += '<td style="font-weight:600;color:var(--text)">' + md(risk.risk) + '</td>';
+    h += '<td class="mono" style="color:' + pColor + ';font-weight:700">' + e(risk.probability ? risk.probability + '%' : '\u2014') + '</td>';
+    h += '<td style="color:var(--text2)">' + md(risk.impact || '\u2014') + '</td>';
+    if (risk.most_impacted) {
+      var affList = Array.isArray(risk.most_impacted) ? risk.most_impacted : String(risk.most_impacted).split(',').map(function(s) { return s.trim(); });
+      h += '<td>';
+      for (var afi = 0; afi < affList.length; afi++) {
+        h += '<span class="b b-o" style="font-size:9px;padding:3px 8px;margin:2px">' + e(affList[afi]) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(risk.hedge || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 4. Evolution Timeline
+if ((D.evolution || []).length) {
+  h += '<div class="card"><div class="card-title">\u957F\u671F\u6F14\u53D8</div>';
+  h += '<div class="timeline">';
+  for (var evi = 0; evi < D.evolution.length; evi++) {
+    var ev = D.evolution[evi];
+    h += '<div class="tl-item">';
+    h += '<span class="tl-date">' + e(ev.period) + '</span>';
+    h += '<div class="tl-content">';
+    h += '<div style="font-weight:600;color:var(--text)">' + md(ev.event) + '</div>';
+    h += '<div style="display:flex;gap:10px;margin-top:4px;font-size:12px">';
+    if (ev.probability) h += '<span class="mono" style="color:var(--text3)">\u6982\u7387: ' + e(ev.probability) + '</span>';
+    if (ev.investment_impact) h += '<span style="color:var(--text2)">\u5F71\u54CD: ' + md(ev.investment_impact) + '</span>';
+    h += '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 4b. Terminal State
+if (D.terminal_state) {
+  h += '<div class="card"><div class="card-title">\u7EC8\u6001\u5224\u65AD</div>';
+  h += '<div class="card-body"><div style="font-size:13px;color:var(--text2)">' + renderBlock(D.terminal_state) + '</div></div></div>';
+}
+
+// 5. Exit Framework — removed (internal module)
+// 6. Discussion Notes — removed (internal module)
+
+h += '</div>'; // section-stack
+h += '</div>'; // end monitor
+
+// Inject into DOM
+$('app').innerHTML = h;
+document.title = (D.title || 'Sector') + ' \u2014 Cortex';
+
+// Tab switching
+function showTab(id, btn) {
+  document.querySelectorAll('.page-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  $(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+</script>
+</body>
+</html>

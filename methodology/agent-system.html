@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 系统 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* ========== DESIGN TOKENS (page-level overrides) ========== */
+:root {
+  --page-bg: #0a0a0b;
+  --surface-1: #111113;
+  --surface-2: #1a1a1e;
+  --surface-3: #222228;
+  --text-1: #ececef;
+  --text-2: #a0a0ab;
+  --text-3: #5c5c66;
+  --accent-1: #6c8aff;
+  --accent-2: #4a6aff;
+  --accent-glow: rgba(108,138,255,0.12);
+  --accent-glow-strong: rgba(108,138,255,0.2);
+  --green-1: #34d399;
+  --green-glow: rgba(52,211,153,0.1);
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--page-bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== SCROLL PROGRESS ========== */
+.scroll-progress {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-1), var(--green-1));
+  z-index: 99;
+  transition: width 0.08s linear;
+  opacity: 0.9;
+}
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 72px 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero .container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.page-hero .page-subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-top: 10px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-breadcrumb a:hover { color: var(--accent-1); }
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.page-layout {
+  display: flex;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 8px 20px 80px;
+  gap: 56px;
+}
+.page-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ========== SIDEBAR TOC ========== */
+.page-toc {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.page-toc::-webkit-scrollbar { display: none; }
+.toc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-subtle);
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 12px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  margin-left: -1px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.toc-list a.active {
+  color: var(--accent-1);
+  border-left-color: var(--accent-1);
+  font-weight: 600;
+}
+.toc-list .toc-h3 {
+  padding-left: 26px;
+  font-size: 11px;
+  font-weight: 400;
+}
+@media (max-width: 960px) {
+  .page-toc { display: none; }
+  .page-layout { max-width: 780px; }
+}
+
+/* ========== MARKDOWN BODY ========== */
+
+/* --- H2: Section Headers --- */
+.md-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 56px 0 20px;
+  padding: 0 0 12px;
+  color: var(--text-1);
+  border: none;
+  position: relative;
+  scroll-margin-top: 72px;
+  letter-spacing: -0.01em;
+}
+.md-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-1), transparent);
+  border-radius: 1px;
+}
+.md-body h2:first-child { margin-top: 8px; }
+
+/* --- H3: Sub-sections --- */
+.md-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  color: var(--text-1);
+  scroll-margin-top: 72px;
+  letter-spacing: -0.005em;
+}
+
+/* --- H4: Detail headers --- */
+.md-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  color: var(--accent-1);
+  letter-spacing: 0.02em;
+}
+
+/* --- H5: Fine detail --- */
+.md-body h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+  color: var(--text-2);
+}
+
+/* --- Body text --- */
+.md-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+.md-body strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.md-body em {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ========== LISTS ========== */
+.md-body > ul,
+.md-body > ol {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.md-body > ul > li,
+.md-body > ol > li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  padding: 10px 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.md-body > ul > li:hover,
+.md-body > ol > li:hover {
+  border-color: var(--border-medium);
+  background: var(--surface-2);
+}
+.md-body > ul > li strong,
+.md-body > ol > li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Nested lists */
+.md-body li ul,
+.md-body li ol {
+  margin: 8px 0 2px;
+  padding-left: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.md-body li li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-2);
+  padding: 2px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  padding-left: 14px;
+}
+.md-body li li:hover {
+  border-color: transparent;
+  background: none;
+}
+.md-body li li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.md-body li li li::before {
+  background: transparent;
+  border: 1px solid var(--text-3);
+  width: 3px;
+  height: 3px;
+}
+.md-body li li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ========== BLOCKQUOTE ========== */
+.md-body blockquote {
+  border: none;
+  padding: 14px 20px;
+  margin: 20px 0;
+  background: var(--accent-glow);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+.md-body blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-1);
+}
+.md-body blockquote p {
+  color: var(--text-1);
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+/* ========== CODE ========== */
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--surface-2);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--accent-1);
+  border: 1px solid var(--border-subtle);
+}
+.md-body pre {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.md-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ========== TABLE ========== */
+.md-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.md-body th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-2);
+}
+.md-body td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.md-body tr:last-child td { border-bottom: none; }
+.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 48px 0 8px;
+}
+
+/* ========== INDEX CARDS ========== */
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.index-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.index-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-glow), transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.index-card:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+.index-card:hover::before { opacity: 1; }
+.index-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+}
+.index-card p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.index-card .index-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+}
+.index-tag-invest { background: var(--green-glow); color: var(--green-1); }
+.index-tag-model { background: rgba(188,140,255,0.1); color: #bc8cff; }
+
+/* ========== FAQ CARDS ========== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
+  gap: 12px;
+}
+.page-layout:has(.faq-grid) .page-content { max-width: 1100px; }
+.faq-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.faq-card:hover { border-color: var(--border-medium); }
+.faq-question {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-1);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.faq-answer p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.faq-answer strong { color: var(--text-1); }
+.faq-answer ul, .faq-answer ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.faq-answer li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.faq-answer li::before { display: none; }
+.faq-answer li strong { color: var(--text-1); }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#universe">仓库</a></li>
+      <li><a href="../methodology/">方法论</a></li>
+      <li><a href="../beliefs.html">信仰</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-breadcrumb"><a href="../">首页</a> / <a href="../methodology/">方法论</a></div>
+    <h1>Agent 系统</h1>
+    <p class="page-subtitle">如何用 Claude Code + 自建 Agent 体系构建 24/7 投研认知中枢。</p>
+  </div>
+</section>
+
+<!-- CONTENT WITH TOC -->
+<div class="page-layout">
+  <article class="page-content">
+    <div class="md-body">
+<h2>核心理念</h2>
+<p><strong>Agent 不是工具，是数字分身。</strong> 目标不是"帮我查数据"，而是模仿我的思维方式、放大我的能力边界、观察我的盲点、在该反对时反对。</p>
+<p>四层能力：</p>
+<ol>
+<li>
+<p><strong>模仿</strong> — 用我的投资哲学、提问方式、决策框架来思考</p>
+</li>
+<li>
+<p><strong>放大</strong> — 24/7 监控、多线程并行研究、秒级检索、完整记忆</p>
+</li>
+<li>
+<p><strong>观察</strong> — 发现我看不到的盲点、低效模式、系统异常</p>
+</li>
+<li>
+<p><strong>挑战</strong> — 该反对就反对，关心结果比讨好重要</p>
+</li>
+</ol>
+<h2>整体架构</h2>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│                     Fred（决策者）                     │
+│         大决策 / 投资判断 / 对外沟通 → 我来           │
+│         执行细节 / 技术方案 / 巡检 → Agent 来         │
+└────────────────────┬────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────┐
+│              ClawFred 🦀（调度层）                    │
+│    Claude Code 主 session，路由任务到对应 Agent       │
+│    读 AGENTS.md 路由表 → 读 agents/*.md 角色合同      │
+│    → spawn sub-agent 或自己执行                      │
+└────────┬───────────┬────────────┬───────────────────┘
+         │           │            │
+    ┌────▼───┐  ┌────▼───┐  ┌────▼───┐
+    │研究 Agent│  │监控系统 │  │自动化   │
+    │stock    │  │monitors│  │cron    │
+    │crypto   │  │heartbeat│ │sentinel│
+    │sector   │  │health   │ │digest  │
+    └────────┘  └────────┘  └────────┘
+         │           │            │
+    ┌────▼───────────▼────────────▼───────────────────┐
+    │              Cortex（知识库）                      │
+    │  0-journal / 2-meta / 3-universe / 4-data        │
+    └─────────────────────────────────────────────────┘
+</code></pre>
+<h2>配置文件体系</h2>
+<p>所有配置集中在 <code>.claude/</code> 目录，是整个系统的唯一源头。</p>
+<h3><code>.claude/rules/</code> — 每个 session 自动加载的规则</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>核心功能</th>
+<th>关键 Insight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>soul.md</strong></td>
+<td>Agent 的人格定义</td>
+<td>不是"你是一个助手"，而是"你是我的数字分身"。四层能力模型（模仿→放大→观察→挑战）。决策冲突时的优先级：安全 &gt; 意图 &gt; 诚实 &gt; 行动</td>
+</tr>
+<tr>
+<td><strong>user.md</strong></td>
+<td>我的思维模式画像</td>
+<td>Agent 要模仿的对象。包含投资哲学、提问方式、决策风格、工作偏好、思维盲点。会随交互持续更新</td>
+</tr>
+<tr>
+<td><strong>agents.md</strong></td>
+<td>路由表 + 执行规范</td>
+<td>哪个任务由哪个 Agent 做、怎么 spawn、6 条协作铁律。核心原则：默认主 session 自己做，spawn 只为隔离上下文/保护主线/并行执行</td>
+</tr>
+<tr>
+<td><strong>memory.md</strong></td>
+<td>跨 session 长期记忆</td>
+<td>环境信息、端口分配、关键教训、cron 调度表。精炼的事实，不是对话记录</td>
+</tr>
+<tr>
+<td><strong>heartbeat.md</strong></td>
+<td>健康巡检架构</td>
+<td>两层：Python 健康检查（每 10 分钟）+ AI 巡检（每天首次）。全正常则静默，异常才告警</td>
+</tr>
+<tr>
+<td><strong>todo.md</strong></td>
+<td>任务追踪</td>
+<td>分 Blocked / Ready(P1-P3) / Autonomous / Done 四档</td>
+</tr>
+</tbody>
+</table>
+<h3><code>.claude/agents/</code> — Agent 角色合同</h3>
+<p><strong>通用 Agent（13 个）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>research (stock-lead)</td>
+<td>对一个标的做完整深度研究</td>
+</tr>
+<tr>
+<td>challenge</td>
+<td>质疑一个观点或论点</td>
+</tr>
+<tr>
+<td>suggest</td>
+<td>分析当前组合，看要不要调仓</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>判断一个持仓要不要退出</td>
+</tr>
+<tr>
+<td>news</td>
+<td>整理当天重要信息</td>
+</tr>
+<tr>
+<td>twitter-writer</td>
+<td>把观点变成高传播推文</td>
+</tr>
+<tr>
+<td>repo-research</td>
+<td>快速评估一个开源项目</td>
+</tr>
+<tr>
+<td>solution-finder</td>
+<td>全网调研方案 + 推荐报告</td>
+</tr>
+<tr>
+<td>pm-forensics</td>
+<td>预测市场异常账户取证</td>
+</tr>
+<tr>
+<td>pm-bot-strategy</td>
+<td>地址视角分析交易策略</td>
+</tr>
+</tbody>
+</table>
+<p><strong>研究管道 Agent（按标的类型分组）：</strong></p>
+<ul>
+<li><strong>Stock（8 个）：</strong> valuation / earnings / 6 个 knowledge 模块（history, business, financials, industrial, management, strategy）/ 5 个 perspectives 模块（7powers, order, ecology, genesis, disruptor）</li>
+<li><strong>Sector（6 个）：</strong> sector-lead → intro → competition → opportunities → judgment → research，完整赛道研究管道</li>
+<li><strong>Crypto（6 个）：</strong> crypto-lead → intro / valuation / airdrop / opportunity / hidden</li>
+</ul>
+<h3><code>.claude/skills/</code> — 按需加载的执行知识包</h3>
+<p>Skills 和 Agents 的区别：Agent 是角色合同（"你是谁，做什么"），Skill 是工具说明书（"这个操作怎么执行"）。</p>
+<p>关键 Skills：data-sources（数据获取）、asm-operations（资产管理）、defi-eval（DeFi 评估）、profile-analyst（人格分析）、playwriter（浏览器自动化）、doc-check（文档质检）等。</p>
+<h3><code>.claude/settings.local.json</code> — 运行时配置</h3>
+<p>两个关键 Hook：
+- <strong>PreCompact</strong> — Compact 前提醒 Agent 列出值得记录的信息，确保 compact 不丢失关键上下文
+- <strong>PostCompact</strong> — Compact 后自动写入 daily notes + 更新长期记忆</p>
+<p>这解决了 AI 对话的根本问题：<strong>对话会消失，但认知必须沉淀。</strong></p>
+<h2>核心自动化系统</h2>
+<h3>Sentinel — 每日投研情报管道</h3>
+<p>每天 6AM 自动运行，~30 分钟，~150+ 次 LLM 调用。</p>
+<pre><code>信源采集 → 相关性过滤 → 按标的聚合研究（含主动搜索）
+    → 逐拐点判断 → 对抗审查 → AI 首席分析师裁量 → 等人决策
+</code></pre>
+<p><strong>四层 LLM 设计：</strong></p>
+<ol>
+<li>
+<p><strong>Research</strong> — 今天发生了什么？（含主动搜索验证）</p>
+</li>
+<li>
+<p><strong>Judgment</strong> — 哪个拐点该变？持仓怎么调？</p>
+</li>
+<li>
+<p><strong>Challenge</strong> — 判断对吗？（对抗审查，削减过度自信）</p>
+</li>
+<li>
+<p><strong>AI Proposal</strong> — 最终结论是什么？（全局裁量）</p>
+</li>
+</ol>
+<p><strong>关键设计决策：</strong>
+- 置信度是<strong>数学算的</strong>（加权拐点分数），不是 AI 拍脑袋
+- Hypothesis 决策一律<strong>等人 review</strong>，不 auto-apply
+- 信源过滤链 6921 → 2794 → ~600 → 精选，逐步收窄
+- 详细流程图：<code>5-ability/sentinel/sentinel-intro.html</code></p>
+<h3>Agent Evolution — Agent 自迭代系统</h3>
+<p>经典控制论闭环：目标函数 → 传感器（采集执行数据）→ 比较器（actual vs target）→ 控制器（生成优化提案）→ 执行器（改 agent prompt）→ 人在回路确认。</p>
+<p>让 Agent 的每次执行变成可量化、可追溯、可优化的闭环。</p>
+<h3>健康巡检 — 两层自愈</h3>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>频率</th>
+<th>方式</th>
+<th>做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layer 1</td>
+<td>每 10 分钟</td>
+<td>Python 脚本</td>
+<td>检查 7 个服务健康状态，异常自动 launchctl 重启，连续 3 次失败才告警</td>
+</tr>
+<tr>
+<td>Layer 2</td>
+<td>每天首次</td>
+<td>Claude Opus</td>
+<td>分析趋势性问题（服务反复重启），检查 cron 触发是否正常</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心原则：全正常则静默。</strong> 只有真正需要关注的才推送。</p>
+<h2>Cron 调度表</h2>
+<p>全部走 LaunchD，plist 在 <code>5-ability/cron/plist/</code>。</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每 10 分钟</td>
+<td>健康巡检</td>
+<td>静默（异常才告警）</td>
+</tr>
+<tr>
+<td>每 10 分钟</td>
+<td>predict-orderbook-monitor</td>
+<td>静默（有新市场才推）</td>
+</tr>
+<tr>
+<td>6×/天</td>
+<td>twitter-feed-digest</td>
+<td>#twitter-feed</td>
+</tr>
+<tr>
+<td>6:00 AM</td>
+<td>sentinel-pipeline</td>
+<td>静默（产物写文件）</td>
+</tr>
+<tr>
+<td>7:00 AM</td>
+<td>agent-evolution-daily</td>
+<td>#daily（有 proposal 才推）</td>
+</tr>
+<tr>
+<td>7:30 AM</td>
+<td>binance-daily-snapshot</td>
+<td>#binance-account</td>
+</tr>
+<tr>
+<td>9:00 AM</td>
+<td>daily-briefing</td>
+<td>#daily</td>
+</tr>
+<tr>
+<td>10:00 AM</td>
+<td>daily-coaching</td>
+<td>#daily</td>
+</tr>
+<tr>
+<td>7:00 PM</td>
+<td>company-sentinel</td>
+<td>#company-sentinel</td>
+</tr>
+<tr>
+<td>每周一 9AM</td>
+<td>weekly-workspace-review</td>
+<td>#daily</td>
+</tr>
+<tr>
+<td>3:30 AM</td>
+<td>asm-sync</td>
+<td>静默（备份+导出）</td>
+</tr>
+<tr>
+<td>4:00 AM</td>
+<td>auto-sync</td>
+<td>静默（git commit+push）</td>
+</tr>
+</tbody>
+</table>
+<h2>协作 6 条铁律</h2>
+<p>从真实事故中提炼，每条都有血的教训：</p>
+<ol>
+<li>
+<p><strong>大需求先 Plan</strong> — 预计 &gt;30min 或 &gt;3 步，先出方向和边界让我确认（教训：报告 5 轮重写、ASM 返工、Hypothesis Engine 推倒重来）</p>
+</li>
+<li>
+<p><strong>新功能先问"你会用吗"</strong> — 没有具体使用场景就不做（一个月砍了 7+ 个白做的功能）</p>
+</li>
+<li>
+<p><strong>复杂系统出流程图</strong> — 避免反复问"这是什么"</p>
+</li>
+<li>
+<p><strong>Sub-agent 写禁止列表 + 删前验证</strong> — spawn 时写明不能删/改什么（教训：误删导致 5h 中断 ×2）</p>
+</li>
+<li>
+<p><strong>推送默认静默</strong> — 只有有价值的新信息才推送，调试/进度走 log</p>
+</li>
+<li>
+<p><strong>回答先 commit 结论</strong> — 一句话 take + 理由，不确定就说不确定</p>
+</li>
+</ol>
+<h2>三路反馈闭环</h2>
+<p>所有重要输出经过三路验证：</p>
+<ol>
+<li>
+<p><strong>环境反馈</strong> — 健康检查、监控告警、用户反馈</p>
+</li>
+<li>
+<p><strong>执行错误</strong> — 关键路径有 fallback，错误自动修复 + 告警</p>
+</li>
+<li>
+<p><strong>自我验证</strong> — 投研报告 spawn verification agent 挑刺；关键数字交叉验证；重大判断附反向论证</p>
+</li>
+</ol>
+<h2>设计原则</h2>
+<ul>
+<li><strong>迁移优先</strong> — 每做一件事先问：明天换平台，能带走吗？记忆文件、独立服务、方法论 = 带得走。平台特定调度 = 框架依赖</li>
+<li><strong>独立可运行</strong> — 每个项目能脱离平台独立跑</li>
+<li><strong>纯文本优先</strong> — 记忆、文档、Agent spec 都用 Markdown</li>
+<li><strong>推送直连</strong> — 不走中间层</li>
+<li><strong>写下来 &gt; 记心里</strong> — 只存在对话里 = 不存在</li>
+<li><strong>从开环转向闭环</strong> — 不是 pipeline 跑完就完了，要有目标函数 → 传感器 → 比较器 → 执行器 → 反馈</li>
+</ul>
+<h2>关键教训</h2>
+<table>
+<thead>
+<tr>
+<th>事故</th>
+<th>教训</th>
+<th>防护措施</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>误删 GitHub repo</td>
+<td>删 repo 前必须检查所有本地 git remote</td>
+<td>流程约束</td>
+</tr>
+<tr>
+<td>Twitter follow 被封号</td>
+<td>激进执行要考虑平台限制</td>
+<td>频率控制</td>
+</tr>
+<tr>
+<td>误删生产脚本 (5h ×2)</td>
+<td>Sub-agent 必须写禁止列表</td>
+<td>Spawn 合同</td>
+</tr>
+<tr>
+<td>venv 被系统升级破坏</td>
+<td>cron 一律显式用 <code>venv/bin/python3</code></td>
+<td>隔离依赖</td>
+</tr>
+<tr>
+<td>git add -A 误删文件</td>
+<td>add 前必须 <code>git diff --stat</code></td>
+<td>PreCommit hook</td>
+</tr>
+<tr>
+<td>LaunchD plist 更新不生效</td>
+<td>必须 unload+load，symlink 更新 ≠ loaded config 更新</td>
+<td>操作规范</td>
+</tr>
+<tr>
+<td>凌晨日期切换 bug</td>
+<td>涉及日期切换的逻辑必须测凌晨边界</td>
+<td>测试边界</td>
+</tr>
+</tbody>
+</table>
+    </div>
+  </article>
+  <aside class="page-toc" id="pageToc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="tocList"></ul>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-text">Cortex — Fred's Investment Research System</div>
+    <ul class="footer-links">
+      <li><a href="../index.html#universe">仓库</a></li>
+      <li><a href="../methodology/">方法论</a></li>
+      <li><a href="../beliefs.html">信仰</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// Nav toggle
+document.querySelector('[data-nav-toggle]')?.addEventListener('click', () => {
+  document.querySelector('.nav-links')?.classList.toggle('open');
+});
+
+// Auto-generate TOC
+(function() {
+  const body = document.querySelector('.md-body');
+  const tocList = document.getElementById('tocList');
+  const tocAside = document.getElementById('pageToc');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocAside) tocAside.style.display = 'none';
+    return;
+  }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 's-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.classList.add('toc-h3');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Scroll spy
+  const tocLinks = tocList.querySelectorAll('a');
+  let current = null;
+  const update = () => {
+    let found = null;
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 100) found = h;
+    });
+    if (found && found !== current) {
+      current = found;
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = tocList.querySelector('a[href="#' + found.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// Scroll progress
+window.addEventListener('scroll', function() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  bar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+</script>
+</body>
+</html>

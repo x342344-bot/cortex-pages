@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方法论 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* ========== DESIGN TOKENS (page-level overrides) ========== */
+:root {
+  --page-bg: #0a0a0b;
+  --surface-1: #111113;
+  --surface-2: #1a1a1e;
+  --surface-3: #222228;
+  --text-1: #ececef;
+  --text-2: #a0a0ab;
+  --text-3: #5c5c66;
+  --accent-1: #6c8aff;
+  --accent-2: #4a6aff;
+  --accent-glow: rgba(108,138,255,0.12);
+  --accent-glow-strong: rgba(108,138,255,0.2);
+  --green-1: #34d399;
+  --green-glow: rgba(52,211,153,0.1);
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--page-bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== SCROLL PROGRESS ========== */
+.scroll-progress {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-1), var(--green-1));
+  z-index: 99;
+  transition: width 0.08s linear;
+  opacity: 0.9;
+}
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 72px 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero .container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.page-hero .page-subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-top: 10px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-breadcrumb a:hover { color: var(--accent-1); }
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.page-layout {
+  display: flex;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 8px 20px 80px;
+  gap: 56px;
+}
+.page-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ========== SIDEBAR TOC ========== */
+.page-toc {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.page-toc::-webkit-scrollbar { display: none; }
+.toc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-subtle);
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 12px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  margin-left: -1px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.toc-list a.active {
+  color: var(--accent-1);
+  border-left-color: var(--accent-1);
+  font-weight: 600;
+}
+.toc-list .toc-h3 {
+  padding-left: 26px;
+  font-size: 11px;
+  font-weight: 400;
+}
+@media (max-width: 960px) {
+  .page-toc { display: none; }
+  .page-layout { max-width: 780px; }
+}
+
+/* ========== MARKDOWN BODY ========== */
+
+/* --- H2: Section Headers --- */
+.md-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 56px 0 20px;
+  padding: 0 0 12px;
+  color: var(--text-1);
+  border: none;
+  position: relative;
+  scroll-margin-top: 72px;
+  letter-spacing: -0.01em;
+}
+.md-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-1), transparent);
+  border-radius: 1px;
+}
+.md-body h2:first-child { margin-top: 8px; }
+
+/* --- H3: Sub-sections --- */
+.md-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  color: var(--text-1);
+  scroll-margin-top: 72px;
+  letter-spacing: -0.005em;
+}
+
+/* --- H4: Detail headers --- */
+.md-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  color: var(--accent-1);
+  letter-spacing: 0.02em;
+}
+
+/* --- H5: Fine detail --- */
+.md-body h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+  color: var(--text-2);
+}
+
+/* --- Body text --- */
+.md-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+.md-body strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.md-body em {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ========== LISTS ========== */
+.md-body > ul,
+.md-body > ol {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.md-body > ul > li,
+.md-body > ol > li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  padding: 10px 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.md-body > ul > li:hover,
+.md-body > ol > li:hover {
+  border-color: var(--border-medium);
+  background: var(--surface-2);
+}
+.md-body > ul > li strong,
+.md-body > ol > li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Nested lists */
+.md-body li ul,
+.md-body li ol {
+  margin: 8px 0 2px;
+  padding-left: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.md-body li li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-2);
+  padding: 2px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  padding-left: 14px;
+}
+.md-body li li:hover {
+  border-color: transparent;
+  background: none;
+}
+.md-body li li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.md-body li li li::before {
+  background: transparent;
+  border: 1px solid var(--text-3);
+  width: 3px;
+  height: 3px;
+}
+.md-body li li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ========== BLOCKQUOTE ========== */
+.md-body blockquote {
+  border: none;
+  padding: 14px 20px;
+  margin: 20px 0;
+  background: var(--accent-glow);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+.md-body blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-1);
+}
+.md-body blockquote p {
+  color: var(--text-1);
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+/* ========== CODE ========== */
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--surface-2);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--accent-1);
+  border: 1px solid var(--border-subtle);
+}
+.md-body pre {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.md-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ========== TABLE ========== */
+.md-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.md-body th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-2);
+}
+.md-body td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.md-body tr:last-child td { border-bottom: none; }
+.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 48px 0 8px;
+}
+
+/* ========== INDEX CARDS ========== */
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.index-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.index-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-glow), transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.index-card:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+.index-card:hover::before { opacity: 1; }
+.index-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+}
+.index-card p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.index-card .index-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+}
+.index-tag-invest { background: var(--green-glow); color: var(--green-1); }
+.index-tag-model { background: rgba(188,140,255,0.1); color: #bc8cff; }
+
+/* ========== FAQ CARDS ========== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
+  gap: 12px;
+}
+.page-layout:has(.faq-grid) .page-content { max-width: 1100px; }
+.faq-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.faq-card:hover { border-color: var(--border-medium); }
+.faq-question {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-1);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.faq-answer p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.faq-answer strong { color: var(--text-1); }
+.faq-answer ul, .faq-answer ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.faq-answer li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.faq-answer li::before { display: none; }
+.faq-answer li strong { color: var(--text-1); }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#universe">仓库</a></li>
+      <li><a href="../methodology/">方法论</a></li>
+      <li><a href="../beliefs.html">信仰</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-breadcrumb"><a href="../">首页</a></div>
+    <h1>方法论</h1>
+    <p class="page-subtitle">投资体系 + Agent 系统 + 常见问答。所有判断的底座，所有自动化的骨架。</p>
+  </div>
+</section>
+
+<!-- CONTENT WITH TOC -->
+<div class="page-layout">
+  <article class="page-content">
+    <div class="md-body">
+<div class="index-grid">
+<a class="index-card" href="./investment/" style="text-decoration:none;color:inherit">
+  <span class="index-tag index-tag-invest">投资体系</span>
+  <h4>投资方法论</h4>
+  <p>投资认知（战略层）+ 战术（执行层），按资产类别分独立方法论。</p>
+  <p style="font-size:12px;color:var(--fg-dim);margin-top:8px">总纲 + 股票 · 14 个方法论 · 15 个思维模型</p>
+</a>
+<a class="index-card" href="./agent-system.html" style="text-decoration:none;color:inherit">
+  <span class="index-tag index-tag-invest">系统架构</span>
+  <h4>Agent 系统</h4>
+  <p>Claude Code + 自建 Agent 体系，24/7 投研认知中枢。</p>
+  <p style="font-size:12px;color:var(--fg-dim);margin-top:8px">30+ Agent · 12 个 Cron 任务</p>
+</a>
+</div>
+    </div>
+  </article>
+  <aside class="page-toc" id="pageToc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="tocList"></ul>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-text">Cortex — Fred's Investment Research System</div>
+    <ul class="footer-links">
+      <li><a href="../index.html#universe">仓库</a></li>
+      <li><a href="../methodology/">方法论</a></li>
+      <li><a href="../beliefs.html">信仰</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// Nav toggle
+document.querySelector('[data-nav-toggle]')?.addEventListener('click', () => {
+  document.querySelector('.nav-links')?.classList.toggle('open');
+});
+
+// Auto-generate TOC
+(function() {
+  const body = document.querySelector('.md-body');
+  const tocList = document.getElementById('tocList');
+  const tocAside = document.getElementById('pageToc');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocAside) tocAside.style.display = 'none';
+    return;
+  }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 's-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.classList.add('toc-h3');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Scroll spy
+  const tocLinks = tocList.querySelectorAll('a');
+  let current = null;
+  const update = () => {
+    let found = null;
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 100) found = h;
+    });
+    if (found && found !== current) {
+      current = found;
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = tocList.querySelector('a[href="#' + found.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// Scroll progress
+window.addEventListener('scroll', function() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  bar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+</script>
+</body>
+</html>

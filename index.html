@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex — Fred's Investment Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="#universe">仓库</a></li>
+      <li><a href="./methodology/">方法论</a></li>
+      <li><a href="./beliefs.html">信仰</a></li>
+      <li><a href="./faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">Investment Research System</div>
+    <h1>
+      <span class="accent">Cortex</span>
+    </h1>
+    <p class="hero-desc">
+      人工精选的投研首页。不是把 Cortex 全量倒出来，
+      只展示当前值得被看见的方法论、赛道和标的。<br>
+      所有结论分三层 — Conviction / 假设 / 标的判断。
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">1</div>
+        <div class="hero-stat-label">精选赛道</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">0</div>
+        <div class="hero-stat-label">精选标的</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">29</div>
+        <div class="hero-stat-label">方法论</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">30+</div>
+        <div class="hero-stat-label">Agents</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSE -->
+<section class="section" id="universe">
+  <div class="container">
+    <div class="section-tag">仓库</div>
+    <h2 class="section-title">赛道 & 标的</h2>
+    <p class="section-desc">
+      每个赛道有完整的假设树和拐点追踪。标的判断标注依赖哪个假设 — 假设变，判断跟着变。<br>
+      <strong style="color:var(--accent)">贝叶斯更新：</strong>新证据出现 → 更新假设概率 → 联动调整所有依赖该假设的标的判断。Conviction 没变就不改仓位。
+    </p>
+
+    <h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--fg-dim);margin-bottom:12px">赛道</h3>
+<div class="card-grid grid-2" style="margin-bottom:32px">
+<a class="card" href="./universe/sector/global-payments.html">
+        <span class="tag tag-sector">赛道报告</span>
+        <div class="card-title">全球支付</div>
+        <div class="card-desc">
+          支付利润来自基础设施租金——规则权/编排权/分发权决定谁赚钱
+        </div>
+        <div class="formula-box" style="margin-top: 12px;">
+          <span class="hl">Why now</span> = GENIUS Act 7月最终规则 + EPI A2A上线 + PYUSD $4.3B = 利润归属即将初步固化<br>
+          <span class="hl">关键拐点</span> = —
+        </div>
+        <div class="card-meta">
+          <span>📅 2026-04-22</span>
+          <span>📊 10 个假设</span>
+          <span>点击进入赛道页</span>
+        </div>
+      </a>
+</div>
+
+
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section class="section" id="methodology">
+  <div class="container">
+    <div class="section-tag">方法论</div>
+    <h2 class="section-title">方法论 & 系统</h2>
+    <p class="section-desc">
+      投资体系 + Agent 系统。所有判断的底座，所有自动化的骨架。
+    </p>
+
+    <div class="card-grid grid-2">
+      <a class="card" href="./methodology/">
+        <span class="tag tag-framework">方法论</span>
+        <div class="card-title">方法论 & 系统</div>
+        <div class="card-desc">
+          投资方法论、Agent 系统架构。所有判断的底座，所有自动化的骨架。
+        </div>
+        <div class="card-meta">
+          <span>29 个方法论</span>
+          <span>30+ Agent</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-text">🧠 Cortex · Fred's Investment Research System · 2026</div>
+    <ul class="footer-links">
+      <li><a href="#universe">仓库</a></li>
+      <li><a href="./methodology/">方法论</a></li>
+      <li><a href="./beliefs.html">信仰</a></li>
+      <li><a href="./faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="./assets/app.js"></script>
+</body>
+</html>

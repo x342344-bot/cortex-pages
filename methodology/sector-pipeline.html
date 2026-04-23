@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sector Research Pipeline — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* ========== DESIGN TOKENS (page-level overrides) ========== */
+:root {
+  --page-bg: #0a0a0b;
+  --surface-1: #111113;
+  --surface-2: #1a1a1e;
+  --surface-3: #222228;
+  --text-1: #ececef;
+  --text-2: #a0a0ab;
+  --text-3: #5c5c66;
+  --accent-1: #6c8aff;
+  --accent-2: #4a6aff;
+  --accent-glow: rgba(108,138,255,0.12);
+  --accent-glow-strong: rgba(108,138,255,0.2);
+  --green-1: #34d399;
+  --green-glow: rgba(52,211,153,0.1);
+  --yellow-1: #fbbf24;
+  --red-1: #f87171;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--page-bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== SCROLL PROGRESS ========== */
+.scroll-progress {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-1), var(--green-1));
+  z-index: 99;
+  transition: width 0.08s linear;
+  opacity: 0.9;
+}
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 72px 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero .container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.page-hero .page-subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-top: 10px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-breadcrumb a:hover { color: var(--accent-1); }
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.page-layout {
+  display: flex;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 8px 20px 80px;
+  gap: 56px;
+}
+.page-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ========== SIDEBAR TOC ========== */
+.page-toc {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.page-toc::-webkit-scrollbar { display: none; }
+.toc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-subtle);
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 12px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  margin-left: -1px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.toc-list a.active {
+  color: var(--accent-1);
+  border-left-color: var(--accent-1);
+  font-weight: 600;
+}
+.toc-list .toc-h3 {
+  padding-left: 26px;
+  font-size: 11px;
+  font-weight: 400;
+}
+@media (max-width: 960px) {
+  .page-toc { display: none; }
+  .page-layout { max-width: 780px; }
+}
+
+/* ========== MARKDOWN BODY ========== */
+
+/* --- H2: Section Headers --- */
+.md-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 56px 0 20px;
+  padding: 0 0 12px;
+  color: var(--text-1);
+  border: none;
+  position: relative;
+  scroll-margin-top: 72px;
+  letter-spacing: -0.01em;
+}
+.md-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-1), transparent);
+  border-radius: 1px;
+}
+.md-body h2:first-child { margin-top: 8px; }
+
+/* --- H3: Sub-sections --- */
+.md-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  color: var(--text-1);
+  scroll-margin-top: 72px;
+  letter-spacing: -0.005em;
+}
+
+/* --- H4: Detail headers --- */
+.md-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  color: var(--accent-1);
+  letter-spacing: 0.02em;
+}
+
+/* --- H5: Fine detail --- */
+.md-body h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+  color: var(--text-2);
+}
+
+/* --- Body text --- */
+.md-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+.md-body strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.md-body em {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ========== LISTS ========== */
+.md-body > ul,
+.md-body > ol {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.md-body > ul > li,
+.md-body > ol > li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  padding: 10px 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.md-body > ul > li:hover,
+.md-body > ol > li:hover {
+  border-color: var(--border-medium);
+  background: var(--surface-2);
+}
+.md-body > ul > li strong,
+.md-body > ol > li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Nested lists */
+.md-body li ul,
+.md-body li ol {
+  margin: 8px 0 2px;
+  padding-left: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.md-body li li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-2);
+  padding: 2px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  padding-left: 14px;
+}
+.md-body li li:hover {
+  border-color: transparent;
+  background: none;
+}
+.md-body li li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.md-body li li li::before {
+  background: transparent;
+  border: 1px solid var(--text-3);
+  width: 3px;
+  height: 3px;
+}
+.md-body li li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ========== BLOCKQUOTE ========== */
+.md-body blockquote {
+  border: none;
+  padding: 14px 20px;
+  margin: 20px 0;
+  background: var(--accent-glow);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+.md-body blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-1);
+}
+.md-body blockquote p {
+  color: var(--text-1);
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+/* ========== CODE ========== */
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--surface-2);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--accent-1);
+  border: 1px solid var(--border-subtle);
+}
+.md-body pre {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.md-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ========== TABLE ========== */
+.md-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.md-body th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-2);
+}
+.md-body td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.md-body tr:last-child td { border-bottom: none; }
+.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 48px 0 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-title">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>☰</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#universe">仓库</a></li>
+      <li><a href="../methodology/">方法论</a></li>
+      <li><a href="../beliefs.html">信仰</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-breadcrumb"><a href="../">首页</a> / <a href="../methodology/">方法论</a></div>
+    <h1>Sector Research Pipeline</h1>
+    <p class="page-subtitle">九阶段赛道研究管道 — 从数据预取到 Portal 发布，系统化产出投资级赛道报告。</p>
+  </div>
+</section>
+
+<!-- CONTENT WITH TOC -->
+<div class="page-layout">
+  <article class="page-content">
+    <div class="md-body">
+
+<h2>核心理念</h2>
+<p>赛道研究的核心框架是三维度评估：<strong>TAM x 利润率 x 市占率</strong>。赛道的本质不是"这个行业有多大"，而是"谁能在这个行业里赚到钱、赚多少、能持续多久"。</p>
+<p><strong>河流模型</strong>是整个分析的骨架：</p>
+<ul>
+<li><strong>河岸 Riverbank</strong> — 结构性信念，概率 >=90%，赛道级的长期判断。例如："支付网络效应不可逆"</li>
+<li><strong>河流 River</strong> — 可证伪假设，每条假设绑定拐点和置信度评分。例如："稳定币跨境支付 2026 年占比突破 5%"</li>
+<li><strong>分叉 Fork</strong> — 互斥路径，各路径概率合计 100%。例如："监管收紧 vs 沙盒开放"</li>
+</ul>
+<p><strong>赛道研究 vs 标的研究：</strong>赛道是标的的上游。赛道研究做的是横向对比 — 谁在打、打什么牌、牌桌规则是什么；标的研究做的是纵深 — 这个玩家的手牌、牌技和筹码够不够。先看懂牌桌，再挑玩家。</p>
+
+<h2>河流模型 — 认知架构</h2>
+
+<p>河流模型是整个 Pipeline 的<strong>结论骨架</strong>。不是"写完报告贴个标签"，而是从 S4 开始就用这个结构组织所有判断，Sentinel 每天用同一套结构做贝叶斯更新。一套框架贯穿<strong>建档 → 监控 → 更新 → 行动</strong>全链路。</p>
+
+<h3>三层结构</h3>
+
+<table>
+<thead>
+<tr><th>层级</th><th>是什么</th><th>概率语义</th><th>失效 =</th><th>State</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>河岸 Riverbank</strong></td>
+<td>不依赖其他假设的结构性判断（地基）</td>
+<td>边际概率，独立成立<br>P ≥ 90 视为成立</td>
+<td>退出整个赛道</td>
+<td>active / challenged / invalidated</td>
+</tr>
+<tr>
+<td><strong>河流 River</strong></td>
+<td>条件于河岸的方向性假设</td>
+<td>条件概率<br>（河岸成立前提下）</td>
+<td>退出该主题全部仓位</td>
+<td>active / challenged / invalidated</td>
+</tr>
+<tr>
+<td><strong>分叉 Fork</strong></td>
+<td>河流上等待的具体事件<br>2-4 条互斥路径</td>
+<td>各路径条件概率<br>Σ paths.p = 100</td>
+<td>调整某个具体仓位</td>
+<td>open / resolved / cancelled</td>
+</tr>
+</tbody>
+</table>
+
+<p>一句话区分：<strong>河岸是结构（几乎不变），河流是方向（随证据更新），分叉是决策节点（等事件 resolve 触发行动）。</strong></p>
+
+<p><strong>河流分两类，都要有：</strong></p>
+<ul>
+<li><strong>方向性河流</strong> — 跨层的投资判断，表达"我赌什么"（如"多轨化趋势让编排层侵蚀卡网络利润"）</li>
+<li><strong>层级河流</strong> — 某竞争层内的假设，表达"这个层会怎样"（如"稳定币重构跨境结算"）</li>
+</ul>
+
+<h3>DAG 依赖关系</h3>
+
+<p>河岸、河流、分叉构成<strong>有向无环图（DAG）</strong>：</p>
+
+<pre><code>riverbank A ──┐
+              ├── river X ── fork X1 (paths: A/B/C)
+riverbank B ──┘              fork X2 (paths: A/B)
+              │
+              └── river Y ── fork Y1
+
+riverbank C ──── river Z ── fork Z1</code></pre>
+
+<ul>
+<li><strong>river → 1+ riverbank(s)</strong> — 一条河流可以依赖多个河岸（交叉领域假设）</li>
+<li><strong>fork → 1 river</strong> — 一个分叉只挂一条河流</li>
+<li>一个河岸可以被多条河流引用 — 多对多关系</li>
+</ul>
+
+<p><strong>级联规则：</strong></p>
+<ul>
+<li>河岸 P 跌破 90 → 依赖它的河流自动 <code>challenged</code></li>
+<li>河流 <code>invalidated</code> → 其下所有 fork 自动 <code>cancelled</code></li>
+<li>赛道分叉更新 → 通过 <code>linked_symbols</code> 传导到标的级 asset_judgment</li>
+</ul>
+
+<h4>实例：Global Payments DAG</h4>
+
+<pre><code>GP-RB1 支付利润=基础设施租金 (p=83) ──┬── GP-H2 卡网吸收新rail (40) ── F1 Wero渗透
+                                      ├── GP-H3 编排层拿权利 (40)   ── F1 PYPL多轨验证
+                                      └── GP-H4 发行层租金压缩 (72)
+
+GP-RB2 数字支付替代现金不可逆 (p=95) ──┬── GP-H1 稳定币重构跨境 (65) ── F1 GENIUS Act
+                                       └── GP-H3 (共享，也依赖 RB1)
+
+GP-RB3 跨境/B2B效率最低利润最厚 (p=93) ── GP-H1 (共享，也依赖 RB2)</code></pre>
+
+<p>3 河岸 × 4 河流 × 3 分叉 × 14 拐点 — 一张图看清整个赛道的认知结构和依赖链。</p>
+
+<h3>置信度计算 — TP 驱动</h3>
+
+<p>所有概率由<strong>拐点（Tipping Points）驱动计算</strong>，不是拍脑袋。每个 TP 通过 <code>hypothesis_id</code> 绑定到具体的河岸、河流或分叉。一个假设可挂多个 TP，同假设下 TP 的 <code>weight</code> 合计 100。</p>
+
+<h4>河岸 / 河流 p_value</h4>
+
+<pre><code>p_value = Σ(weight × score_map[score_status]) / Σ(weight) × 100</code></pre>
+
+<table>
+<thead><tr><th>score_status</th><th>分值</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td><code>confirmed</code></td><td>1.0</td><td>已被事实验证</td></tr>
+<tr><td><code>strong</code></td><td>0.8</td><td>强证据支持</td></tr>
+<tr><td><code>approaching</code></td><td>0.6</td><td>接近验证</td></tr>
+<tr><td><code>watching</code></td><td>0.4</td><td>观察中</td></tr>
+<tr><td><code>weakening</code></td><td>0.2</td><td>证据转弱</td></tr>
+<tr><td><code>failing</code></td><td>0.0</td><td>证据已反面</td></tr>
+</tbody>
+</table>
+
+<p><strong>计算示例 — GP-RB1 "支付利润来自基础设施租金"：</strong></p>
+
+<pre><code>  TP-1: Visa/MA 网络费占收入比   weight=40  score=confirmed  (1.0)
+  TP-2: 监管是否限制 interchange  weight=30  score=watching   (0.4)
+  TP-3: 替代轨道渗透率           weight=30  score=approaching (0.6)
+
+  p_value = (40×1.0 + 30×0.4 + 30×0.6) / 100 × 100 = 70
+
+  → 需要 TP-2 或 TP-3 走强（approaching→strong）才能回到 ≥90 河岸安全线</code></pre>
+
+<h4>分叉路径概率 — path_signals + softmax</h4>
+
+<p>分叉的每条路径不只有概率，还预设了<strong>行动和预期影响</strong>。路径概率由 TP 的 <code>path_signals</code> 通过 softmax 驱动：</p>
+
+<pre><code>1. 每个 TP 携带 path_signals — 对各路径的方向性判断
+   如：{"A": "利好", "B": "利空", "C": "中性"}
+
+2. 信号五档映射 signal_weight：
+   利好 = 1.0 ｜ 偏好 = 0.5 ｜ 中性 = 0 ｜ 偏空 = -0.5 ｜ 利空 = -1.0
+
+3. 每条路径: raw = Σ(weight × score_map[score_status] × signal_weight)
+4. 全部 raw 做 softmax 归一化 → paths.p，总和 = 100
+5. 无 TP 的新 fork → paths.p 用人工初始值，有 TP 后自动接管</code></pre>
+
+<p><strong>实例 — GP-H1-F1 GENIUS Act：</strong></p>
+
+<pre><code>路径 A: 按期落地门槛适中  p=76%  → action: 加仓 PYPL         payoff: +10-15%
+路径 B: 推迟 3-6 个月    p=10%  → action: 维持现有仓位       payoff: 中性
+路径 C: 落地但门槛极高   p=14%  → action: 减仓 CRCL 加仓 V/MA payoff: CRCL -15-25%
+
+新信号："参议院银行委员会 18:6 通过 GENIUS Act"
+  → 归河: GP-H1-F1
+  → 分类: 涨落（实质性立法进展）
+  → TP score_status: watching → approaching
+  → path_signals: {"A": "利好", "B": "偏空", "C": "中性"}
+  → 重算 paths.p: A: 76→82, B: 10→7, C: 14→11</code></pre>
+
+<h3>Sentinel 信号处理闭环</h3>
+
+<p>Pipeline 产出初始认知（S4 建档），<strong>Sentinel 每天用贝叶斯更新让认知持续迭代</strong>。同一套河流模型、同一套 TP 驱动公式，贯穿建档到日常监控。</p>
+
+<h4>信号分类</h4>
+
+<table>
+<thead><tr><th>分类</th><th>判定标准</th><th>定义</th><th>处理方式</th><th>频率</th></tr></thead>
+<tbody>
+<tr><td><strong>浪花</strong></td><td>|Δp| ≤ 3</td><td>短期噪声，不改变假设</td><td>记录 signal_log，不更新 p_value</td><td>最常见</td></tr>
+<tr><td><strong>涨落</strong></td><td>|Δp| ≤ 10</td><td>有意义的证据变化</td><td>记录 signal_log + 建议变档 → <strong>等 Fred review</strong></td><td>每周数次</td></tr>
+<tr><td><strong>改道</strong></td><td>|Δp| &gt; 10</td><td>结构性变化，可能推翻河岸/河流</td><td>记录 signal_log + 建议变档 + 告警 → <strong>等 Fred review</strong></td><td>极少</td></tr>
+</tbody>
+</table>
+
+<p>三级分类是 signal_log 的<strong>审计标签</strong>（按模拟 Δp 幅度），不决定是否自动执行。所有 score_status 变档一律 <code>needs_review</code>。</p>
+
+<h4>完整更新流程</h4>
+
+<pre><code>每日信号输入（新闻 / 财报 / 政策 / 链上数据）
+    │
+    ▼
+  归河 — 匹配信号属于哪个 hypothesis_id
+    │
+    ▼
+  分类 — 判断浪花 / 涨落 / 改道
+    │
+    ├─ 浪花 → 写 signal_log，结束（不改任何数值）
+    │
+    ├─ 涨落 → 写 signal_log（含 LR 交叉验证 + prior/posterior 模拟）
+    │         → 建议 TP score_status 变档（如 watching → approaching）
+    │         → 等 Fred review（所有变档一律 needs_review）
+    │         → Fred approve 后：重算 p_value / paths.p → 级联传导
+    │
+    └─ 改道 → 写 signal_log + 推送 #daily 告警
+              → 建议 state 变更 proposal（challenged / invalidated）
+              → 等 Fred 确认后执行（河岸级必须人工确认）</code></pre>
+
+<h4>似然比（LR）交叉验证</h4>
+
+<p>每次 Sentinel 建议<strong>变档</strong>（score_status 变化），额外评估证据的诊断性：</p>
+
+<pre><code>LR = P(看到这个证据 | 假设为真) / P(看到这个证据 | 假设为假)
+
+  LR &gt; 3.0    高诊断性 — 强力区分假设真/假
+  LR 1.5-3.0  中等诊断性
+  LR &lt; 1.5    低诊断性（浪花） — 不管假设真假都可能看到</code></pre>
+
+<p>LR 由 Sentinel judgment 的 LLM 评估输出，<strong>不改变加权公式</strong> — 它是交叉验证层，不是替代计算。交叉验证逻辑：比较 LR 和实际变档幅度，抓自相矛盾：</p>
+
+<table>
+<thead><tr><th>情况</th><th>lr_check</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>LR &gt; 3 但只动 1 档</td><td><code>possibly_underestimated</code></td><td>证据很强但变化保守，可能低估了影响</td></tr>
+<tr><td>LR &lt; 1.5 但动 ≥2 档</td><td><code>possibly_overestimated</code></td><td>证据弱但变化激进，可能过度反应</td></tr>
+<tr><td>其他</td><td><code>consistent</code></td><td>LR 和变化幅度匹配</td></tr>
+</tbody>
+</table>
+
+<h4>Signal_log 审计链</h4>
+
+<p>每次 score_status 变档都写入 <code>signal_log.csv</code>，记录完整决策链路：</p>
+
+<pre><code>信号 → 归河(hypothesis_id) → 变档(TP old→new score_status)
+     → 模拟影响(prior_p → posterior_p, Δp)
+     → LR 交叉验证(lr_check)
+     → 决策(ai_proposed → human_accept/reject)</code></pre>
+
+<table>
+<thead><tr><th>字段</th><th>来源</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td><code>hypothesis_id</code> / <code>tp_id</code></td><td>10a 归河</td><td>哪个假设的哪个拐点</td></tr>
+<tr><td><code>old / new_score_status</code></td><td>judgment 建议</td><td>变档前后的 6 档状态</td></tr>
+<tr><td><code>prior_p / posterior_p</code></td><td>calc_confidence_diff 模拟</td><td>"如果这个 TP 变了，假设置信度从多少到多少"</td></tr>
+<tr><td><code>likelihood_ratio / lr_check</code></td><td>judgment + 交叉验证</td><td>证据诊断性 + 是否和变档幅度一致</td></tr>
+<tr><td><code>classification</code></td><td>Δp 幅度</td><td>浪花(≤3) / 涨落(≤10) / 改道(&gt;10)</td></tr>
+<tr><td><code>decision_by</code></td><td>流程状态</td><td><code>ai_proposed</code> → <code>human_accept</code> / <code>human_reject</code></td></tr>
+</tbody>
+</table>
+
+<p><strong>ID 规范：</strong><code>SL-TP-{date}-{seq}</code>（TP 级变档）/ <code>SL-HD-{date}-{seq}</code>（hypothesis 级决策），避免同日跨文件碰撞。</p>
+
+<blockquote><p>Signal_log 解决的核心问题：<strong>追溯性</strong>。过去的判断为什么变了？变了多少？LLM 的理由是什么？Fred 同意了吗？没有这条日志，所有历史只有最终状态、没有中间过程。</p></blockquote>
+
+<h4>Fork Resolve — 事件驱动行动</h4>
+
+<pre><code>事件实际发生（不是概率到 95% 就提前 resolve）
+    │
+    ▼
+  标记 resolved_path + resolved_at
+    → 执行预设 action（仓位调整建议推送 Fred）
+    → 写 events.csv 记录
+    → 更新依赖该 fork 的 asset_judgment
+    → 通过 linked_symbols 传导到标的级页面</code></pre>
+
+<h4>防抖规则 — 5 条硬约束</h4>
+
+<p>避免对噪声过度反应：</p>
+
+<ol>
+<li><strong>浪花不动手</strong> — 分类为浪花的信号只记录，不改 p_value</li>
+<li><strong>单一来源不改道</strong> — 改道分类需要 2+ 独立来源交叉验证</li>
+<li><strong>TP score 单次变动 ≤1 档</strong> — 不允许从 <code>watching</code> 直接跳到 <code>confirmed</code>，必须经 <code>approaching</code> → <code>strong</code></li>
+<li><strong>河岸 invalidated 需人工确认</strong> — Sentinel 可以 propose <code>challenged</code>，但 <code>invalidated</code> 必须 Fred 确认</li>
+<li><strong>Fork resolve 等事件实际发生</strong> — 不因概率到 95% 就提前 resolve</li>
+</ol>
+
+<h4>盲区检测</h4>
+
+<blockquote><p><strong>"如果这条信息为真，会不会后悔没早建一个分叉？"</strong><br>
+答案是"会" → 补建 fork，设定初始路径和概率。<br>
+答案是"不会" → 正常归河分类。<br><br>
+这是防止框架盲区的主动机制 — 不在框架内的信号最容易被忽略。</p></blockquote>
+
+<p>Sentinel judgment 每次运行都执行盲区扫描：检查当天证据中是否有<strong>不属于任何现有 TP</strong>的重要信号。发现后输出 <code>unmatched_signals</code>（含建议的新 TP 名称、类型、权重、理由），但<strong>新 TP 必须 Fred review 后才会被添加</strong> — 不自动建 TP。</p>
+
+<h2>Pipeline 架构</h2>
+<pre><code>S0 数据预取 ─── web_search + scanner-data          → s0_prefetch.md
+    │
+S1 赛道画像 ─── sector-intro agent                  → s1_landscape.md
+    │
+S2 角色层识别 ── 主 session 判断复杂度               → ⏸ Fred 确认分层
+    │
+    ├── 简单模式（≤2 层）──── S3 x 1
+    └── 多层模式（≥3 层）──── S3 x N（并行）
+    │
+S3 竞争格局 ─── sector-competition agent             → s3_competition*.md
+    │
+S4 综合判断 ─── sector-judgment agent                → s4_judgment.md
+    │                                                  → ⏸ Fred 确认 top 标的
+S5 标的深研 ─── stock-lead / crypto-lead slim mode   → 各标的目录
+    │           x N（并行）
+S6 完整报告 ─── sector-research agent                → s6_report.md
+    │
+S7 Challenge ── sector-challenge agent               → s7_challenge.md
+    │                                                  → 修正 S6
+S8 建档 ─────── CSV + page.md + render + Portal</code></pre>
+<p>两个人工检查点：<strong>S2 后确认分层方案</strong>，<strong>S4 后确认深研标的</strong>。</p>
+
+<h2>各阶段详解</h2>
+
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Agent</th>
+<th>输入</th>
+<th>输出</th>
+<th>关键点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S0</strong></td>
+<td>主 session</td>
+<td>web_search</td>
+<td>s0_prefetch.md</td>
+<td>每条数据附来源 URL</td>
+</tr>
+<tr>
+<td><strong>S1</strong></td>
+<td>sector-intro</td>
+<td>s0_prefetch</td>
+<td>s1_landscape.md</td>
+<td>5 模块：本质 → TAM → 商业模式 → 运行机制 → 阶段</td>
+</tr>
+<tr>
+<td><strong>S2</strong></td>
+<td>主 session</td>
+<td>s1_landscape</td>
+<td>分层方案</td>
+<td>⏸ Fred 确认后才 spawn S3</td>
+</tr>
+<tr>
+<td><strong>S3</strong></td>
+<td>sector-competition</td>
+<td>s1 + s0</td>
+<td>s3_competition*.md</td>
+<td>简单 / 多层模式，重要玩家不跳过</td>
+</tr>
+<tr>
+<td><strong>S4</strong></td>
+<td>sector-judgment</td>
+<td>s1 + s3 + s0</td>
+<td>s4_judgment.md</td>
+<td>河流模型 + 拐点 + 博弈 + ⏸ Fred 确认</td>
+</tr>
+<tr>
+<td><strong>S5</strong></td>
+<td>stock / crypto-lead</td>
+<td>s4 + Fred 确认</td>
+<td>各标的目录</td>
+<td>slim mode，含重要玩家参考研究</td>
+</tr>
+<tr>
+<td><strong>S6</strong></td>
+<td>sector-research</td>
+<td>s1-s5 全部</td>
+<td>s6_report.md</td>
+<td>merge-not-summarize，核心独立价值在第七章</td>
+</tr>
+<tr>
+<td><strong>S7</strong></td>
+<td>sector-challenge</td>
+<td>s6 + s3 + s4</td>
+<td>s7_challenge.md</td>
+<td>7 维度独立挑战，Score >= 4 才过</td>
+</tr>
+<tr>
+<td><strong>S8</strong></td>
+<td>主 session</td>
+<td>s6 report</td>
+<td>CSV + page.md + Portal</td>
+<td>11 项 checklist</td>
+</tr>
+</tbody>
+</table>
+
+<h3>S0 数据预取</h3>
+<p>主 session 用 <code>web_search</code> + <code>scanner-data</code> 搜集赛道基础数据：市场规模、增长率、主要玩家、近期事件。</p>
+<p><strong>Agent：</strong>主 session（不 spawn）<br>
+<strong>输入：</strong>赛道名称 / Fred 的初始方向<br>
+<strong>输出：</strong><code>data/s0_prefetch.md</code><br>
+<strong>设计决策：</strong>每条数据必须附来源 URL，后续阶段可回溯验证。不做判断，只做收集。</p>
+
+<h3>S1 赛道画像</h3>
+<p>用 sector-intro agent 把原始数据组织成结构化赛道画像。</p>
+<p><strong>Agent：</strong><code>sector-intro</code>（<code>.claude/agents/sector/sector-intro.md</code>）<br>
+<strong>输入：</strong>s0_prefetch.md<br>
+<strong>输出：</strong><code>knowledge/s1_landscape.md</code><br>
+<strong>设计决策：</strong>5 个模块缺一不可 — 赛道本质（一句话 + 第一性原理）、TAM 测算、商业模式拆解、产业运行机制、发展阶段判断。</p>
+
+<h3>S2 角色层识别</h3>
+<p>主 session 根据 S1 判断赛道的竞争层数，决定 S3 用简单模式还是多层模式。</p>
+<p><strong>Agent：</strong>主 session（不 spawn）<br>
+<strong>输入：</strong>s1_landscape.md<br>
+<strong>输出：</strong>分层方案（口头确认）<br>
+<strong>设计决策：</strong>这是第一个人工检查点。复杂赛道（如支付，4 层）和简单赛道（如 SaaS 细分，1-2 层）的研究深度差异很大，必须人工确认后再投入算力。</p>
+
+<h3>S3 竞争格局</h3>
+<p>按确认的分层方案，对每层做竞争格局分析。</p>
+<p><strong>Agent：</strong><code>sector-competition</code>（<code>.claude/agents/sector/sector-competition.md</code>）<br>
+<strong>输入：</strong>s1_landscape.md + s0_prefetch.md<br>
+<strong>输出：</strong><code>knowledge/s3_competition*.md</code>（多层模式下每层一个文件）<br>
+<strong>设计决策：</strong>重要玩家不跳过 — 分析深度由市场影响力决定，不由可投资性决定。非上市公司也要覆盖，否则竞争全景图是残缺的。</p>
+
+<h3>S4 综合判断</h3>
+<p>基于 S1-S3 全部材料，输出河流模型结论。</p>
+<p><strong>Agent：</strong><code>sector-judgment</code>（<code>.claude/agents/sector/sector-judgment.md</code>）<br>
+<strong>输入：</strong>s1_landscape.md + s3_competition*.md + s0_prefetch.md<br>
+<strong>输出：</strong><code>knowledge/s4_judgment.md</code><br>
+<strong>设计决策：</strong>这是第二个人工检查点。输出河岸 / 河流 / 分叉 + 拐点清单 + 标的排序建议。Fred 在这里确认哪些标的进入 S5 深研，避免全量研究浪费算力。</p>
+
+<h3>S5 标的深研</h3>
+<p>对 Fred 确认的 top 标的，并行 spawn 深度研究。</p>
+<p><strong>Agent：</strong><code>stock-lead</code> / <code>crypto-lead</code>（slim mode）<br>
+<strong>输入：</strong>s4_judgment.md + Fred 确认的标的列表<br>
+<strong>输出：</strong>各标的独立目录（<code>3-universe/stock/{SYMBOL}/</code>）<br>
+<strong>设计决策：</strong>slim mode 跳过重复的赛道背景，聚焦标的自身。重要但不可投资的玩家也做参考研究，确保竞争对比完整。</p>
+
+<h3>S6 完整报告</h3>
+<p>Merge S1-S5 全部材料为一份完整赛道报告。</p>
+<p><strong>Agent：</strong><code>sector-research</code>（<code>.claude/agents/sector/sector-research.md</code>）<br>
+<strong>输入：</strong>s1 + s3 + s4 + s5 全部产物<br>
+<strong>输出：</strong><code>s6_report-YYYY-MM-DD.md</code><br>
+<strong>设计决策：</strong>Merge not summarize — 输出信息密度 >= 输入，可删的只有重复定义和过程性语言。核心独立价值在第七章（赛道级投资结论 + 标的排序 + 监控框架）。</p>
+
+<h3>S7 Challenge</h3>
+<p>独立 agent 对 S6 报告做系统性挑战。</p>
+<p><strong>Agent：</strong><code>sector-challenge</code>（<code>.claude/agents/sector/sector-challenge.md</code>）<br>
+<strong>输入：</strong>s6_report.md + s3_competition*.md + s4_judgment.md<br>
+<strong>输出：</strong><code>knowledge/s7_challenge.md</code><br>
+<strong>设计决策：</strong>写报告的人不能审自己。7 个维度逐一检查，Score 1-10，>= 4 才通过。挑战结果反馈回 S6 做修正。</p>
+
+<h3>S8 建档</h3>
+<p>将最终报告转化为 Cortex 标准产物，发布到 Portal。</p>
+<p><strong>Agent：</strong>主 session（不 spawn）<br>
+<strong>输入：</strong>修正后的 s6_report.md<br>
+<strong>输出：</strong>CSV 文件 + page.md + Portal 页面<br>
+<strong>设计决策：</strong>11 项 checklist 逐项验证：hypotheses.csv / tipping_points.csv / events.csv / page.md YAML / render-pages / build.py / Portal 4 tab / notes.md / 标的 cross-link 等。</p>
+
+<h2>设计原则</h2>
+<blockquote>
+<p>六条核心原则，从实际研究中提炼：</p>
+</blockquote>
+<ol>
+<li><strong>结论层按收入池比例</strong> — 不被单一子赛道叙事热度带偏。一个子赛道的分析篇幅应与其在整体 TAM 中的收入占比匹配，而不是与媒体关注度匹配。</li>
+<li><strong>重要玩家不跳过</strong> — 分析深度由市场影响力决定，不由可投资性决定。Stripe 不上市，但不分析 Stripe 的支付赛道研究是残缺的。</li>
+<li><strong>Merge not summarize</strong> — 输出信息密度 >= 输入，可删的只有重复定义和过程性语言。每一轮 agent 产出都是增量，不是摘要。</li>
+<li><strong>Schema 合同</strong> — <code>sector-page-schema.md</code> 是 page.md 和模板的唯一合同。schema 变了，page 和模板一起变；schema 没变，两边都不准自由发挥。</li>
+<li><strong>写报告的人不能审自己</strong> — S7 用独立 challenge agent，和 S6 的 sector-research agent 完全隔离。自审没有信息增量。</li>
+<li><strong>证据分级</strong> — <strong>[A]</strong> 一手数据（财报、官方披露）附 URL；<strong>[B]</strong> 研报 / 分析师估计应附 URL；<strong>[C]</strong> 推理和估算标注逻辑链。读者一眼看出哪些是事实、哪些是判断。</li>
+</ol>
+
+<h2>质量控制</h2>
+<p>S7 Challenge 是整个 pipeline 的质量关卡。独立 agent 从 7 个维度逐一检查 S6 报告：</p>
+<ol>
+<li><strong>赛道论点</strong> — TAM 测算是否合理？增长假设有没有过度外推？</li>
+<li><strong>标的选择</strong> — 有没有遗漏重要玩家？排序逻辑是否自洽？</li>
+<li><strong>估值假设</strong> — 关键参数（增长率、利润率、折现率）是否在合理区间？</li>
+<li><strong>风险评估</strong> — 尾部风险有没有被低估？黑天鹅场景覆盖了吗？</li>
+<li><strong>修正逻辑</strong> — 如果核心假设错了，报告的结论会怎么变？</li>
+<li><strong>证据质量</strong> — [A]/[B]/[C] 分级是否准确？关键结论有没有只靠 [C] 级证据？</li>
+<li><strong>竞争覆盖完整性</strong> — 每一层的 top 3 玩家是否都有充分分析？</li>
+</ol>
+<p><strong>评分制度：</strong>Score 1-10。</p>
+<ul>
+<li><strong>Score >= 4</strong> — 修正 challenge 指出的问题后建档</li>
+<li><strong>Score 1-3</strong> — 停止流程，等人工判断是否需要重做某个阶段</li>
+</ul>
+<p><strong>历史案例：</strong>Global Payments 赛道 S7 得分 7.5/10，共 8 处修正（3 处估值参数调整、2 处竞争覆盖补充、2 处证据降级、1 处风险场景增补）。</p>
+
+<h2>输出结构</h2>
+<pre><code>3-universe/sector/{SECTOR}/
+├── data/s0_prefetch.md
+├── knowledge/
+│   ├── s1_landscape.md
+│   ├── s3_competition*.md
+│   ├── s4_judgment.md
+│   └── s7_challenge.md
+├── s6_report-YYYY-MM-DD.md
+├── page.md
+└── notes.md</code></pre>
+<p><code>page.md</code> 通过 <code>render-pages.py</code> → <code>build.py</code> 生成 Portal 页面，支持 4 个 tab：<strong>总览</strong> / <strong>行业</strong> / <strong>标的</strong> / <strong>监控</strong>。</p>
+
+<h2>案例：Global Payments</h2>
+<p><strong>赛道评级 B+</strong></p>
+<p>Global Payments（全球支付）是第一个跑完完整 S0-S8 的赛道，验证了整条 pipeline 的可行性。</p>
+<ul>
+<li><strong>4 个竞争层</strong> — 规则网络（Visa/MA）/ 编排层（Adyen/Stripe）/ 跨境分发（WISE/Remitly）/ 稳定币发行（CRCL/Tether）→ 多层模式，S3 并行跑 4 个 competition agent</li>
+<li><strong>河流模型</strong> — 3 河岸 + 4 河流 + 3 分叉 + 14 拐点，完整覆盖赛道核心博弈</li>
+<li><strong>13 个标的全量深研</strong> — 含 4 个重要但不可投资的参考标的（Stripe、Ant Group 等）</li>
+<li><strong>最终排序</strong> — PYPL #1 > V #2 > MA #3 > WISE #4 > Adyen #5 > CRCL #6</li>
+<li><strong>S7 Challenge Score</strong> — 7.5/10，8 处修正后建档</li>
+</ul>
+<p><a href="../universe/sector/global-payments.html">查看 Global Payments 赛道页面 →</a></p>
+
+<h2>与 Sentinel 的联动</h2>
+<p>Pipeline 产出初始认知（S4 建档），Sentinel 负责持续迭代。完整的信号处理流程、置信度重算机制和防抖规则见上方<strong>「河流模型 — 认知架构」</strong>章节。</p>
+<ul>
+<li><strong>同一套数据</strong> — Pipeline 写入的 hypotheses.csv / tipping_points.csv 就是 Sentinel 每天读取和更新的对象</li>
+<li><strong>同一套公式</strong> — TP 驱动的 p_value 计算（加权平均）和 paths.p 计算（softmax）在建档和日常更新中完全一致</li>
+<li><strong>周期性 Review</strong> — 关键日期（财报、监管 deadline、行业大会）记入 events.csv，Sentinel 在日期前后主动拉取最新信息</li>
+<li><strong>赛道→标的传导</strong> — 赛道分叉更新 → <code>linked_symbols</code> → 标的级 asset_judgment 联动</li>
+</ul>
+
+    </div>
+  </article>
+  <aside class="page-toc" id="pageToc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="tocList"></ul>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-text">Cortex — Fred's Investment Research System</div>
+    <ul class="footer-links">
+      <li><a href="../index.html#universe">仓库</a></li>
+      <li><a href="../methodology/">方法论</a></li>
+      <li><a href="../beliefs.html">信仰</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// Nav toggle
+document.querySelector('[data-nav-toggle]')?.addEventListener('click', () => {
+  document.querySelector('.nav-links')?.classList.toggle('open');
+});
+
+// Auto-generate TOC (h2 + h3)
+(function() {
+  const body = document.querySelector('.md-body');
+  const tocList = document.getElementById('tocList');
+  const tocAside = document.getElementById('pageToc');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocAside) tocAside.style.display = 'none';
+    return;
+  }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 's-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.classList.add('toc-h3');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Scroll spy
+  const tocLinks = tocList.querySelectorAll('a');
+  let current = null;
+  const update = () => {
+    let found = null;
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 100) found = h;
+    });
+    if (found && found !== current) {
+      current = found;
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = tocList.querySelector('a[href="#' + found.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// Scroll progress
+window.addEventListener('scroll', function() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  bar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+</script>
+</body>
+</html>
