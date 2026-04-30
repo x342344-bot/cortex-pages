@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 系统 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/components.css">
+<style>
+/* ═══════════ PAGE: CONTENT ═══════════ */
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 72px 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero .container {
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.page-hero .page-subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-top: 10px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-breadcrumb a:hover { color: var(--accent-light); }
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.page-layout {
+  display: flex;
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 8px 32px 80px;
+  gap: 56px;
+}
+.page-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ========== SIDEBAR TOC ========== */
+.page-toc {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.page-toc::-webkit-scrollbar { display: none; }
+.toc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 12px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  margin-left: -1px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.toc-list a.active {
+  color: var(--accent-light);
+  border-left-color: var(--accent-light);
+  font-weight: 600;
+}
+.toc-list .toc-h3 {
+  padding-left: 26px;
+  font-size: 11px;
+  font-weight: 400;
+}
+@media (max-width: 960px) {
+  .page-toc { display: none; }
+  .page-layout { max-width: var(--max-width); }
+}
+
+/* ========== MARKDOWN BODY ========== */
+
+/* --- H2: Section Headers --- */
+.md-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 56px 0 20px;
+  padding: 0 0 12px;
+  color: var(--text-1);
+  border: none;
+  position: relative;
+  scroll-margin-top: 72px;
+  letter-spacing: -0.01em;
+}
+.md-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-light), transparent);
+  border-radius: 1px;
+}
+.md-body h2:first-child { margin-top: 8px; }
+
+/* --- H3: Sub-sections --- */
+.md-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  color: var(--text-1);
+  scroll-margin-top: 72px;
+  letter-spacing: -0.005em;
+}
+
+/* --- H4: Detail headers --- */
+.md-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  color: var(--accent-light);
+  letter-spacing: 0.02em;
+}
+
+/* --- H5: Fine detail --- */
+.md-body h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+  color: var(--text-2);
+}
+
+/* --- Body text --- */
+.md-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+.md-body strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.md-body em {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ========== LISTS ========== */
+.md-body > ul,
+.md-body > ol {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.md-body > ul > li,
+.md-body > ol > li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  padding: 10px 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.md-body > ul > li:hover,
+.md-body > ol > li:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-2);
+}
+.md-body > ul > li strong,
+.md-body > ol > li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Nested lists */
+.md-body li ul,
+.md-body li ol {
+  margin: 8px 0 2px;
+  padding-left: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.md-body li li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-2);
+  padding: 2px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  padding-left: 14px;
+}
+.md-body li li:hover {
+  border-color: transparent;
+  background: none;
+}
+.md-body li li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.md-body li li li::before {
+  background: transparent;
+  border: 1px solid var(--text-3);
+  width: 3px;
+  height: 3px;
+}
+.md-body li li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ========== BLOCKQUOTE ========== */
+.md-body blockquote {
+  border: none;
+  padding: 14px 20px;
+  margin: 20px 0;
+  background: var(--accent-glow);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+.md-body blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-light);
+}
+.md-body blockquote p {
+  color: var(--text-1);
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+/* ========== CODE ========== */
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-2);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--accent-light);
+  border: 1px solid var(--border);
+}
+.md-body pre {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.md-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ========== TABLE ========== */
+.md-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.md-body th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.md-body td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.md-body tr:last-child td { border-bottom: none; }
+.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0 8px;
+}
+
+/* ========== INDEX CARDS ========== */
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.index-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.index-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-glow), transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.index-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+.index-card:hover::before { opacity: 1; }
+.index-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+}
+.index-card p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.index-card .index-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+}
+.index-tag-invest { background: var(--green-dim); color: var(--green); }
+.index-tag-model { background: rgba(188,140,255,0.1); color: #bc8cff; }
+
+/* ========== FAQ CARDS ========== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
+  gap: 12px;
+}
+.page-layout:has(.faq-grid) .page-content { max-width: 1100px; }
+.faq-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.faq-card:hover { border-color: var(--border-hover); }
+.faq-question {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.faq-answer p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.faq-answer strong { color: var(--text-1); }
+.faq-answer ul, .faq-answer ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.faq-answer li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.faq-answer li::before { display: none; }
+.faq-answer li strong { color: var(--text-1); }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../universe.html">仓库</a></li>
+      <li><a href="../methodology/index.html" class="active">方法论</a></li>
+      <li><a href="../beliefs.html">信念</a></li>
+      <li><a href="../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-breadcrumb"><a href="../index.html">首页</a> / <a href="../methodology/index.html">方法论</a></div>
+    <h1>Agent 系统</h1>
+    <p class="page-subtitle">如何用 Claude Code + 自建 Agent 体系构建 24/7 投研认知中枢。</p>
+  </div>
+</section>
+
+<!-- CONTENT WITH TOC -->
+<div class="page-layout">
+  <article class="page-content">
+    <div class="md-body">
+<h2>核心命题：数字分身 vs 工具</h2>
+<p>大多数人把 AI 当工具用——"帮我查个数据"、"帮我写段代码"。这浪费了 90% 的价值。</p>
+<p>Agent 的正确定位是<strong>数字分身</strong>：模仿你的思维方式，放大你的能力边界，观察你的盲点，在该反对时反对。工具等你发号施令；分身替你思考、替你盯盘、替你发现你没注意到的东西。</p>
+<p>区别不在技术实现，在<strong>设计意图</strong>。同样一个 prompt，写成"你是一个投研助手"和"你是我的数字分身，用我的投资哲学来思考"，产出完全不同。</p>
+<h2>四层能力模型</h2>
+<p>按价值递增排列：</p>
+<ul>
+<li><strong>模仿</strong> — 用我的框架分析问题（赔率&gt;胜率、贝叶斯更新、第一性原理），用我的标准输出（结论置顶、有框架、可操作）。这是基础层，没有这层其他都是空的</li>
+<li><strong>放大</strong> — 做我做不到的事：24/7 监控、多线程并行研究、秒级检索、完整记忆。纯算力优势，但已经是巨大的杠杆</li>
+<li><strong>观察</strong> — 发现我看不到的：思维盲点（confirmation bias、循环论证）、工作流低效、系统异常。这需要 Agent 真正理解我的模式，才能识别偏离</li>
+<li><strong>挑战</strong> — 该反对就反对。投研报告附反向论证，重大判断质疑假设。<strong>关心结果比讨好重要</strong> — 这是最难设计但最有价值的一层</li>
+</ul>
+<p>大部分 Agent 系统只做到前两层。后两层才是分身和工具的分水岭。</p>
+<h2>任务路由：什么时候 spawn，什么时候自己做</h2>
+<p>默认主 session 自己做。spawn sub-agent 只有三个理由：</p>
+<ol>
+<li>
+<p><strong>隔离上下文</strong> — 深度研究会产生大量中间过程，污染主对话</p>
+</li>
+<li>
+<p><strong>保护主线</strong> — 独立审查/对抗验证需要独立视角，不能被之前的推理"带偏"</p>
+</li>
+<li>
+<p><strong>并行执行</strong> — 多个标的同时研究，互不阻塞</p>
+</li>
+</ol>
+<p>不 spawn 的情况：一个 read 能解决的小问题、边界模糊说不清目标的任务、强依赖当前对话上下文的连续推理。</p>
+<p><strong>Spawn 合同</strong>是关键设计：每个 sub-agent 启动时必须写清输入、输出、禁止列表（不能删什么、不能改什么）。没有合同的 spawn = 定时炸弹。</p>
+<h2>从 Pipeline 到控制论闭环</h2>
+<p>早期设计全是开环 pipeline：抓数据 → 分析 → 输出报告，跑完就完了。问题是：输出对不对？质量在变好还是变差？没人知道。</p>
+<p>正确的架构是控制论闭环：</p>
+<pre><code>目标函数 → 传感器（采集执行数据）→ 比较器（actual vs target）
+    → 控制器（生成优化提案）→ 执行器（改 prompt/参数）→ 反馈
+</code></pre>
+<p>具体落地：
+- <strong>投研报告</strong>：初稿完成后 spawn 独立 agent 做对抗审查，修正后才交付
+- <strong>假设系统</strong>：置信度是数学算的（加权拐点分数），不是 AI 拍脑袋。每个拐点有 weight + score_status，假设置信度 = Σ(weight × 分值)
+- <strong>Agent 自迭代</strong>：采集每次执行的质量数据，和目标对比，生成 prompt 优化提案，人确认后执行</p>
+<p>关键原则：<strong>人在回路</strong>。闭环的"执行器"必须等人确认，不 auto-apply。AI 可以建议，不能替你决策。</p>
+<h2>三路验证</h2>
+<p>所有重要输出经过三路交叉验证：</p>
+<ul>
+<li><strong>环境反馈</strong> — 外部信号（健康检查、监控告警、用户反馈）告诉你系统是否正常运行</li>
+<li><strong>执行错误</strong> — 关键路径有 fallback + 自愈机制，单点依赖 = 灾难</li>
+<li><strong>自我验证</strong> — 最容易偷懒也最重要的一路。投研报告 spawn verification agent 挑刺；关键数字交叉验证；重大判断附反向论证（"如果我错了，最可能因为…"）</li>
+</ul>
+<h2>记忆架构</h2>
+<p>AI 对话的根本问题：<strong>对话会消失，但认知必须沉淀。</strong></p>
+<p>三层记忆解决这个问题：</p>
+<ul>
+<li><strong>Daily notes</strong>（<code>0-journal/</code>）— 发生了什么，每天写，流水账</li>
+<li><strong>Long-term memory</strong>（自动加载）— 精炼的事实和教训，跨 session 持久化</li>
+<li><strong>Knowledge base</strong>（<code>3-universe/</code>）— 结构化的标的/赛道/方法论知识</li>
+</ul>
+<p>写下来 &gt; 记心里。只存在对话里的信息 = 不存在。</p>
+<h2>设计红线</h2>
+<ul>
+<li><strong>迁移优先</strong> — 每做一件事先问：明天换平台，能带走吗？记忆文件、方法论、Agent 设计模式 = 带得走。平台特定调度 = 框架依赖</li>
+<li><strong>独立可运行</strong> — 每个模块能脱离平台独立跑</li>
+<li><strong>纯文本优先</strong> — 记忆、文档、Agent spec 都用 Markdown，不绑格式</li>
+<li><strong>一个信息一个地方</strong> — 重复维护 = 迟早不一致</li>
+</ul>
+    </div>
+  </article>
+  <aside class="page-toc" id="pageToc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="tocList"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+// Auto-generate TOC
+(function() {
+  const body = document.querySelector('.md-body');
+  const tocList = document.getElementById('tocList');
+  const tocAside = document.getElementById('pageToc');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocAside) tocAside.style.display = 'none';
+    return;
+  }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 's-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.classList.add('toc-h3');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Scroll spy
+  const tocLinks = tocList.querySelectorAll('a');
+  let current = null;
+  const update = () => {
+    let found = null;
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 100) found = h;
+    });
+    if (found && found !== current) {
+      current = found;
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = tocList.querySelector('a[href="#' + found.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

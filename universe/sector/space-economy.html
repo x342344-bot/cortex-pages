@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<link rel="stylesheet" href="../../assets/dashboard.css">
+<style>
+/* Page-specific: sector tier colors */
+.tier-t1 { border-left: 4px solid var(--green); }
+.tier-t2 { border-left: 4px solid var(--blue); }
+.tier-t3 { border-left: 4px solid var(--yellow); }
+.tier-t4 { border-left: 4px solid var(--red); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../../universe.html" class="active">仓库</a></li>
+      <li><a href="../../methodology/index.html">方法论</a></li>
+      <li><a href="../../beliefs.html">信念</a></li>
+      <li><a href="../../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="dashboard" id="app"></div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../../assets/app.js"></script>
+<script src="../../assets/dashboard.js"></script>
+<script>
+const D = {"title": "太空经济 (Space Economy)", "slug": "space-economy", "status": "growing", "conviction_level": "", "updated_at": "2026-04-27", "one_liner": "**物理层垄断租金 + 政府合同锁定 + 网络效应溢价**，6 层结构中 **L4 国防太空**是风险调整后最优层", "what_it_is": "", "core_summary": "", "why_now": "", "core_thesis": "**Starship 降本使利润从发射层向下游迁移，L1/L2 P/S 80-350x vs L4 P/E 25x 是估值倒挂——L4 国防太空是风险调整后赔率最优层。全部标的当前无有吸引力入场点，等 SpaceX IPO 回调窗口建仓。**", "market_structure": "SpaceX 一超(CR1 >80% 发射 + ~90% 卫星互联网) → L4 国防三巨头(NOC/LMT/L3H) → 应用层龙头(PL EO/ASTS D2D/LUNR 月球/ICEYE SAR)", "what_confirms": "**SpaceX IPO 首季报**回调创建仓窗口; **ASTS Block 2** ≥30星验证D2D; **NOC 太空段**恢复增长; **Golden Dome**首批合同$10B+; **Starship上级回收**成功", "what_breaks": "**Starship** 连续失败; **估值泡沫**系统性破裂(-50%+); **国防预算**大幅削减(>15%/yr); **Kessler syndrome**碎片碰撞; **ASTS** D2C被Starlink碾压", "conviction": "", "hypotheses": [{"id": "SPACE-RB1", "title": "可复用火箭成本革命不可逆", "layer": "riverbank", "statement": "可复用火箭是不可逆的发射成本革命——Starship 目标 \u003c$500/kg 将发射成本再降一个数量级，所有下游太空应用的经济性因此成立", "why": "Falcon 9 已将成本从 $54,500/kg 降至 $2,720/kg；Starship IFT-8 完成助推器回收；全球 5+ 家公司在研发可复用火箭", "status": "monitoring", "confidence": "60", "state": "active", "tipping_points": [{"id": "SPACE-RB1-TP1", "event": "Starship IFT 成功率", "current": "IFT-8 完成", "quantitative": "连续 3 次全任务成功", "qualitative": "", "data_source": "https://www.spacex.com/vehicles/starship/", "if_triggered": "连续成功 → RB1 confirmed", "if_failed": "连续 3+ 失败 → RB1 退出", "weight": "100", "score_status": "approaching", "tp_type": "threshold"}]}, {"id": "SPACE-RB2", "title": "LEO 星座成为新基础设施层", "layer": "riverbank", "statement": "LEO 大规模星座是新一代全球基础设施层——卫星宽带从替代品不可逆地变成基础设施", "why": "Starlink 10M+ 用户已过 PMF 拐点；收入 $11.4B；EBITDA 63%；全球 30 亿人无可靠互联网", "status": "monitoring", "confidence": "92", "state": "active", "tipping_points": []}, {"id": "SPACE-RB3", "title": "大国太空军事化不可逆", "layer": "riverbank", "statement": "SDA 分布式星座取代传统大型 GEO 军事卫星是美国国防太空的结构性转向", "why": "SDA T3 $3.5B 授出；Golden Dome $185B 计划启动；中俄反卫星能力迫使分布式架构", "status": "monitoring", "confidence": "93", "state": "active", "tipping_points": []}, {"id": "SPACE-H1", "title": "利润从发射层向下游迁移", "layer": "river", "statement": "Starship 降本使发射层利润率承压，真正的价值捕获在通信/观测/国防应用层", "why": "类比云计算：服务器利润→SaaS 利润迁移。Starship 将发射商品化，下游应用获得更多经济空间", "status": "monitoring", "confidence": "47", "state": "active", "tipping_points": [{"id": "SPACE-H1-TP1", "event": "SpaceX Starship 全面复用进度", "current": "IFT-8 完成，上级未回收", "quantitative": "上级成功回收 + \u003c7 天周转 → 发射成本 \u003c$500/kg", "qualitative": "", "data_source": "https://www.spacex.com/vehicles/starship/", "if_triggered": "上级回收成功 → H1 approaching confirmed", "if_failed": "复用失败 → H1 延迟验证", "weight": "35", "score_status": "approaching", "tp_type": "threshold"}, {"id": "SPACE-H1-TP2", "event": "ASTS BlueBird 在轨卫星数", "current": "6 颗（BB7 将退轨）", "quantitative": "≥30 颗在轨 + 首个商业服务上线 → D2D 品类验证", "qualitative": "", "data_source": "https://investors.ast-science.com/", "if_triggered": "≥30 星 → D2D 验证加速", "if_failed": "部署失败 → D2D 品类风险", "weight": "30", "score_status": "watching", "tp_type": "threshold"}, {"id": "SPACE-H1-TP3", "event": "Amazon Kuiper 商业化", "current": "231 颗在轨，Beta 中", "quantitative": "用户 >100K + Starlink 降价应对 → L2 定价权竞争加剧", "qualitative": "", "data_source": "https://www.aboutamazon.com/news/tag/project-kuiper", "if_triggered": "Kuiper 商业化 → 竞争加剧", "if_failed": "Kuiper 延迟 → Starlink 定价权维持", "weight": "20", "score_status": "watching", "tp_type": "threshold"}, {"id": "SPACE-H1-TP4", "event": "Neutron 首飞", "current": "开发中，Q4 2026 目标", "quantitative": "首飞成功 → RKLB 升 T1；失败 → 降 T3", "qualitative": "", "data_source": "https://investors.rocketlabcorp.com/", "if_triggered": "首飞成功 → RKLB 价值重估", "if_failed": "首飞失败 → RKLB 降级", "weight": "15", "score_status": "watching", "tp_type": "event"}]}, {"id": "SPACE-H2", "title": "国防太空是风险调整后最优层", "layer": "river", "statement": "P/E 25-28x + 5-10 年合同可见性 + Golden Dome 未定价，而 L1/L2 P/S 80-350x 透支 5 年完美执行", "why": "估值倒挂——市场按太空科技成长股给 L1/L2 定价，按传统国防给 L4 定价，但 L4 太空段增速和催化剂被低估", "status": "monitoring", "confidence": "49", "state": "active", "tipping_points": [{"id": "SPACE-H2-TP1", "event": "Golden Dome 国防授权", "current": "$185B 总计划，FY2026 启动研究", "quantitative": "首批合同 $10B+ 落地", "qualitative": "NOC/LMT/RTX 最大受益，未被定价", "data_source": "https://www.defense.gov/News/", "if_triggered": "SPACE-H2 → confirmed", "if_failed": "Golden Dome 取消或大幅缩减 → SPACE-H2 weakened", "weight": "45", "score_status": "approaching", "tp_type": "event"}, {"id": "SPACE-H2-TP2", "event": "NASA FY2027 预算最终拨款", "current": "FY2026 $24.4B（国会否决 24% 砍幅）", "quantitative": "最终拨款 \u003c$20B → LUNR/月球经济受重创", "qualitative": "", "data_source": "https://www.space.com/nasa-budget", "if_triggered": "拨款维持 → L5 安全", "if_failed": "拨款 \u003c$20B → LUNR 受重创", "weight": "30", "score_status": "watching", "tp_type": "event"}, {"id": "SPACE-H2-TP3", "event": "FCC LEO 碎片法规", "current": "现有 25 年除轨规则，讨论缩短至 5 年", "quantitative": "强制 5 年除轨 → 星座运营成本上升 5-10%", "qualitative": "", "data_source": "https://www.fcc.gov/space", "if_triggered": "碎片法规收紧 → 运营成本增加", "if_failed": "法规不变 → 无影响", "weight": "15", "score_status": "watching", "tp_type": "event"}, {"id": "SPACE-H2-TP4", "event": "ITAR 改革进展", "current": "现行严格限制太空技术出口", "quantitative": "放松 → 美国太空公司国际市场扩大", "qualitative": "", "data_source": "https://www.state.gov/directorate-of-defense-trade-controls/", "if_triggered": "放松 → 利好出口", "if_failed": "维持限制 → 无变化", "weight": "10", "score_status": "watching", "tp_type": "event"}]}, {"id": "SPACE-H3", "title": "D2D 卫星直连手机创造新 TAM", "layer": "river", "statement": "覆盖全球 55 亿手机用户中无信号区域的增量市场，TAM $12B by 2030", "why": "ASTS 50+ MNO 签约证明运营商有兴趣；Starlink D2C 仅文本级说明技术门槛不低", "status": "monitoring", "confidence": "40", "state": "active", "tipping_points": [{"id": "SPACE-H3-TP1", "event": "Starlink D2C 升级到宽带", "current": "当前仅文本/图片", "quantitative": "升级到宽带级（>5Mbps）→ ASTS 差异化窗口关闭", "qualitative": "", "data_source": "https://starlink.com/direct-to-cell", "if_triggered": "D2C 升级 → ASTS 差异化消失", "if_failed": "D2C 维持文本级 → ASTS 窗口存在", "weight": "40", "score_status": "watching", "tp_type": "threshold"}, {"id": "SPACE-H3-TP2", "event": "MNO D2D 分成模式接受度", "current": "50+ MNO 签约（ASTS），但多为 MoU", "quantitative": "≥5 个 MNO 进入正式收入分成 → 验证商业模式", "qualitative": "", "data_source": "https://investors.ast-science.com/", "if_triggered": "≥5 MNO 正式分成 → 商业模式验证", "if_failed": "MNO 拒绝分成 → 模式失败", "weight": "35", "score_status": "watching", "tp_type": "threshold"}, {"id": "SPACE-H3-TP3", "event": "EO 数据 AI 分析渗透率", "current": "PL Pelican + BKSY Spectra 上线中", "quantitative": "AI 分析收入占 EO 总收入 >30% → 数据平台溢价兑现", "qualitative": "", "data_source": "https://investors.planetlabs.com/", "if_triggered": "AI 渗透 >30% → 数据平台溢价", "if_failed": "AI 渗透停滞 → 影像商品化", "weight": "25", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "SPACE-H4", "title": "SDA 分布式星座成为天基国防主架构", "layer": "river", "statement": "150+ 颗 Tracking Layer 卫星证明分布式 > 少数大型 GEO，后续 Tranche 加速", "why": "T3 $3.5B 已授出，4 家公司各 18 颗；分布式架构抗毁性和成本效率优于传统方案", "status": "monitoring", "confidence": "40", "state": "active", "tipping_points": [{"id": "SPACE-H4-TP1", "event": "SDA T3 交付进度", "current": "T3 授出 $3.5B", "quantitative": "72 颗卫星按期交付 2027-2028", "qualitative": "", "data_source": "https://www.sda.mil/", "if_triggered": "按期交付 → 分布式验证", "if_failed": "延迟 >18 个月 → 架构质疑", "weight": "50", "score_status": "watching", "tp_type": "threshold"}, {"id": "SPACE-H4-TP2", "event": "SDA T4 授出规模", "current": "T3 $3.5B 基准", "quantitative": "T4 ≥T3 规模 → 加速扩张", "qualitative": "", "data_source": "https://www.sda.mil/", "if_triggered": "T4 ≥$3.5B → 加速", "if_failed": "T4 缩减 → 减速", "weight": "50", "score_status": "watching", "tp_type": "event"}]}, {"id": "SPACE-H1-F1", "title": "SpaceX IPO 及首季报", "layer": "fork", "statement": "SpaceX IPO 定价及首季报暴露 xAI 亏损规模", "why": "", "status": "open", "confidence": "48", "state": "open", "tipping_points": [{"id": "SPACE-H1-F1-TP1", "event": "SpaceX IPO 实际估值 vs $1.75T", "current": "无变化。社交媒体合并讨论持续（starzq为第二个独立讨论来源，但均为C级传闻，仍无官方确认），S-1状态未更新。", "quantitative": "定价 ≥$1.75T 且超额认购 >10x", "qualitative": "", "data_source": "https://www.sec.gov/cgi-bin/browse-edgar?company=spacex", "if_triggered": "高估值 → 全赛道上移", "if_failed": "低估值或推迟 → 赛道降温", "weight": "40", "score_status": "approaching", "tp_type": "event"}, {"id": "SPACE-H1-F1-TP2", "event": "xAI 亏损规模（首季报披露）", "current": "未公开（市场估计 $3-8B/年）（合并讨论暗示xAI亏损是合并动机之一，但无具体数据）", "quantitative": "亏损 >$5B/年 → 市场恐慌", "qualitative": "", "data_source": "SpaceX 10-Q filing", "if_triggered": "亏损可控 → 路径 A", "if_failed": "亏损巨大 → 路径 B", "weight": "60", "score_status": "watching", "tp_type": "event"}]}, {"id": "SPACE-H3-F1", "title": "ASTS BlueBird Block 2 批量验证", "layer": "fork", "statement": "Block 2 卫星批量部署成功率决定 D2D 品类成立与否", "why": "", "status": "open", "confidence": "40", "state": "open", "tipping_points": [{"id": "SPACE-H3-F1-TP1", "event": "ASTS Block 2 发射成功率", "current": "BB1-6 成功，BB7 失败（Blue Origin 问题）", "quantitative": "Block 2 首批 ≥8/10 成功率", "qualitative": "", "data_source": "https://investors.ast-science.com/", "if_triggered": "成功率高 → D2D 加速", "if_failed": "成功率低 → D2D 风险", "weight": "50", "score_status": "watching", "tp_type": "event"}, {"id": "SPACE-H3-F1-TP2", "event": "Block 2 商业服务验证", "current": "未上线", "quantitative": "首个 MNO 付费服务上线", "qualitative": "", "data_source": "https://investors.ast-science.com/", "if_triggered": "MNO 付费 → 品类验证", "if_failed": "MNO 拒绝 → 品类存疑", "weight": "50", "score_status": "watching", "tp_type": "event"}]}, {"id": "SPACE-RB1-F1", "title": "Starship 全面复用时间线", "layer": "fork", "statement": "Starship 实现完整上级回收 + 快速周转复用确立 \u003c$500/kg 成本", "why": "", "status": "open", "confidence": "40", "state": "open", "tipping_points": [{"id": "SPACE-RB1-F1-TP1", "event": "Starship 上级回收测试", "current": "未尝试", "quantitative": "成功回收 + 检查通过 + 公布周转计划", "qualitative": "", "data_source": "https://www.spacex.com/", "if_triggered": "回收成功 → 路径 A 加速", "if_failed": "回收失败 → 路径 B/C", "weight": "60", "score_status": "watching", "tp_type": "event"}, {"id": "SPACE-RB1-F1-TP2", "event": "Starship 周转时间", "current": "N/A", "quantitative": "第二次飞行间隔 \u003c30 天 → 路径 A 加速", "qualitative": "", "data_source": "https://www.spacex.com/", "if_triggered": "快速周转 → 全面复用临近", "if_failed": "周转慢 → 路径 B", "weight": "40", "score_status": "watching", "tp_type": "threshold"}]}], "asset_judgment": [{"symbol": "NOC", "action": "等回调建仓", "position_type": "核心", "depends_on": ["SPACE-H2", "SPACE-H4"], "valuation_range": "$425/$575/$700"}, {"symbol": "ASTS", "action": "观望→催化后买入", "position_type": "卫星", "depends_on": ["SPACE-H3", "SPACE-H3-F1"], "valuation_range": "$25/$65/$130"}, {"symbol": "LUNR", "action": "等催化剂", "position_type": "卫星", "depends_on": ["SPACE-H1"], "valuation_range": "$8/$16/$28"}, {"symbol": "PL", "action": "观望", "position_type": "观望", "depends_on": ["SPACE-H1"], "valuation_range": "$5/$14/$26"}, {"symbol": "RKLB", "action": "观望", "position_type": "观望", "depends_on": ["SPACE-H1-F1", "SPACE-RB1-F1"], "valuation_range": "$15/$30/$55"}, {"symbol": "BKSY", "action": "观望", "position_type": "投机", "depends_on": ["SPACE-H1"], "valuation_range": "$10/$34/$55"}], "bull_case": "", "main_risk": "", "key_metrics": [{"label": "TAM (2024)", "value": "$613B", "note": "YoY +7.8%，商业 78% / 政府 22%"}, {"label": "TAM 预测 (2030)", "value": "$1T+", "note": "McKinsey $1.8T by 2035"}, {"label": "SpaceX 发射 CR1", "value": ">80%", "note": "165次/年(2025)，Starlink自有需求占一半"}, {"label": "Starlink 用户", "value": "10M+", "note": "收入 $11.4B，EBITDA margin 63%"}, {"label": "SDA 合同规模", "value": "$3.5B (T3)", "note": "72颗卫星，NOC 150颗累计最多"}, {"label": "赛道 T-stage", "value": "T1→T2", "note": "SpaceX IPO加速至T2→T3"}], "rating": "B", "review_date": "2026-07-15", "essence": "**太空经济 = 物理层垄断租金 + 政府合同锁定 + 网络效应溢价**\n- **L1 发射**: 可复用火箭创造规模+成本护城河，SpaceX 飞轮已自我强化\n- **L2 通信**: 星座密度→网络效应→赢者通吃，Starlink 已过 PMF\n- **L3 EO**: 历史数据壁垒 + AI 分析附加值，从卖图片转卖洞察\n- **L4 国防**: 安全审查+合同锁定+技术积累，5-10 年现金流可见\n- **L5 制造**: 先发验证+政府合同，高赔率低胜率\n", "tam": [{"label": "TAM (2024)", "value": "$613B", "growth": "+7.8% YoY", "source": "Space Foundation"}, {"label": "SAM (商业可投)", "value": "~$300B", "growth": "+10-15%", "source": "商业占比 78% 中可投资部分"}, {"label": "TAM 预测 (2030)", "value": "$1T+", "growth": "CAGR ~8-10%", "source": "McKinsey/BryceTech 中位数"}], "layer_overview": {}, "business_models": [{"layer": "L1 发射", "representative": "SpaceX, Rocket Lab", "margin": "SpaceX 50%+ GM; RKLB 37% GM", "profit_quality": "规模效应强，可复用提升利润率", "core_risk": "SpaceX 定价权碾压竞争者"}, {"layer": "L2 通信", "representative": "Starlink, ASTS", "margin": "Starlink EBITDA 63%; ASTS 负", "profit_quality": "网络效应 + 锁定效应", "core_risk": "前商业化烧钱 + 竞争加剧"}, {"layer": "L3 EO", "representative": "PL, BKSY, ICEYE", "margin": "PL 55-65% GM; BKSY 接近 BE", "profit_quality": "SaaS 模型，AI 分析附加值提升中", "core_risk": "规模受限 + 客户集中度"}, {"layer": "L4 国防", "representative": "NOC, LMT, L3Harris", "margin": "OPM 10-12%", "profit_quality": "合同锁定 5-10 年，现金流极稳", "core_risk": "政策变化 + 固定价格合同超支"}, {"layer": "L5 制造", "representative": "LUNR, Redwire", "margin": "负(LUNR接近BE)", "profit_quality": "极早期，2026-2027 拐点", "core_risk": "NASA 预算 + 执行风险"}], "role_table": [{"role": "发射服务商", "function": "将载荷送入轨道", "representative": "SpaceX(Ref), RKLB, ULA(Ref)", "revenue_scale": "SpaceX ~$4B; RKLB $602M", "margin": "SpaceX 50%+ GM; RKLB 37% GM", "义务": "发射场维护、火箭研发、FAA许可", "权利不对等": "SpaceX极好(成本垄断); RKLB一般(高研发)"}, {"role": "LEO 通信运营商", "function": "提供卫星宽带/连接", "representative": "Starlink(Ref), OneWeb", "revenue_scale": "Starlink $11.4B", "margin": "Starlink EBITDA 63%", "义务": "星座维护、频谱费、地面站", "权利不对等": "Starlink极好(垂直整合+10M用户)"}, {"role": "D2D 运营商", "function": "卫星直连手机", "representative": "ASTS, Starlink D2C(Ref)", "revenue_scale": "ASTS $71M", "margin": "负(前商业化)", "义务": "巨额卫星制造+发射资本", "权利不对等": "差(capex vs 未验证模式)"}, {"role": "EO/DaaS", "function": "卫星拍地球+数据分析", "representative": "PL, BKSY, ICEYE(Ref)", "revenue_scale": "PL $308M; BKSY $107M", "margin": "PL 55-65% GM", "义务": "星座补充、数据处理", "权利不对等": "一般(高毛利但规模受限)"}, {"role": "防务太空承包商", "function": "军事卫星/载荷制造", "representative": "NOC, LMT, L3H", "revenue_scale": "NOC Space $10.8B; LMT ~$13.6B", "margin": "OPM 10-12%", "义务": "ITAR合规、安全设施、人员审查", "权利不对等": "一般(低利润但现金流极可见)"}, {"role": "卫星/组件制造", "function": "卫星本体/组件", "representative": "RDW, Airbus(Ref)", "revenue_scale": "RDW $335M", "margin": "RDW -67.5% net", "义务": "制造设施、研发、质量体系", "权利不对等": "差(亏损+重资产)"}], "transaction_paths": [], "competition_layers": [{"layer": "L1 发射", "stability": "极度集中", "cr2": "SpaceX >80%", "moat_score": "SpaceX 34/35; RKLB 4/10", "key_dynamic": "- **SpaceX 飞轮已自我强化**: 170次/年发射→成本碾压→更多客户→更高可靠性\n- **Neutron Q4 2026 首飞**: 成功→RKLB 切入$30B中型市场; 失败→出局\n- **Starship \u003c$500/kg**: base case 2028-2029，Polymarket 60.5%赌2027前不会\n"}, {"layer": "L2 通信", "stability": "极度集中", "cr2": "Starlink ~90%", "moat_score": "Starlink 5/5; ASTS 3/5(成型中)", "key_dynamic": "- **SpaceX D2C 150Mbps升级是ASTS生存威胁**: $17B EchoStar频谱+2027底测试目标\n- **ASTS唯一生存路径**: 18-24月窗口完成45星+MNO商业化\n- **Kuiper 2026 H2商业化**: AWS捆绑可能压缩Starlink定价权\n"}, {"layer": "L3 地球观测", "stability": "中度集中", "cr2": "CR5 ~57%", "moat_score": "PL 4/5; ICEYE 3.8/5; BKSY 2.7/5", "key_dynamic": "- **光学+SAR互补非替代**: 完整ISR需要两者，国防客户同时采购\n- **ICEYE SAR准垄断**: 70+星 vs Capella 14 vs Umbra 8，EUR1.5B+ backlog\n- **PL 10年历史数据不可复制**: 但 ~40x P/S严重高估\n- **BKSY Gen-3是纯光学非SAR**: 差异化在分钟级交付+Spectra AI\n"}, {"layer": "L4 国防太空", "stability": "高度集中", "cr2": "CR3 ~65%", "moat_score": "NOC 4.5/5; LMT 4.5/5", "key_dynamic": "- **SDA分布式星座成为标准架构**: T3 $3.5B，T4 2027授出\n- **Golden Dome $185B**: NOC/LMT/RTX最大受益，未被定价\n- **Anduril 5年内威胁有限**: Lattice OS是10年维度风险(P=20%)\n- **NOC fwd P/E 20x是赛道最便宜优质标的**\n"}, {"layer": "L5 太空制造", "stability": "极度分散", "moat_score": "LUNR 3/5", "key_dynamic": "- **LUNR 月球→space prime转型**: fwd P/S 5.4x最便宜纯太空股\n- **商业空间站TAM有限**: 实际SAM $2-4B/yr，不足以支撑3个空间站\n- **Sierra Space从民用转国防**: Dream Chaser延期6年，对LUNR威胁低\n"}], "scenario_grid": {}, "tier_ranking": [{"tier": "T1 核心", "targets": [{"symbol": "NOC", "rationale": "风险调整后赔率最优: P/E 25x + $95B backlog + Golden Dome 未定价。等 $450-480 回调建仓"}]}, {"tier": "T2 条件", "targets": [{"symbol": "ASTS", "rationale": "[Challenge 修正] T1→T2：P/S 405x + 概率加权回报 -20% + Starlink D2C 生存威胁配不上 T1。等 $35-50 + Block 2 验证"}]}, {"tier": "T2 卫星", "targets": [{"symbol": "LUNR", "rationale": "最便宜纯太空股 fwd P/S 5.4x。等 $18-20 + IM-3 催化"}]}, {"tier": "T3 观望", "targets": [{"symbol": "PL", "rationale": "护城河极强但 ~40x P/S 严重高估，概率加权目标 $15。等 $10-15"}, {"symbol": "BKSY", "rationale": "EO 最便宜 P/S 12x，execution story。等 $22-25 + backlog 转化确认"}, {"symbol": "RKLB", "rationale": "Beck S级但 P/S 76x。等 Neutron 首飞 + $25-35 回调"}]}, {"tier": "Ref", "targets": [{"symbol": "SpaceX", "rationale": "7Powers 34/35，SOTP $1.0-1.25T。IPO 不参与，等首季报回调"}, {"symbol": "ICEYE", "rationale": "SAR准垄断70+星，EUR250M+收入。IPO 2027H2-2028H1，届时评估"}, {"symbol": "Anduril", "rationale": "Lattice OS平台化。5年对NOC威胁有限，IPO 2027?时重新评估"}, {"symbol": "Sierra Space", "rationale": "从民用转国防。Dream Chaser延期6年，$8B估值偏高"}]}], "scoring_matrix": [{"symbol": "NOC", "valuation": 4, "moat": 5, "management": 4, "growth": 4, "downside": 2, "upside": 3}, {"symbol": "ASTS", "valuation": 1, "moat": 3, "management": 3, "growth": 5, "downside": 5, "upside": 5}, {"symbol": "PL", "valuation": 1, "moat": 4, "management": 3, "growth": 3, "downside": 3, "upside": 3}, {"symbol": "LUNR", "valuation": 4, "moat": 3, "management": 3.5, "growth": 4, "downside": 3, "upside": 4}, {"symbol": "RKLB", "valuation": 1, "moat": 2, "management": 5, "growth": 3, "downside": 4, "upside": 4}, {"symbol": "BKSY", "valuation": 3, "moat": 2, "management": 3, "growth": 3, "downside": 3, "upside": 3}], "scenario_matrix": {"paths": [{"path": "SpaceX IPO路径A (热潮+xAI可控)", "probability": 35, "description": "IPO成功+xAI亏损\u003c$3B/年", "impact": "全板块+15-25%，情绪溢价", "portfolio_return": "+10-15%（未建仓时段）"}, {"path": "SpaceX IPO路径B (xAI亏损暴露)", "probability": 45, "description": "首季报暴露xAI $5B+/年亏损", "impact": "全板块-20-30%，黄金建仓窗口", "portfolio_return": "建仓NOC $450-480 + LUNR $18-20"}, {"path": "SpaceX IPO路径C (推迟)", "probability": 20, "description": "IPO推迟或估值\u003c$1T", "impact": "板块横盘6-12月", "portfolio_return": "等待"}], "expected_return": "等回调建仓后12月预期回报 +15-25%（NOC+LUNR组合）"}, "edge_conclusion": "**Alpha 来自\"在对的价格买入对的层级\"——L4 P/E 25x vs L1/L2 P/S 80-350x 是估值倒挂，等 SpaceX IPO 回调窗口建仓。**\n- **NOC $450-480 建仓**正确 → 5年 1.2-1.3x + Golden Dome 催化可提前兑现\n- **LUNR $18-20 建仓**正确 → moon→space prime 转型兑现 5年 1.5-2x\n- **ASTS $35-50 条件建仓**正确 → D2D 品类验证 12月 +50-100%\n- **全部判断错误**（xAI 爆发+Starship 2027复用+Musk 超强多线程）→ 错过 RKLB/ASTS +100%+ 上行，但宁可错过不错判\n", "contrarian": [{"reason": "Starship 重大失败，太空经济增长减速 3-5 年", "probability": 15, "impact": "下游 TAM 下修，L5/L6 最受打击，RKLB 短期受益"}, {"reason": "估值泡沫系统性破裂（类 2022 成长股 -50-70%）", "probability": 25, "impact": "NOC 跌幅最小(-10-15%)，ASTS/RKLB 跌幅最大"}, {"reason": "国防预算政治逆转", "probability": 10, "impact": "SDA/Golden Dome 延迟，L4 确定性溢价消失"}, {"reason": "xAI 意外爆发，SpaceX $1.75T 有支撑", "probability": 15, "impact": "全板块估值上移，错过入场"}, {"reason": "低估 Musk 多线程能力", "probability": 20, "impact": "注意力分散风险被高估，SpaceX 执行力不降"}], "catalysts": [{"date": "2026-06", "event": "SpaceX IPO 定价", "targets": ["全板块"], "expected_impact": "全赛道重估，情绪高点或回调起点"}, {"date": "2026-Q3", "event": "SpaceX 首次季报（xAI 亏损暴露）", "targets": ["全板块"], "expected_impact": "高概率触发 -20-30% 回调 = 建仓窗口"}, {"date": "2026-Q3/Q4", "event": "ASTS Block 2 批量部署", "targets": ["ASTS"], "expected_impact": "D2D 品类验证/证伪"}, {"date": "2026-Q4", "event": "Neutron 首飞", "targets": ["RKLB"], "expected_impact": "中型发射市场准入验证"}, {"date": "2026-H2", "event": "Amazon Kuiper 商业服务上线", "targets": ["Starlink", "ASTS"], "expected_impact": "L2 竞争格局变化"}, {"date": "2026-2027", "event": "Golden Dome 首批工程合同", "targets": ["NOC", "LMT", "RTX"], "expected_impact": "国防太空新增 TAM"}], "risks": [{"risk": "估值泡沫破裂", "probability": 30, "impact": "中", "most_impacted": "ASTS/RKLB (P/S >75x)", "hedge": "只在回调建仓，NOC P/E 25x 安全垫"}, {"risk": "国防预算削减", "probability": 15, "impact": "中-高", "most_impacted": "NOC/LUNR", "hedge": "PL/ASTS 商业收入占比高"}, {"risk": "SpaceX IPO 推迟", "probability": 10, "impact": "高", "most_impacted": "全板块", "hedge": "NOC/LMT 受影响最小"}, {"risk": "Kessler Syndrome", "probability": 5, "impact": "极高", "most_impacted": "LEO 依赖标的", "hedge": "不过度集中 LEO"}, {"risk": "地缘冲突升级", "probability": 5, "impact": "极高", "most_impacted": "全板块(但NOC反向受益)", "hedge": "NOC 天然对冲"}], "evolution": [{"period": "12个月内", "event": "SpaceX IPO→首季报→回调", "probability": 70, "investment_impact": "NOC/LUNR 在回调时建仓"}, {"period": "12个月内", "event": "ASTS 20-30星在轨", "probability": 50, "investment_impact": "验证通过→条件建仓"}, {"period": "1-2年", "event": "Starship 上级回收", "probability": 60, "investment_impact": "加速利润L1→下游迁移"}, {"period": "1-2年", "event": "SDA T3交付 + T4授出", "probability": 75, "investment_impact": "NOC/LMT太空段收入加速"}, {"period": "1-2年", "event": "Golden Dome首批合同 $10-30B", "probability": 55, "investment_impact": "NOC最大受益"}, {"period": "2-3年", "event": "Kuiper 1000+星 + 100K+用户", "probability": 45, "investment_impact": "L2竞争加剧"}], "terminal_state": "**太空经济形成\"一超多强+层级分化\"格局，SpaceX 捕获 40-50% 赛道利润**\n- **L1 发射**: SpaceX 垂直整合碾压，RKLB 在缝隙中生存（多极化路径下受益）\n- **L2 通信**: Starlink+Kuiper 双寡头占85%+，ASTS 在 D2D 细分获$2-5B（如果成立）\n- **L3 EO**: PL 转型\"空间数据操作系统\"，ICEYE 主导 SAR\n- **L4 国防**: NOC/LMT/L3H 三巨头稳定，Anduril 成中型 prime ($5-10B 太空段)\n- **L5 制造**: LUNR 如转型成功成月球经济龙头，商业空间站 ISS 退役后启动但 TAM 有限\n- **L6 算力**: 5年内不可投\n", "exit_framework": "- 结构性失败: Starship连续3+次失败→退出整个赛道; D2D技术被证伪→退出ASTS\n- 权利被剥夺: Starlink D2C升级到宽带级→ASTS差异化消失; EO商品化+云厂商吃AI层→PL毛利\u003c40%\n- 组织断裂: Musk注意力彻底转移→全赛道; LUNR管理层更换+月球任务连续失败\n- 期权失效: Neutron首飞失败+延期→RKLB; 45星完成但MNO拒绝商业化→ASTS\n- 赔率反转: 纯太空公司集体P/S>100x+分析师全\"强买\"+散户新高→T4-T5信号→逐步退出", "discussion_notes": []};
+
+var hypotheses = normalizeHypotheses();
+var allTippingPoints = hypotheses.flatMap(function(h) {
+  return (h.tipping_points || []).map(function(tp) {
+    return Object.assign({}, tp, { hypothesis_id: h.id, hypothesis_title: h.title });
+  });
+});
+
+// Normalize asset_judgment: support both string and array
+function normalizeAssetJudgment() {
+  if (Array.isArray(D.asset_judgment)) return D.asset_judgment;
+  if (typeof D.asset_judgment === 'string' && D.asset_judgment) {
+    return [{ symbol: '—', action: '', position_type: '', valuation_range: '', depends_on: [], _raw: D.asset_judgment }];
+  }
+  return [];
+}
+var assetJudgments = normalizeAssetJudgment();
+
+// Rating color
+function ratingColor(rating) {
+  if (!rating) return 'var(--text3)';
+  var r = String(rating).toUpperCase();
+  if (r.startsWith('A')) return 'var(--green)';
+  if (r.startsWith('B')) return 'var(--blue)';
+  if (r.startsWith('C')) return 'var(--yellow)';
+  if (r.startsWith('D')) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+// Action badge
+function actionBadge(action) {
+  if (!action) return '';
+  var a = String(action);
+  var aLow = a.toLowerCase();
+  var cls = 'b-gr';
+  if (aLow.includes('买入') || aLow.includes('buy') || aLow.includes('加仓')) cls = 'b-g';
+  else if (aLow.includes('观望') || aLow.includes('hold') || aLow.includes('wait')) cls = 'b-y';
+  else if (aLow.includes('回避') || aLow.includes('sell') || aLow.includes('avoid') || aLow.includes('减仓')) cls = 'b-r';
+  return '<span class="b ' + cls + '">' + e(a) + '</span>';
+}
+
+// Tier color
+function tierColor(tier) {
+  var t = String(tier || '').toUpperCase();
+  if (t === 'T1') return 'var(--green)';
+  if (t === 'T2') return 'var(--blue)';
+  if (t === 'T3') return 'var(--yellow)';
+  if (t === 'T4') return 'var(--red)';
+  if (t === 'REF') return 'var(--text3)';
+  return 'var(--text3)';
+}
+
+// Format probability — avoids double-% (e.g. "30%" + "%" → "30%%")
+function fmtProb(v) {
+  if (v == null || v === '') return '\u2014';
+  var s = String(v).trim();
+  if (s.endsWith('%')) return s;
+  var n = Number(s);
+  if (!isNaN(n)) return n + '%';
+  return s; // "高/中/低" etc.
+}
+
+// Heatmap class for score 1-5
+function hmClass(val) {
+  var n = parseInt(val);
+  if (n >= 5) return 'hm-5';
+  if (n === 4) return 'hm-4';
+  if (n === 3) return 'hm-3';
+  if (n === 2) return 'hm-2';
+  if (n <= 1) return 'hm-1';
+  return '';
+}
+
+// Scenario cell class
+function scenarioClass(text) {
+  var t = String(text || '');
+  if (t.includes('\u2705')) return 'scenario-green';
+  if (t.includes('\u26A0')) return 'scenario-yellow';
+  if (t.includes('\u274C')) return 'scenario-red';
+  return '';
+}
+
+// Probability color
+function probColor(prob) {
+  var p = parseFloat(prob);
+  if (isNaN(p)) {
+    var s = String(prob || '').toLowerCase();
+    if (s.includes('high') || s.includes('\u9AD8')) return 'var(--red)';
+    if (s.includes('med') || s.includes('\u4E2D')) return 'var(--yellow)';
+    return 'var(--green)';
+  }
+  if (p > 30) return 'var(--red)';
+  if (p >= 15) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+// Parse valuation range "bear $X / base $Y / bull $Z"
+function parseValRange(str) {
+  if (!str) return null;
+  var parts = String(str).split('/').map(function(s) { return s.trim(); });
+  var result = {};
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    var m = p.match(/(bear|base|bull|low|mid|high)[\s:]*\$?([\d,.]+)/i);
+    if (m) {
+      var key = m[1].toLowerCase();
+      if (key === 'low') key = 'bear';
+      if (key === 'mid') key = 'base';
+      if (key === 'high') key = 'bull';
+      result[key] = parseFloat(m[2].replace(/,/g, ''));
+    }
+  }
+  if (result.bear !== undefined || result.base !== undefined || result.bull !== undefined) return result;
+  return null;
+}
+
+// ---- BUILD HTML ----
+var h = '';
+
+// Header
+var rc = ratingColor(D.rating);
+h += '<header class="header">';
+h += '<div>';
+h += '<div class="eyebrow">Sector Dashboard</div>';
+h += '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">';
+h += '<h1>' + e(D.title) + '</h1>';
+if (D.rating) {
+  h += '<div class="rating-circle" style="color:' + rc + ';border-color:' + rc + '">' + e(D.rating) + '</div>';
+}
+h += '</div>';
+var subParts = [];
+if (D.review_date) subParts.push('Review ' + e(D.review_date));
+if (D.updated_at) subParts.push('Updated ' + e(D.updated_at));
+if (subParts.length) h += '<div class="header-sub">' + subParts.join(' \u00B7 ') + '</div>';
+h += '</div>';
+h += '<div class="header-right"></div>';
+h += '</header>';
+
+// Tabs
+h += '<div class="tabs">';
+h += '<button class="tab active" onclick="showTab(\'overview\',this)">\u603B\u89C8</button>';
+h += '<button class="tab" onclick="showTab(\'industry\',this)">\u884C\u4E1A</button>';
+h += '<button class="tab" onclick="showTab(\'assets\',this)">\u6807\u7684</button>';
+h += '<button class="tab" onclick="showTab(\'monitor\',this)">\u76D1\u63A7</button>';
+h += '</div>';
+
+// ========== TAB 1: OVERVIEW ==========
+h += '<div id="overview" class="page-panel active">';
+h += '<div class="section-stack">';
+
+// 1. Core Thesis
+if (D.core_thesis) {
+  h += '<div class="quote-block">' + renderBlock(D.core_thesis) + '</div>';
+}
+
+// 2. River Model
+var layerGroups = { riverbank: [], river: [], fork: [] };
+for (var hi = 0; hi < hypotheses.length; hi++) {
+  var layer = (hypotheses[hi].layer || 'river').toLowerCase();
+  if (layer === 'riverbank') layerGroups.riverbank.push(hypotheses[hi]);
+  else if (layer === 'fork') layerGroups.fork.push(hypotheses[hi]);
+  else layerGroups.river.push(hypotheses[hi]);
+}
+// Sort each layer by confidence descending
+function _sortByConf(a, b) { return (parseInt(b.confidence) || 0) - (parseInt(a.confidence) || 0); }
+layerGroups.riverbank.sort(_sortByConf);
+layerGroups.river.sort(_sortByConf);
+// Build hypothesis → assets map from asset_judgment
+var hypoAssets = {};
+if (assetJudgments.length) {
+  for (var aj = 0; aj < assetJudgments.length; aj++) {
+    var jd = assetJudgments[aj];
+    var deps = jd.depends_on || [];
+    for (var di = 0; di < deps.length; di++) {
+      if (!hypoAssets[deps[di]]) hypoAssets[deps[di]] = [];
+      hypoAssets[deps[di]].push({ symbol: jd.symbol, action: jd.action || '', position_type: jd.position_type || '' });
+    }
+  }
+}
+// Build fork → parent river map (GP-H1-F1 → GP-H1)
+var forkParent = {};
+for (var fi = 0; fi < layerGroups.fork.length; fi++) {
+  var fid = layerGroups.fork[fi].id || '';
+  var pm = fid.match(/^(.+-H\d+)-F\d+$/);
+  if (pm) forkParent[fid] = pm[1];
+}
+if (hypotheses.length) {
+  h += '<div class="panel">';
+  h += '<div class="panel-title" style="margin-bottom:14px">\u6CB3\u6D41\u6A21\u578B</div>';
+
+  // === RIVERBANKS ===
+  if (layerGroups.riverbank.length) {
+    h += '<div style="margin-bottom:18px">';
+    h += '<div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">\u6CB3\u5CB8 \u00B7 \u7ED3\u6784\u6027\u4FE1\u5FF5</div>';
+    for (var rb = 0; rb < layerGroups.riverbank.length; rb++) {
+      var rbItem = layerGroups.riverbank[rb];
+      var rbConf = parseInt(rbItem.confidence) || 0;
+      h += '<div style="display:flex;gap:12px;align-items:start;padding:10px 0;' + (rb < layerGroups.riverbank.length - 1 ? 'border-bottom:1px solid rgba(255,255,255,.06)' : '') + '">';
+      // Left: ID + confidence
+      h += '<div style="flex-shrink:0;width:56px;text-align:center">';
+      h += '<div class="mono" style="font-size:22px;font-weight:800;color:rgba(255,255,255,.9);line-height:1">' + rbConf + '</div>';
+      h += '<div class="mono" style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px">' + e(rbItem.id.replace(/^.*-/, '')) + '</div>';
+      h += '</div>';
+      // Right: statement
+      h += '<div style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;flex:1">' + md(rbItem.statement) + '</div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+
+  // === RIVERS with inline forks ===
+  if (layerGroups.river.length) {
+    h += '<div>';
+    h += '<div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">\u6CB3\u6D41 \u00B7 \u53EF\u8BC1\u4F2A\u5047\u8BBE</div>';
+    for (var rv = 0; rv < layerGroups.river.length; rv++) {
+      var rvItem = layerGroups.river[rv];
+      var rvConf = parseInt(rvItem.confidence) || 0;
+      var isLast = rv === layerGroups.river.length - 1;
+      h += '<div style="padding:8px 0;' + (!isLast ? 'border-bottom:1px solid rgba(255,255,255,.06)' : '') + '">';
+      // Header: ID + confidence + bar + assets
+      h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">';
+      h += '<span class="mono" style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);min-width:24px">' + e(rvItem.id.replace(/^.*-(H\d+)$/, '$1')) + '</span>';
+      h += '<span class="mono" style="font-size:15px;font-weight:800;color:rgba(255,255,255,.85)">' + rvConf + '</span>';
+      // Thin bar
+      h += '<div style="width:48px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;flex-shrink:0">';
+      h += '<div style="width:' + rvConf + '%;height:100%;background:rgba(255,255,255,.35);border-radius:2px"></div></div>';
+      // Assets
+      var rvAssets = hypoAssets[rvItem.id] || [];
+      if (rvAssets.length) {
+        for (var ra = 0; ra < rvAssets.length; ra++) {
+          var aBold = rvAssets[ra].action === '\u4E70\u5165';
+          h += '<span class="mono" style="font-size:10px;font-weight:700;color:rgba(255,255,255,' + (aBold ? '.8' : '.4') + ');padding:1px 4px;background:rgba(255,255,255,' + (aBold ? '.08' : '.03') + ');border-radius:3px">' + e(rvAssets[ra].symbol) + '</span>';
+        }
+      }
+      h += '</div>';
+      // Statement
+      h += '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.65;padding-left:32px">' + md(rvItem.statement) + '</div>';
+      // Inline forks
+      var childForks = [];
+      for (var cf = 0; cf < layerGroups.fork.length; cf++) {
+        if (forkParent[layerGroups.fork[cf].id] === rvItem.id) childForks.push(layerGroups.fork[cf]);
+      }
+      for (var cfi = 0; cfi < childForks.length; cfi++) {
+        var fk = childForks[cfi];
+        var fkState = (fk.state || 'open').toLowerCase();
+        var fkAssets = hypoAssets[fk.id] || [];
+        h += '<div style="display:flex;align-items:center;gap:6px;padding:4px 0 0 32px">';
+        h += '<span style="font-size:9px;color:rgba(255,255,255,.3)">\u25C6</span>';
+        h += '<span style="font-size:11px;color:rgba(255,255,255,.5)">' + e(fk.statement) + '</span>';
+        for (var fa = 0; fa < fkAssets.length; fa++) {
+          h += '<span class="mono" style="font-size:10px;color:rgba(255,255,255,.4)">' + e(fkAssets[fa].symbol) + '</span>';
+        }
+        h += '<span style="font-size:9px;color:rgba(255,255,255,.3)">' + (fkState === 'resolved' ? '\u2713' : '\u2022 \u5F85\u51B3') + '</span>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+
+  // Orphan forks
+  var orphanForks = [];
+  for (var of2 = 0; of2 < layerGroups.fork.length; of2++) {
+    if (!forkParent[layerGroups.fork[of2].id]) orphanForks.push(layerGroups.fork[of2]);
+  }
+  if (orphanForks.length) {
+    h += '<div style="margin-top:12px;font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">\u5206\u53C9 \u00B7 \u5F85\u51B3\u4E8B\u4EF6</div>';
+    for (var ofi = 0; ofi < orphanForks.length; ofi++) {
+      var ofk = orphanForks[ofi];
+      h += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0">';
+      h += '<span style="font-size:9px;color:rgba(255,255,255,.3)">\u25C6</span>';
+      h += '<span style="font-size:11px;color:rgba(255,255,255,.5)">' + e(ofk.statement) + '</span>';
+      h += '</div>';
+    }
+  }
+  h += '</div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end overview
+
+// ========== TAB 2: INDUSTRY ==========
+h += '<div id="industry" class="page-panel">';
+h += '<div class="section-stack">';
+
+// 1. Essence
+if (D.essence) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u672C\u8D28 (Essence)</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div style="font-size:13px;color:var(--text2)">' + renderBlock(D.essence) + '</div>';
+  h += '</div></div>';
+}
+
+// 2. TAM (supports both object {total,sam,som,cagr} and array [{label,value,growth,source},...])
+if (D.tam) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">TAM / SAM / SOM</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  if (Array.isArray(D.tam)) {
+    h += '<div class="table-wrap"><table class="data-tbl" style="min-width:500px"><thead><tr>';
+    h += '<th>\u6307\u6807</th><th>\u89C4\u6A21</th><th>\u589E\u901F</th><th>\u6570\u636E\u6E90</th>';
+    h += '</tr></thead><tbody>';
+    for (var tami = 0; tami < D.tam.length; tami++) {
+      var tamItem = D.tam[tami];
+      h += '<tr>';
+      h += '<td style="font-weight:600;color:var(--text)">' + e(tamItem.label) + '</td>';
+      h += '<td class="mono" style="color:var(--green-strong)">' + e(tamItem.value || '\u2014') + '</td>';
+      h += '<td style="color:var(--text2)">' + e(tamItem.growth || '\u2014') + '</td>';
+      h += '<td style="color:var(--text3);font-size:11px">' + e(tamItem.source || '\u2014') + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+  } else {
+    var tam = D.tam;
+    var tamTotal = parseFloat(tam.total) || 0;
+    var tamSam = parseFloat(tam.sam) || 0;
+    var tamSom = parseFloat(tam.som) || 0;
+    h += '<div class="tam-bar-wrap">';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">TAM</div>';
+    h += '<div class="tam-bar" style="width:100%;background:rgba(82,199,140,.15);color:var(--green-strong)">' + e(tam.total || '\u2014') + '</div>';
+    h += '</div>';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">SAM</div>';
+    var samPct = tamTotal > 0 ? Math.max(15, (tamSam / tamTotal * 100)) : 60;
+    h += '<div class="tam-bar" style="width:' + samPct + '%;background:rgba(77,141,255,.15);color:#9db8ff">' + e(tam.sam || '\u2014') + '</div>';
+    h += '</div>';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">SOM</div>';
+    var somPct = tamTotal > 0 ? Math.max(10, (tamSom / tamTotal * 100)) : 30;
+    h += '<div class="tam-bar" style="width:' + somPct + '%;background:rgba(179,155,255,.15);color:#c8b8ff">' + e(tam.som || '\u2014') + '</div>';
+    h += '</div>';
+    if (tam.cagr) {
+      h += '<div style="margin-top:8px;font-size:13px;color:var(--text3)">CAGR: <span class="mono" style="color:var(--green-strong);font-weight:700">' + e(tam.cagr) + '</span></div>';
+    }
+    h += '</div>';
+  }
+  h += '</div></div>';
+}
+
+// 4. Role Table
+if ((D.role_table || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u89D2\u8272\u529F\u80FD\u8868</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  var roleFields = [];
+  var roleFieldLabels = {
+    role: '\u89D2\u8272', companies: '\u4EE3\u8868\u516C\u53F8', representative: '\u4EE3\u8868\u516C\u53F8', function: '\u529F\u80FD', revenue_source: '\u6536\u5165\u6765\u6E90',
+    revenue_scale: '\u6536\u5165\u89C4\u6A21', margin: '\u5229\u6DA6\u7387', risk: '\u98CE\u9669',
+    obligations: '\u4E49\u52A1', '\u4E49\u52A1': '\u4E49\u52A1', parity: '\u5BF9\u7B49\u6027', '\u6743\u5229\u4E0D\u5BF9\u7B49': '\u6743\u5229\u4E0D\u5BF9\u7B49', moat: '\u62A4\u57CE\u6CB3',
+    replaceable: '\u53EF\u66FF\u4EE3\u6027', trend: '\u8D8B\u52BF'
+  };
+  var allRoleKeys = ['role','companies','representative','function','revenue_source','revenue_scale','margin','risk','obligations','\u4E49\u52A1','parity','\u6743\u5229\u4E0D\u5BF9\u7B49','moat','replaceable','trend'];
+  for (var ki = 0; ki < allRoleKeys.length; ki++) {
+    var k = allRoleKeys[ki];
+    for (var ri = 0; ri < D.role_table.length; ri++) {
+      if (D.role_table[ri][k] !== undefined && D.role_table[ri][k] !== '') {
+        roleFields.push(k);
+        break;
+      }
+    }
+  }
+  var layerColors = ['var(--green)', 'var(--blue)', 'var(--purple)', 'var(--orange)', 'var(--cyan)', 'var(--yellow)', 'var(--red)'];
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:' + (roleFields.length * 100) + 'px"><thead><tr>';
+  for (var fi = 0; fi < roleFields.length; fi++) {
+    h += '<th>' + e(roleFieldLabels[roleFields[fi]] || roleFields[fi]) + '</th>';
+  }
+  h += '</tr></thead><tbody>';
+  for (var ri2 = 0; ri2 < D.role_table.length; ri2++) {
+    var row = D.role_table[ri2];
+    var lc = layerColors[ri2 % layerColors.length];
+    h += '<tr style="border-left:3px solid ' + lc + '">';
+    for (var fi2 = 0; fi2 < roleFields.length; fi2++) {
+      var val = row[roleFields[fi2]];
+      var cellVal = val !== undefined && val !== '' ? String(val) : '\u2014';
+      if (roleFields[fi2] === 'margin') {
+        h += '<td class="mono" style="color:var(--green-strong)">' + e(cellVal) + '</td>';
+      } else if (roleFields[fi2] === 'risk') {
+        h += '<td style="color:#ef8f7d">' + md(cellVal) + '</td>';
+      } else {
+        h += '<td>' + md(cellVal) + '</td>';
+      }
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div>';
+  h += '</div></div>';
+}
+
+// 5. Business Models
+if ((D.business_models || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u5546\u4E1A\u6A21\u5F0F</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+  h += '<th>\u5C42\u7EA7</th><th>\u4EE3\u8868</th><th>\u5229\u6DA6\u7387</th><th>\u5229\u6DA6\u8D28\u91CF</th><th>\u6838\u5FC3\u98CE\u9669</th>';
+  h += '</tr></thead><tbody>';
+  for (var bi = 0; bi < D.business_models.length; bi++) {
+    var bm = D.business_models[bi];
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text);white-space:nowrap">' + e(bm.layer) + '</td>';
+    h += '<td>' + md(bm.representative || bm.example || '\u2014') + '</td>';
+    h += '<td class="mono" style="color:var(--green-strong);white-space:nowrap">' + e(bm.margin || '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:11px">' + md(bm.profit_quality || bm.revenue_source || '\u2014') + '</td>';
+    h += '<td style="color:#ef8f7d;font-size:11px">' + md(bm.core_risk || bm.risk || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div>';
+  h += '</div></div>';
+}
+
+// 7. Sector Layers (赛道格局 — 含 business_models + role_table 合并字段)
+if ((D.competition_layers || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">赛道格局</span>';
+  h += '<span class="arrow">▼</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div style="display:flex;flex-direction:column;gap:16px">';
+  for (var ci = 0; ci < D.competition_layers.length; ci++) {
+    var cl = D.competition_layers[ci];
+    var clCr = cl.cr2 || cl.cr || '';
+    var clBorder = cl.highlight === true ? 'var(--accent)' : 'rgba(255,255,255,.12)';
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;border-left:3px solid ' + clBorder + '">';
+    h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">';
+    h += '<span style="font-size:13px;font-weight:700;color:var(--text)">' + e(cl.layer) + '</span>';
+    if (cl.stability) h += '<span class="b b-gr" style="font-size:9px;padding:2px 6px">稳定性: ' + e(cl.stability) + '</span>';
+    if (clCr) h += '<span class="b b-b" style="font-size:9px;padding:2px 6px">Top 2 集中度: ' + e(clCr) + '</span>';
+    if (cl.moat_score) h += '<span class="b b-g" style="font-size:9px;padding:2px 6px">护城河: ' + e(cl.moat_score) + '</span>';
+    h += '</div>';
+    var metaFields = [
+      ['representatives', '代表玩家'],
+      ['function', '功能定位'],
+      ['margin', '利润率'],
+      ['profit_quality', '利润质量'],
+      ['revenue_scale', '收入规模'],
+      ['core_risk', '核心风险'],
+      ['权利不对等', '权利对等性']
+    ];
+    var hasMeta = false;
+    for (var mfi = 0; mfi < metaFields.length; mfi++) {
+      if (cl[metaFields[mfi][0]] !== undefined && cl[metaFields[mfi][0]] !== '') { hasMeta = true; break; }
+    }
+    if (hasMeta) {
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:4px;font-size:11px;margin-bottom:8px;padding:8px;background:rgba(255,255,255,.02);border-radius:6px">';
+      for (var mfi2 = 0; mfi2 < metaFields.length; mfi2++) {
+        var mfk = metaFields[mfi2][0];
+        var mfl = metaFields[mfi2][1];
+        var mfval = cl[mfk];
+        if (mfval !== undefined && mfval !== '') {
+          h += '<div style="color:var(--text3);font-weight:600;white-space:nowrap">' + e(mfl) + '</div>';
+          h += '<div style="color:var(--text2)">' + md(String(mfval)) + '</div>';
+        }
+      }
+      h += '</div>';
+    }
+    if (cl.key_dynamic) {
+      h += '<div style="font-size:12px;color:var(--text2);line-height:1.6">' + renderBlock(cl.key_dynamic) + '</div>';
+    }
+    if ((cl.players || []).length) {
+      var playerFields = ['symbol','revenue','growth','margin','moat_score','pe'];
+      var playerLabels = { symbol:'标的', revenue:'收入', growth:'增速', margin:'利润率', moat_score:'护城河', pe:'PE' };
+      var activePFields = [];
+      for (var pfi = 0; pfi < playerFields.length; pfi++) {
+        var pf = playerFields[pfi];
+        for (var pli = 0; pli < cl.players.length; pli++) {
+          if (cl.players[pli][pf] !== undefined && cl.players[pli][pf] !== '') { activePFields.push(pf); break; }
+        }
+      }
+      if (activePFields.length) {
+        h += '<div class="table-wrap" style="margin-top:6px"><table class="data-tbl"><thead><tr>';
+        for (var pfi2 = 0; pfi2 < activePFields.length; pfi2++) {
+          h += '<th>' + e(playerLabels[activePFields[pfi2]] || activePFields[pfi2]) + '</th>';
+        }
+        h += '</tr></thead><tbody>';
+        for (var pli2 = 0; pli2 < cl.players.length; pli2++) {
+          var player = cl.players[pli2];
+          h += '<tr>';
+          for (var pfi3 = 0; pfi3 < activePFields.length; pfi3++) {
+            var pval = player[activePFields[pfi3]];
+            var pcell = pval !== undefined && pval !== '' ? String(pval) : '—';
+            if (activePFields[pfi3] === 'symbol') h += '<td style="font-weight:700;color:var(--text)">' + e(pcell) + '</td>';
+            else h += '<td class="mono">' + e(pcell) + '</td>';
+          }
+          h += '</tr>';
+        }
+        h += '</tbody></table></div>';
+      }
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+// 0. Layer Overview (PPT-style: 利润切片 + 趋势渗透矩阵 + 关键洞察)
+if (D.layer_overview && D.layer_overview.rows && D.layer_overview.rows.length) {
+  var lo = D.layer_overview;
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">支付层级利润切片</span>';
+  h += '<span class="arrow">▼</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+
+  // 副标题
+  if (lo.example) {
+    h += '<div style="font-size:13px;color:var(--text2);margin-bottom:16px;font-style:italic">';
+    h += e(lo.example) + ' — 哪一层吃多少净利润 + 哪些趋势在渗透哪一层';
+    h += '</div>';
+  }
+
+  // Part 1: 利润切片 horizontal stacked bar (单色调 + peak 高亮)
+  h += '<div style="margin-bottom:20px">';
+  h += '<div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:8px;letter-spacing:0.05em">利润切片</div>';
+  h += '<div style="display:flex;width:100%;height:64px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">';
+  for (var lri = 0; lri < lo.rows.length; lri++) {
+    var lr = lo.rows[lri];
+    var lpct = parseInt(lr.pct) || 1;
+    var isHighlight = lr.highlight === true || lpct >= 50;
+    var bgColor = isHighlight ? 'var(--accent)' : 'rgba(255,255,255,.08)';
+    var txColor = isHighlight ? 'white' : 'var(--text2)';
+    h += '<div title="' + e(lr.layer + ': ' + (lr.fee_type || '')) + '" style="flex:' + lpct + ';background:' + bgColor + ';display:flex;flex-direction:column;justify-content:center;align-items:center;color:' + txColor + ';padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;border-right:1px solid rgba(255,255,255,.05)">';
+    if (lpct >= 30) {
+      // Peak: % (大) + layer + fee_type
+      h += '<div style="font-weight:800;font-size:16px">' + lpct + '%</div>';
+      h += '<div style="font-size:11px;opacity:0.95;font-weight:600;margin-top:2px">' + e(lr.layer) + '</div>';
+      if (lr.fee_type) {
+        h += '<div style="font-size:10px;opacity:0.85;margin-top:2px">' + e(lr.fee_type) + '</div>';
+      }
+    } else {
+      // 小段: 只显示 %（layer name + fee_type 留给下方 inline cards 看）
+      h += '<div style="font-weight:700;font-size:11px">' + lpct + '%</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '</div>';
+
+  // Part 1.5: 每层本质（统一灰底 + peak 用 accent border）
+  h += '<div style="margin-bottom:18px;display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:8px">';
+  for (var ldi = 0; ldi < lo.rows.length; ldi++) {
+    var lrow = lo.rows[ldi];
+    var ldpct = parseInt(lrow.pct) || 1;
+    var isPeak = lrow.highlight === true || ldpct >= 50;
+    var bdColor = isPeak ? 'var(--accent)' : 'rgba(255,255,255,.12)';
+    h += '<div style="padding:8px 10px;background:rgba(255,255,255,.02);border-left:3px solid ' + bdColor + ';border-radius:0 6px 6px 0;font-size:11px">';
+    h += '<div style="font-weight:700;color:var(--text);margin-bottom:3px">' + e(lrow.layer) + ' <span style="color:var(--text3);font-weight:500">· ' + ldpct + '%</span></div>';
+    if (lrow.fee_type) {
+      h += '<div style="color:var(--text2)">' + e(lrow.fee_type) + '</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+
+  // Part 2: 趋势渗透矩阵 (转置：趋势作行 / 层作列)
+  if (lo.trends && lo.trends.length) {
+    h += '<div style="margin-bottom:18px">';
+    h += '<div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:8px;letter-spacing:0.05em">新趋势改变传统链条的强度</div>';
+    h += '<div class="table-wrap"><table class="data-tbl" style="font-size:12px"><thead><tr>';
+    h += '<th style="text-align:left;width:18%">趋势</th>';
+    for (var ri = 0; ri < lo.rows.length; ri++) {
+      h += '<th style="text-align:center;font-size:10px">' + e(lo.rows[ri].layer) + '</th>';
+    }
+    h += '<th style="text-align:center;width:10%;font-size:10px">全链路通<br><span style="color:var(--text3);font-weight:400">(木桶)</span></th>';
+    h += '</tr></thead><tbody>';
+    function scoreColor(s) {
+      if (s >= 50) return 'background:var(--accent);color:white';
+      if (s >= 25) return 'background:rgba(155,138,250,.55);color:white';
+      if (s >= 10) return 'background:rgba(155,138,250,.28);color:var(--text)';
+      if (s > 0) return 'background:rgba(155,138,250,.12);color:var(--text2)';
+      return 'background:rgba(255,255,255,.03);color:var(--text3)';
+    }
+    function bucketColor(b) {
+      if (b >= 80) return 'background:var(--green);color:white';
+      if (b >= 30) return 'background:var(--yellow);color:#000';
+      return 'background:#ef8f7d;color:white';
+    }
+    for (var ti = 0; ti < lo.trends.length; ti++) {
+      var trendName = lo.trends[ti];
+      // 木桶 = min(current/limit) ratio; tracks weakest layer's progress %
+      var minRatio = 1000;
+      for (var pi = 0; pi < lo.rows.length; pi++) {
+        var p = (lo.rows[pi].penetration || {})[trendName];
+        var pc = p ? (parseInt(p.current) || 0) : 0;
+        var pl = p ? (parseInt(p.limit) || 0) : 0;
+        var ratio = pl > 0 ? Math.round(pc / pl * 100) : 0;
+        if (ratio < minRatio) minRatio = ratio;
+      }
+      var minCur = minRatio;
+      h += '<tr>';
+      h += '<td style="font-weight:700;color:var(--text)">' + e(trendName) + '</td>';
+      for (var ri2 = 0; ri2 < lo.rows.length; ri2++) {
+        var pen = (lo.rows[ri2].penetration || {})[trendName];
+        var cur = pen ? (parseInt(pen.current) || 0) : 0;
+        var lim = pen ? (parseInt(pen.limit) || 0) : 0;
+        var note = pen ? (pen.note || '') : '';
+        h += '<td style="text-align:center;cursor:help" title="' + e(note) + '">';
+        h += '<span style="' + scoreColor(cur) + ';padding:3px 9px;border-radius:6px;font-weight:700;font-size:11px;display:inline-block;min-width:48px">' + cur + '<span style="opacity:.6;font-weight:500">/' + lim + '</span></span>';
+        h += '</td>';
+      }
+      h += '<td style="text-align:center"><span style="' + bucketColor(minCur) + ';padding:3px 10px;border-radius:6px;font-weight:800;font-size:11px;display:inline-block;min-width:36px">' + minCur + '%</span></td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    h += '<div style="font-size:10px;color:var(--text3);margin-top:6px">每行 limit 总和 = 100；cell = 当前进展 / 上限；末尾"全链路通 %" = min(current/limit) = 最弱层进展率（木桶）</div>';
+    h += '</div>';
+  }
+
+  // Part 3: 关键洞察
+  if ((lo.insights || []).length) {
+    h += '<div style="background:rgba(255,255,255,.02);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0">';
+    h += '<div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:6px;letter-spacing:0.05em">💡 关键洞察</div>';
+    h += '<ul style="margin:0;padding-left:18px;font-size:12px;color:var(--text2);line-height:1.7">';
+    for (var ii = 0; ii < lo.insights.length; ii++) {
+      h += '<li style="margin-bottom:4px">' + md(String(lo.insights[ii])) + '</li>';
+    }
+    h += '</ul>';
+    h += '</div>';
+  }
+
+  h += '</div></div>';
+}
+
+// 6. Transaction Paths
+if ((D.transaction_paths || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u4EA4\u6613\u94FE\u8DEF\u5BF9\u6BD4</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  var pathCount = D.transaction_paths.length;
+  var pathCols = pathCount <= 3 ? 'repeat(' + pathCount + ', 1fr)' : 'repeat(auto-fill, minmax(240px, 1fr))';
+  h += '<div style="display:grid;grid-template-columns:' + pathCols + ';gap:8px">';
+  for (var pi = 0; pi < D.transaction_paths.length; pi++) {
+    var tp = D.transaction_paths[pi];
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px">';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+    h += '<span style="font-size:14px;font-weight:700;color:var(--text)">' + e(tp.name) + '</span>';
+    if (tp.total_cost) h += '<span class="b b-y">' + e(tp.total_cost) + '</span>';
+    h += '</div>';
+    if (tp.flow) {
+      h += '<div style="font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.7">' + md(tp.flow) + '</div>';
+    }
+    if ((tp.steps || []).length) {
+      h += '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">';
+      for (var si = 0; si < tp.steps.length; si++) {
+        h += '<div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2)">';
+        h += '<span style="color:var(--text3);flex-shrink:0;font-weight:700;font-family:var(--mono)">' + (si + 1) + '</span>';
+        h += '<span>' + md(tp.steps[si]) + '</span>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    if (tp.value_split && typeof tp.value_split === 'object') {
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;margin-bottom:8px">';
+      var vsKeys = Object.keys(tp.value_split);
+      for (var vsi = 0; vsi < vsKeys.length; vsi++) {
+        h += '<span style="color:var(--text3)">' + e(vsKeys[vsi]) + '</span>';
+        h += '<span class="mono" style="color:var(--green-strong)">' + e(tp.value_split[vsKeys[vsi]]) + '</span>';
+      }
+      h += '</div>';
+    }
+    h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">';
+    if (tp.settlement) h += '<span style="color:var(--text3)">\u7ED3\u7B97</span><span style="color:var(--text2)">' + e(tp.settlement) + '</span>';
+    if (tp.dispute) h += '<span style="color:var(--text3)">\u4E89\u8BAE</span><span style="color:var(--text2)">' + md(tp.dispute) + '</span>';
+    if (tp.missing) h += '<span style="color:var(--text3)">\u7F3A\u5931</span><span style="color:#ef8f7d">' + md(tp.missing) + '</span>';
+    if (tp.note) h += '<span style="color:var(--text3)">\u5907\u6CE8</span><span style="color:var(--text2)">' + md(tp.note) + '</span>';
+    h += '</div></div>';
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end industry
+
+// ========== TAB 3: ASSETS ==========
+h += '<div id="assets" class="page-panel">';
+h += '<div class="section-stack">';
+// 0. Scenario Grid (消费场景矩阵 — 标的页顶部)
+if (D.scenario_grid) {
+  var sg = D.scenario_grid;
+  var sgTierClass = { T1:'b-g', T2:'b-b', T3:'b-y', T4:'b-r', ref:'b-p', uncovered:'b-gr' };
+  var sgTierLabel = { T1:'T1', T2:'T2', T3:'T3', T4:'T4', ref:'Ref', uncovered:'未覆盖' };
+  var sgPenDot = { high:'●●●', medium:'●●', low:'●' };
+  var sgPenClass = { high:'b-g', medium:'b-y', low:'b-gr' };
+  var sgQLabel = { domestic_consumer:'国内消费', cross_border_consumer:'国际消费', domestic_b2b:'国内 B2B', cross_border_b2b:'国际 B2B' };
+  var sgQOrder = ['domestic_consumer','cross_border_consumer','domestic_b2b','cross_border_b2b'];
+  var sgQColors = ['var(--green)','var(--blue)','var(--purple)','var(--orange)'];
+
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">使用场景矩阵</span>';
+  h += '<span class="arrow">▼</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+
+  if (sg.description) {
+    h += '<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px">' + md(sg.description) + '</div>';
+  }
+
+  // ── Compute (x, y) per company: from main + penetration, or page.md override ──
+  var sgQCenters = { domestic_consumer:[25,25], cross_border_consumer:[75,25], domestic_b2b:[25,75], cross_border_b2b:[75,75] };
+  var sgPenWeight = { high:0.4, medium:0.2, low:0.05 };
+  function sgCalcCoord(c){
+    var mq = sgQCenters[c.main]; if (!mq) return [50, 50];
+    var sx = mq[0], sy = mq[1], wt = 1.0;
+    var pen = c.penetration || {};
+    Object.keys(pen).forEach(function(k){
+      var w = sgPenWeight[pen[k]] || 0;
+      var qq = sgQCenters[k];
+      if (qq) { sx += qq[0]*w; sy += qq[1]*w; wt += w; }
+    });
+    return [sx/wt, sy/wt];
+  }
+  // Stagger same-quadrant companies along Y (and a small X jitter) to avoid overlap
+  var sgQGroups = {};
+  (sg.companies || []).forEach(function(c){
+    var k = c.main || 'unknown';
+    sgQGroups[k] = sgQGroups[k] || [];
+    sgQGroups[k].push(c);
+  });
+  Object.keys(sgQGroups).forEach(function(k){
+    var arr = sgQGroups[k];
+    arr.forEach(function(c, i){
+      var xy = (c.position && typeof c.position.x === 'number') ? [c.position.x, c.position.y] : sgCalcCoord(c);
+      if (!c.position && arr.length > 1) {
+        var spread = (i / (arr.length - 1) - 0.5) * 38; // ±19% Y stagger
+        xy[1] += spread;
+        var dx = (i % 2 === 0 ? -8 : 8);
+        xy[0] += dx;
+      }
+      c._x = Math.max(4, Math.min(96, xy[0]));
+      c._y = Math.max(6, Math.min(94, xy[1]));
+    });
+  });
+
+  // ── SVG scatter plot ──
+  var sgW = 1000, sgH = 600;
+  var sgPad = { t:38, r:30, b:38, l:80 };
+  var sgPw = sgW - sgPad.l - sgPad.r;
+  var sgPh = sgH - sgPad.t - sgPad.b;
+  function sgPx(x){ return sgPad.l + (x/100) * sgPw; }
+  function sgPy(y){ return sgPad.t + (y/100) * sgPh; }
+  var sgTierColor = { T1:'#52c78c', T2:'#9db8ff', T3:'#ebb175', T4:'#ef8f7d', ref:'#c8b8ff', uncovered:'#888' };
+
+  h += '<div style="margin:0 auto 12px;max-width:760px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px">';
+  h += '<svg viewBox="0 0 ' + sgW + ' ' + sgH + '" style="width:100%;height:auto;display:block">';
+
+  // plot background + border
+  h += '<rect x="' + sgPad.l + '" y="' + sgPad.t + '" width="' + sgPw + '" height="' + sgPh + '" fill="rgba(255,255,255,.015)" stroke="rgba(255,255,255,.14)" stroke-width="1"/>';
+  // quadrant subtle tints
+  var sgTintQ = ['rgba(82,199,140,.05)','rgba(77,141,255,.05)','rgba(179,155,255,.05)','rgba(214,149,82,.05)'];
+  h += '<rect x="' + sgPad.l + '" y="' + sgPad.t + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[0] + '"/>';
+  h += '<rect x="' + (sgPad.l + sgPw/2) + '" y="' + sgPad.t + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[1] + '"/>';
+  h += '<rect x="' + sgPad.l + '" y="' + (sgPad.t + sgPh/2) + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[2] + '"/>';
+  h += '<rect x="' + (sgPad.l + sgPw/2) + '" y="' + (sgPad.t + sgPh/2) + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[3] + '"/>';
+  // center cross (dashed)
+  h += '<line x1="' + sgPx(50) + '" y1="' + sgPad.t + '" x2="' + sgPx(50) + '" y2="' + (sgPad.t+sgPh) + '" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 4" stroke-width="1"/>';
+  h += '<line x1="' + sgPad.l + '" y1="' + sgPy(50) + '" x2="' + (sgPad.l+sgPw) + '" y2="' + sgPy(50) + '" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 4" stroke-width="1"/>';
+
+  // X axis labels (top, above plot)
+  h += '<text x="' + sgPx(25) + '" y="' + (sgPad.t-12) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700">国内 Domestic ←</text>';
+  h += '<text x="' + sgPx(75) + '" y="' + (sgPad.t-12) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700">→ 国际 Cross-border</text>';
+  // Y axis labels (rotated, left of plot) — use → / ← so they render visually as ↑ / ↓ after rotate(-90)
+  h += '<text x="' + (sgPad.l-26) + '" y="' + sgPy(25) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700" transform="rotate(-90 ' + (sgPad.l-26) + ' ' + sgPy(25) + ')">消费 Consumer →</text>';
+  h += '<text x="' + (sgPad.l-26) + '" y="' + sgPy(75) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700" transform="rotate(-90 ' + (sgPad.l-26) + ' ' + sgPy(75) + ')">← B2B</text>';
+
+  // Plot company points
+  (sg.companies || []).forEach(function(c){
+    var cx = sgPx(c._x), cy = sgPy(c._y);
+    var col = sgTierColor[c.cortex_tier] || '#888';
+    // halo for T1
+    if (c.cortex_tier === 'T1') {
+      h += '<circle cx="' + cx + '" cy="' + cy + '" r="15" fill="' + col + '" fill-opacity="0.18"/>';
+    }
+    h += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="' + col + '" fill-opacity="0.92" stroke="#0a0e15" stroke-width="1.5"/>';
+    // label: right-anchored if point is in right half, else left-anchored
+    var isRight = c._x > 50;
+    var lx = isRight ? (cx - 13) : (cx + 13);
+    var anchor = isRight ? 'end' : 'start';
+    h += '<text x="' + lx + '" y="' + (cy+5) + '" text-anchor="' + anchor + '" fill="#e8edf2" font-size="16" font-weight="500" style="paint-order:stroke;stroke:#0a0e15;stroke-width:3px;stroke-linejoin:round">' + e(c.name) + '</text>';
+  });
+
+  h += '</svg>';
+
+  // Legend (tier colors)
+  h += '<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:6px">';
+  ['T1','T2','T3','T4','ref','uncovered'].forEach(function(tk){
+    h += '<span style="display:inline-flex;align-items:center;gap:5px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + sgTierColor[tk] + '"></span>' + e(sgTierLabel[tk]) + '</span>';
+  });
+  h += '</div>';
+  h += '</div>';
+
+  // Underlying Rails
+  if ((sg.rails || []).length) {
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-bottom:12px">';
+    h += '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Underlying Rails — 跨四象限基础设施</div>';
+    h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+    h += '<th>名称</th><th>类型</th>';
+    for (var sgrh = 0; sgrh < sgQOrder.length; sgrh++) {
+      h += '<th>' + e(sgQLabel[sgQOrder[sgrh]]) + '</th>';
+    }
+    h += '<th>说明</th>';
+    h += '</tr></thead><tbody>';
+    for (var sgri = 0; sgri < sg.rails.length; sgri++) {
+      var sgR = sg.rails[sgri];
+      h += '<tr>';
+      h += '<td style="white-space:nowrap"><span style="font-weight:700;color:var(--text)">' + e(sgR.name) + '</span>';
+      if (sgR.ticker) h += ' <span class="mono" style="font-size:10px;color:var(--text3)">' + e(sgR.ticker) + '</span>';
+      h += ' <span class="b ' + (sgTierClass[sgR.cortex_tier] || 'b-gr') + '" style="font-size:9px;padding:1px 5px">' + e(sgTierLabel[sgR.cortex_tier] || sgR.cortex_tier || '') + '</span>';
+      h += '</td>';
+      h += '<td style="white-space:nowrap;font-size:11px;color:var(--text2)">' + e(sgR.category || '') + '</td>';
+      for (var sgrk = 0; sgrk < sgQOrder.length; sgrk++) {
+        var sgEv = (sgR.exposure || {})[sgQOrder[sgrk]] || '';
+        var sgCls = sgPenClass[sgEv] || 'b-gr';
+        var sgDot = sgPenDot[sgEv] || '○';
+        h += '<td style="text-align:center"><span class="b ' + sgCls + '" style="font-size:10px;padding:2px 6px" title="' + e(sgEv || '无') + '">' + sgDot + '</span></td>';
+      }
+      h += '<td style="font-size:11px;color:var(--text3)">' + e(sgR.note || '') + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    h += '</div>';
+  }
+
+  h += '</div></div>';
+}
+
+
+// 1. Tier Ranking (inline tags per tier)
+if ((D.tier_ranking || []).length) {
+  var tiers = {};
+  var tierNames = {};
+  var tierOrder = ['T1','T2','T3','T4','REF'];
+  for (var ti = 0; ti < D.tier_ranking.length; ti++) {
+    var tr = D.tier_ranking[ti];
+    var tierRaw = String(tr.tier || 'T4');
+    var tierKey = tierRaw.split(/\s/)[0].toUpperCase();
+    if (!tiers[tierKey]) { tiers[tierKey] = []; tierNames[tierKey] = tierRaw; }
+    var targets = tr.targets || [];
+    for (var tti = 0; tti < targets.length; tti++) { tiers[tierKey].push(targets[tti]); }
+  }
+  h += '<div class="panel"><div class="panel-title">\u6807\u7684\u5206\u5C42</div>';
+  h += '<div style="display:flex;flex-direction:column;gap:8px">';
+  for (var toi = 0; toi < tierOrder.length; toi++) {
+    var tKey = tierOrder[toi];
+    if (!tiers[tKey] || !tiers[tKey].length) continue;
+    var tc = tierColor(tKey);
+    var displayName = tierNames[tKey] || tKey;
+    h += '<div style="display:flex;align-items:center;gap:12px">';
+    h += '<span style="font-size:11px;font-weight:700;color:' + tc + ';min-width:72px;flex-shrink:0;padding-left:8px;border-left:3px solid ' + tc + '">' + e(displayName) + '</span>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
+    for (var tri = 0; tri < tiers[tKey].length; tri++) {
+      var asset = tiers[tKey][tri];
+      var tip = asset.rationale ? ' title="' + e(asset.rationale).replace(/"/g,'&quot;') + '"' : '';
+      h += '<span class="mono" style="font-size:13px;font-weight:700;color:var(--text);background:rgba(255,255,255,.06);padding:3px 10px;border-radius:4px;cursor:default"' + tip + '>' + e(asset.symbol) + '</span>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 2. Scoring Matrix
+if ((D.scoring_matrix || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u8BC4\u5206\u77E9\u9635</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:700px"><thead><tr>';
+  h += '<th>\u6807\u7684</th><th>\u4F30\u503C</th><th>\u62A4\u57CE\u6CB3</th><th>\u7BA1\u7406\u5C42</th><th>\u589E\u957F</th><th>\u4E0B\u884C</th><th>\u4E0A\u884C</th>';
+  h += '</tr></thead><tbody>';
+  for (var smi = 0; smi < D.scoring_matrix.length; smi++) {
+    var sm = D.scoring_matrix[smi];
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text)">' + e(sm.symbol) + '</td>';
+    var numFields = ['valuation','moat','management','growth'];
+    for (var nfi = 0; nfi < numFields.length; nfi++) {
+      var nfv = sm[numFields[nfi]];
+      var nfn = parseInt(nfv);
+      if (!isNaN(nfn) && nfn >= 1 && nfn <= 5) {
+        h += '<td><span class="heatmap-cell ' + hmClass(nfn) + '">' + e(nfv) + '</span></td>';
+      } else {
+        h += '<td class="mono">' + e(nfv !== undefined ? nfv : '\u2014') + '</td>';
+      }
+    }
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(sm.downside || '\u2014') + '</td>';
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(sm.upside || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 3. Asset Judgment Table (replaces valuation bar chart — different currencies/scales can't share one axis)
+if (assetJudgments.length) {
+  h += '<div class="panel"><div class="panel-title">\u6807\u7684\u5224\u65AD</div>';
+  h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+  h += '<th>\u6807\u7684</th><th>\u884C\u52A8</th><th>\u4ED3\u4F4D</th><th>\u4F30\u503C\u533A\u95F4</th><th>\u4F9D\u8D56\u5047\u8BBE</th>';
+  h += '</tr></thead><tbody>';
+  for (var aji = 0; aji < assetJudgments.length; aji++) {
+    var aj2 = assetJudgments[aji];
+    h += '<tr>';
+    h += '<td style="font-weight:700;font-family:var(--mono);font-size:14px;color:var(--text)">' + e(aj2.symbol) + '</td>';
+    h += '<td>' + actionBadge(aj2.action) + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + e(aj2.position_type || '\u2014') + '</td>';
+    if (aj2.valuation_range) {
+      // Parse and color-code bear/base/bull
+      var vrParts = String(aj2.valuation_range).split('/').map(function(s) { return s.trim(); });
+      h += '<td class="mono" style="font-size:12px;white-space:nowrap">';
+      for (var vpi = 0; vpi < vrParts.length; vpi++) {
+        var vp = vrParts[vpi];
+        var vpColor = 'var(--text2)';
+        if (vp.toLowerCase().indexOf('bear') >= 0) vpColor = 'var(--red)';
+        else if (vp.toLowerCase().indexOf('base') >= 0) vpColor = 'var(--text)';
+        else if (vp.toLowerCase().indexOf('bull') >= 0) vpColor = 'var(--green)';
+        if (vpi > 0) h += ' <span style="color:var(--text3)">/</span> ';
+        h += '<span style="color:' + vpColor + '">' + e(vp) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    var deps = Array.isArray(aj2.depends_on) ? aj2.depends_on : (aj2.depends_on ? [String(aj2.depends_on)] : []);
+    if (deps.length) {
+      h += '<td style="font-size:11px">';
+      for (var dpi = 0; dpi < deps.length; dpi++) {
+        if (dpi > 0) h += ' ';
+        h += '<span class="b b-g" style="font-size:9px;padding:2px 6px">' + e(deps[dpi]) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 4. Scenario Matrix (supports both {paths:[...], expected_return} and flat array)
+var smPaths = Array.isArray(D.scenario_matrix) ? D.scenario_matrix : (D.scenario_matrix && D.scenario_matrix.paths ? D.scenario_matrix.paths : []);
+var smExpRet = D.scenario_matrix && D.scenario_matrix.expected_return ? D.scenario_matrix.expected_return : '';
+if (smPaths.length) {
+  h += '<div class="panel"><div class="panel-title">\u60C5\u666F\u77E9\u9635</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:600px"><thead><tr>';
+  h += '<th>\u8DEF\u5F84</th><th>\u6982\u7387</th><th>\u63CF\u8FF0</th><th>\u5F71\u54CD</th><th>\u7EC4\u5408\u56DE\u62A5</th>';
+  h += '</tr></thead><tbody>';
+  for (var sci2 = 0; sci2 < smPaths.length; sci2++) {
+    var scenario = smPaths[sci2];
+    var pColor = probColor(scenario.probability);
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text)">' + md(scenario.path) + '</td>';
+    h += '<td class="mono" style="color:' + pColor + ';font-weight:700">' + e(fmtProb(scenario.probability)) + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + md(scenario.description || '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + md(scenario.impact || '\u2014') + '</td>';
+    h += '<td class="mono" style="color:var(--green);font-weight:600">' + e(scenario.portfolio_return || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  if (smExpRet) {
+    h += '<tr style="border-top:2px solid rgba(255,255,255,.1)"><td colspan="4" style="font-weight:700;color:var(--text);text-align:right">\u671F\u671B\u56DE\u62A5</td>';
+    h += '<td class="mono" style="font-weight:700;color:var(--green);font-size:16px">' + e(smExpRet) + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 5. Edge Conclusion
+if (D.edge_conclusion) {
+  h += '<div class="quote-block" style="border-color:var(--green);margin-top:6px">' + renderBlock(D.edge_conclusion) + '</div>';
+}
+
+// 6. Contrarian
+if ((D.contrarian || []).length) {
+  h += '<div class="panel" style="border-left:4px solid var(--red)"><div class="panel-title" style="color:#ef8f7d">\u53CD\u5411\u8BBA\u8BC1</div>';
+  h += '<div class="panel-body">';
+  for (var cti = 0; cti < D.contrarian.length; cti++) {
+    var ct = D.contrarian[cti];
+    var ctReason = typeof ct === 'string' ? ct : (ct.reason || '');
+    var ctProb = typeof ct === 'object' ? ct.probability : '';
+    var ctImpact = typeof ct === 'object' ? ct.impact : '';
+    h += '<div style="padding:8px 12px;background:rgba(212,74,50,.06);border:1px solid rgba(212,74,50,.15);border-radius:8px;display:flex;gap:12px;align-items:flex-start">';
+    if (ctProb) h += '<span class="mono" style="color:var(--red);font-weight:700;font-size:13px;flex-shrink:0;min-width:32px">' + e(fmtProb(ctProb)) + '</span>';
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div style="font-size:13px;font-weight:600;color:#ef8f7d;line-height:1.5">' + md(ctReason) + '</div>';
+    if (ctImpact) h += '<div style="font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5">\u2192 ' + md(ctImpact) + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end assets
+
+// ========== TAB 4: MONITOR ==========
+h += '<div id="monitor" class="page-panel">';
+
+// Status legend
+h += '<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em">';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot confirmed" style="width:8px;height:8px"></span>\u5DF2\u9A8C\u8BC1</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot strong" style="width:8px;height:8px"></span>\u8D8B\u52BF\u5411\u597D</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot approaching" style="width:8px;height:8px"></span>\u63A5\u8FD1\u89E6\u53D1</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot watching" style="width:8px;height:8px"></span>\u89C2\u5BDF\u4E2D</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot weakening" style="width:8px;height:8px"></span>\u8F6C\u5F31</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot failing" style="width:8px;height:8px"></span>\u8BC1\u4F2A</span>';
+h += '</div>';
+
+h += '<div class="section-stack">';
+
+// 1. Tipping Points Table
+if (allTippingPoints.length) {
+  h += '<div class="panel"><div class="panel-title">\u62D0\u70B9\u76D1\u63A7</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:780px"><thead><tr>';
+  h += '<th>\u62D0\u70B9</th><th>\u5F53\u524D</th><th>\u9608\u503C</th><th>\u5047\u8BBE</th><th>\u6743\u91CD</th><th>\u6570\u636E\u6E90</th><th>\u72B6\u6001</th>';
+  h += '</tr></thead><tbody>';
+  for (var tpi = 0; tpi < allTippingPoints.length; tpi++) {
+    var ip = allTippingPoints[tpi];
+    var state = ipState(ip);
+    var dotHtml = '<span class="tp-dot ' + state + '" style="width:8px;height:8px;margin-right:6px"></span>';
+    var ds = ip.data_source || '';
+    var isUrl = /^https?:\/\//.test(ds);
+    var dsHtml = isUrl
+      ? '<a href="' + e(ds) + '" target="_blank" rel="noopener noreferrer" style="color:var(--purple);font-size:11px">' + e(ds.replace(/^https?:\/\/(www\.)?/, '').split('/').slice(0, 2).join('/')) + '</a>'
+      : '<span style="color:var(--text3);font-size:11px">' + e(ds || '\u2014') + '</span>';
+    h += '<tr>';
+    h += '<td style="font-weight:600">' + e(ip.event) + '</td>';
+    h += '<td class="mono" style="color:var(--green-strong)">' + e(ip.current || '\u2014') + '</td>';
+    h += '<td>' + e(ip.quantitative || ip.qualitative || '\u2014') + '</td>';
+    h += '<td style="color:var(--green);white-space:nowrap">' + (ip.hypothesis_id ? e(ip.hypothesis_id) : '\u2014') + '</td>';
+    h += '<td class="mono">' + e(ip.weight || '\u2014') + '</td>';
+    h += '<td>' + dsHtml + '</td>';
+    h += '<td style="white-space:nowrap">' + dotHtml + statusCn(state) + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 2. Catalysts Timeline
+if ((D.catalysts || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u50AC\u5316\u5242\u65F6\u95F4\u7EBF</div>';
+  h += '<div class="timeline">';
+  var sortedCatalysts = D.catalysts.slice().sort(function(a, b) {
+    return (a.date || '') < (b.date || '') ? -1 : (a.date || '') > (b.date || '') ? 1 : 0;
+  });
+  for (var cai = 0; cai < sortedCatalysts.length; cai++) {
+    var cat = sortedCatalysts[cai];
+    h += '<div class="tl-item">';
+    h += '<span class="tl-date">' + e(cat.date) + '</span>';
+    h += '<div class="tl-content">';
+    h += '<div style="font-weight:600;color:var(--text)">' + md(cat.event) + '</div>';
+    if (cat.targets) {
+      var assetList = Array.isArray(cat.targets) ? cat.targets : String(cat.targets).split(',').map(function(s) { return s.trim(); });
+      h += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">';
+      for (var ali = 0; ali < assetList.length; ali++) {
+        h += '<span class="b b-g" style="font-size:9px;padding:3px 8px">' + e(assetList[ali]) + '</span>';
+      }
+      h += '</div>';
+    }
+    if (cat.expected_impact) h += '<div style="font-size:12px;color:var(--text3);margin-top:4px">' + md(cat.expected_impact) + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 3. Risks Table
+if ((D.risks || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u98CE\u9669\u8BC4\u4F30</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:700px"><thead><tr>';
+  h += '<th>\u98CE\u9669</th><th>\u6982\u7387</th><th>\u5F71\u54CD</th><th>\u6CE2\u53CA\u6807\u7684</th><th>\u5BF9\u51B2</th>';
+  h += '</tr></thead><tbody>';
+  for (var rki = 0; rki < D.risks.length; rki++) {
+    var risk = D.risks[rki];
+    var pColor = probColor(risk.probability);
+    h += '<tr>';
+    h += '<td style="font-weight:600;color:var(--text)">' + md(risk.risk) + '</td>';
+    h += '<td class="mono" style="color:' + pColor + ';font-weight:700">' + e(fmtProb(risk.probability)) + '</td>';
+    h += '<td style="color:var(--text2)">' + md(risk.impact || '\u2014') + '</td>';
+    if (risk.most_impacted) {
+      var affList = Array.isArray(risk.most_impacted) ? risk.most_impacted : String(risk.most_impacted).split(',').map(function(s) { return s.trim(); });
+      h += '<td>';
+      for (var afi = 0; afi < affList.length; afi++) {
+        h += '<span class="b b-o" style="font-size:9px;padding:3px 8px;margin:2px">' + e(affList[afi]) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(risk.hedge || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 4. Evolution Timeline
+if ((D.evolution || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u957F\u671F\u6F14\u53D8</div>';
+  h += '<div class="timeline">';
+  for (var evi = 0; evi < D.evolution.length; evi++) {
+    var ev = D.evolution[evi];
+    h += '<div class="tl-item">';
+    h += '<span class="tl-date">' + e(ev.period) + '</span>';
+    h += '<div class="tl-content">';
+    h += '<div style="font-weight:600;color:var(--text)">' + md(ev.event) + '</div>';
+    h += '<div style="display:flex;gap:10px;margin-top:4px;font-size:12px">';
+    if (ev.probability) h += '<span class="mono" style="color:var(--text3)">\u6982\u7387: ' + e(ev.probability) + '</span>';
+    if (ev.investment_impact) h += '<span style="color:var(--text2)">\u5F71\u54CD: ' + md(ev.investment_impact) + '</span>';
+    h += '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 4b. Terminal State
+if (D.terminal_state) {
+  h += '<div class="panel"><div class="panel-title">\u7EC8\u6001\u5224\u65AD</div>';
+  h += '<div class="panel-body"><div style="font-size:13px;color:var(--text2)">' + renderBlock(D.terminal_state) + '</div></div></div>';
+}
+
+// 5. Exit Framework — removed (internal module)
+// 6. Discussion Notes — removed (internal module)
+
+h += '</div>'; // section-stack
+h += '</div>'; // end monitor
+
+// Inject into DOM
+$('app').innerHTML = h;
+document.title = (D.title || 'Sector') + ' \u2014 Cortex';
+
+</script>
+</body>
+</html>

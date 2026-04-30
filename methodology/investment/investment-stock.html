@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>股票投资方法论 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+/* ═══════════ PAGE: CONTENT ═══════════ */
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 72px 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero .container {
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.page-hero .page-subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-top: 10px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-breadcrumb a:hover { color: var(--accent-light); }
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.page-layout {
+  display: flex;
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 8px 32px 80px;
+  gap: 56px;
+}
+.page-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ========== SIDEBAR TOC ========== */
+.page-toc {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.page-toc::-webkit-scrollbar { display: none; }
+.toc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 12px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  margin-left: -1px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.toc-list a.active {
+  color: var(--accent-light);
+  border-left-color: var(--accent-light);
+  font-weight: 600;
+}
+.toc-list .toc-h3 {
+  padding-left: 26px;
+  font-size: 11px;
+  font-weight: 400;
+}
+@media (max-width: 960px) {
+  .page-toc { display: none; }
+  .page-layout { max-width: var(--max-width); }
+}
+
+/* ========== MARKDOWN BODY ========== */
+
+/* --- H2: Section Headers --- */
+.md-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 56px 0 20px;
+  padding: 0 0 12px;
+  color: var(--text-1);
+  border: none;
+  position: relative;
+  scroll-margin-top: 72px;
+  letter-spacing: -0.01em;
+}
+.md-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-light), transparent);
+  border-radius: 1px;
+}
+.md-body h2:first-child { margin-top: 8px; }
+
+/* --- H3: Sub-sections --- */
+.md-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  color: var(--text-1);
+  scroll-margin-top: 72px;
+  letter-spacing: -0.005em;
+}
+
+/* --- H4: Detail headers --- */
+.md-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  color: var(--accent-light);
+  letter-spacing: 0.02em;
+}
+
+/* --- H5: Fine detail --- */
+.md-body h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+  color: var(--text-2);
+}
+
+/* --- Body text --- */
+.md-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+.md-body strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.md-body em {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ========== LISTS ========== */
+.md-body > ul,
+.md-body > ol {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.md-body > ul > li,
+.md-body > ol > li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  padding: 10px 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.md-body > ul > li:hover,
+.md-body > ol > li:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-2);
+}
+.md-body > ul > li strong,
+.md-body > ol > li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Nested lists */
+.md-body li ul,
+.md-body li ol {
+  margin: 8px 0 2px;
+  padding-left: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.md-body li li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-2);
+  padding: 2px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  padding-left: 14px;
+}
+.md-body li li:hover {
+  border-color: transparent;
+  background: none;
+}
+.md-body li li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.md-body li li li::before {
+  background: transparent;
+  border: 1px solid var(--text-3);
+  width: 3px;
+  height: 3px;
+}
+.md-body li li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ========== BLOCKQUOTE ========== */
+.md-body blockquote {
+  border: none;
+  padding: 14px 20px;
+  margin: 20px 0;
+  background: var(--accent-glow);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+.md-body blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-light);
+}
+.md-body blockquote p {
+  color: var(--text-1);
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+/* ========== CODE ========== */
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-2);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--accent-light);
+  border: 1px solid var(--border);
+}
+.md-body pre {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.md-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ========== TABLE ========== */
+.md-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.md-body th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.md-body td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.md-body tr:last-child td { border-bottom: none; }
+.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0 8px;
+}
+
+/* ========== INDEX CARDS ========== */
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.index-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.index-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-glow), transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.index-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+.index-card:hover::before { opacity: 1; }
+.index-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+}
+.index-card p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.index-card .index-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+}
+.index-tag-invest { background: var(--green-dim); color: var(--green); }
+.index-tag-model { background: rgba(188,140,255,0.1); color: #bc8cff; }
+
+/* ========== FAQ CARDS ========== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
+  gap: 12px;
+}
+.page-layout:has(.faq-grid) .page-content { max-width: 1100px; }
+.faq-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.faq-card:hover { border-color: var(--border-hover); }
+.faq-question {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.faq-answer p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.faq-answer strong { color: var(--text-1); }
+.faq-answer ul, .faq-answer ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.faq-answer li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.faq-answer li::before { display: none; }
+.faq-answer li strong { color: var(--text-1); }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../../universe.html">仓库</a></li>
+      <li><a href="../../methodology/index.html" class="active">方法论</a></li>
+      <li><a href="../../beliefs.html">信念</a></li>
+      <li><a href="../../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-breadcrumb"><a href="../../index.html">首页</a> / <a href="../../methodology/index.html">方法论</a> / <a href="../../methodology/investment/index.html">投资方法论</a></div>
+    <h1>股票投资方法论</h1>
+    <p class="page-subtitle"></p>
+  </div>
+</section>
+
+<!-- CONTENT WITH TOC -->
+<div class="page-layout">
+  <article class="page-content">
+    <div class="md-body">
+<hr />
+<h2>市场认知</h2>
+<ul>
+<li>宏观研究：<ul>
+<li>地区（国家）：国家政策 / 地缘政治风险</li>
+</ul>
+</li>
+<li>公司研究：<ul>
+<li>核心价值 = TAM × 利润率 × 市占率（可能会有"戴维斯双击"的现象出现）<ul>
+<li>TAM：赛道增长</li>
+<li>利润率：商业模式效率提升（拐点）</li>
+<li>市占率：公司竞争力（团队、文化）</li>
+</ul>
+</li>
+<li>先理解行业和赛道当前发展阶段和痛点，然后看行业是否有效率提升的空间，最后看公司的竞争力如何</li>
+<li>不要切片数据，要预测数据</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2>策略认知</h2>
+<p>科技股非线性增长导向：
+- 该体系明确接受：较高的阶段性波动 / 较低的短期确定性 / 较长的验证周期
+- 以换取：极端非线性的长期回报 / 结构性竞争优势所带来的复利</p>
+<p>收益风险结构：
+- 赚 TAM 的钱比赚市占率的钱更简单（抓住行业增长的能力会更简单）
+- 如果不在行业内，底层产品方向的走向是很难把握的（类似于这些底层产品已经在竞争的是执行能力、公司文化、方向 vision 等一系列的综合能力），仅仅作为用户还远远不够（体感）</p>
+<hr />
+<h2>战术</h2>
+<h3>公司深度研究</h3>
+<h4>Part 1：公司概况</h4>
+<h5>1.1 基本信息 &amp; 历史</h5>
+<ul>
+<li>成立时间、总部、员工数</li>
+<li>上市信息（代码、交易所）</li>
+<li>业务所在地区（本土 / 多国）<ul>
+<li>各主要市场的监管框架 / 政策态度</li>
+</ul>
+</li>
+<li>客户规模 &amp; 类型<ul>
+<li>C 端 / B 端 / 两者皆有</li>
+</ul>
+</li>
+<li>公司发展里程碑（策略和执行能力）<ul>
+<li>历史的关键决策</li>
+<li>融资、IPO、重大扩张、监管牌照等</li>
+<li>产品 / 商业模式的关键转折点</li>
+</ul>
+</li>
+<li>企业文化<ul>
+<li>思维方式</li>
+</ul>
+</li>
+</ul>
+<h5>1.2 管理层 &amp; 股权结构</h5>
+<ul>
+<li>核心创始人 / CEO 的背景<ul>
+<li>行业经验、技术 / 产品 / 资本出身</li>
+</ul>
+</li>
+<li>股权结构<ul>
+<li>大股东是谁？</li>
+<li>是否有超级投票权？</li>
+</ul>
+</li>
+<li>核心高管变动<ul>
+<li>COO、CRO、CTO 等</li>
+</ul>
+</li>
+</ul>
+<h4>Part 2：商业模式与收入引擎</h4>
+<h5>2.1 行业结构</h5>
+<ul>
+<li>行业链条示意</li>
+<li>行业为哪个客户群解决了什么痛点？<ul>
+<li><strong>传统模式的"具体痛点"（用生活场景说人话）</strong></li>
+</ul>
+</li>
+<li><strong>行业结构：集中度 &amp; 盈利模式</strong></li>
+<li>该公司的特点和核心竞争力是什么？</li>
+</ul>
+<h5>2.2 产品矩阵（建议做成表格）</h5>
+<p>每一行一个产品 / 业务线，可包含：</p>
+<ul>
+<li>产品类别</li>
+<li>详细介绍</li>
+<li>目标用户</li>
+<li>流程介绍</li>
+<li>收入机制（价值捕获）</li>
+<li>成本结构</li>
+<li>利润驱动因素</li>
+<li>收入贡献绝对值</li>
+<li>同比 / 环比收入增长率</li>
+<li>该产品的 TAM 增长率</li>
+<li>利润率</li>
+<li>「如果我重新做一个产品，我会关注的点」</li>
+</ul>
+<h5>2.3 核心亮点</h5>
+<ul>
+<li>业务、产品上的核心竞争优势 / 亮点 / 创新</li>
+</ul>
+<h4>Part 3：财务表现及关键指标</h4>
+<h5>3.1 收入 / 利润概览</h5>
+<ul>
+<li>收入结构：利息 vs 手续费 vs 其他</li>
+<li>增长率：收入 YoY、净利润 YoY</li>
+<li>盈利水平：毛利率、净利率、ROE、ROA</li>
+</ul>
+<h5>3.2 关键运营 / 财务指标</h5>
+<ul>
+<li><strong>根据行业选指标</strong></li>
+</ul>
+<h4>Part 4：未来展望</h4>
+<h5>4.1 行业 &amp; 公司成长空间</h5>
+<ul>
+<li>行业 TAM 增长拐点</li>
+<li>公司提高市占率的核心优势</li>
+</ul>
+<h5>4.2 利润率提升的可能因素</h5>
+<ul>
+<li>哪些环节有提高利润率的空间？（规模效应、成本优化、产品结构升级等）</li>
+</ul>
+<h5>4.3 AI 带来的结构性变化</h5>
+<p>重点关注业务中那些环节可以被 AI 重构，按链条拆：</p>
+<ul>
+<li><strong>获客</strong>：精准投放、广告优化、信用评分前置筛选</li>
+<li><strong>风控</strong>：信贷审批、反欺诈、动态额度调整</li>
+<li><strong>运营</strong>：客服机器人、催收优化、流程自动化</li>
+<li><strong>产品</strong>：个性化推荐、智能理财建议、动态定价</li>
+<li><strong>内部决策</strong>：预算分配、定价策略、风险建模</li>
+</ul>
+<p>其次关注其在 AI 上的动态竞争状态：</p>
+<ul>
+<li>是否有 <strong>自建模型 / 收购 AI 公司 / 自研平台</strong>？</li>
+<li>是否有 <strong>数据优势</strong>（用户数、行为数据、交易数据）？</li>
+</ul>
+<h5>4.4 风险</h5>
+<ul>
+<li>（在这里统一列公司未来面临的主要风险点：业务、竞争、监管、宏观、治理等）</li>
+</ul>
+<h4>Part 5：估值 &amp; 投资建议</h4>
+<blockquote>
+<p>详细估值方法论见 [[公司估值]]</p>
+</blockquote>
+<h5>5.1 估值</h5>
+<ul>
+<li>估值模型 / 方法<ul>
+<li>P/S、P/E、P/B、PEG、EV/EBITDA 等</li>
+</ul>
+</li>
+<li>同行对比<ul>
+<li>估值水平 + 增速 + 盈利能力的对比</li>
+</ul>
+</li>
+</ul>
+<h5>5.2 拐点观察</h5>
+<ul>
+<li>哪些事件 / 指标是估值或股价的关键拐点？<ul>
+<li>比如：新业务放量、某市场牌照获批等</li>
+</ul>
+</li>
+</ul>
+<h5>5.3 投资建议</h5>
+<ul>
+<li>当前价位下的立场，推荐价位</li>
+<li>推荐持有周期（短 / 中 / 长）</li>
+<li>简要总结：为什么是这个建议？</li>
+</ul>
+<h3>行业分析框架</h3>
+<blockquote>
+<p>TODO：待独立文件化</p>
+</blockquote>
+    </div>
+  </article>
+  <aside class="page-toc" id="pageToc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="tocList"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../../assets/app.js"></script>
+<script>
+// Auto-generate TOC
+(function() {
+  const body = document.querySelector('.md-body');
+  const tocList = document.getElementById('tocList');
+  const tocAside = document.getElementById('pageToc');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocAside) tocAside.style.display = 'none';
+    return;
+  }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 's-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.classList.add('toc-h3');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Scroll spy
+  const tocLinks = tocList.querySelectorAll('a');
+  let current = null;
+  const update = () => {
+    let found = null;
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 100) found = h;
+    });
+    if (found && found !== current) {
+      current = found;
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = tocList.querySelector('a[href="#' + found.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

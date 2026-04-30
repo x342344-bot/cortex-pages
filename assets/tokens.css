@@ -1,0 +1,77 @@
+/* ═══════════ CORTEX DESIGN TOKENS v3 ═══════════ */
+/* 纯变量定义。不含 reset / body / 排版 — 那些在 base.css */
+
+:root {
+  /* --- Surfaces --- */
+  --bg-0: #08080a;
+  --bg-1: #0f0f12;
+  --bg-2: #16161a;
+  --bg-3: #1e1e23;
+  --bg-hover: #22222a;
+  --bg-soft: #0f0f12;
+  --bg-panel: rgba(15,15,18,0.92);
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --border-strong: rgba(255,255,255,0.12);
+
+  /* --- Text --- */
+  --text-1: #ededef;
+  --text-2: #a0a0ab;
+  --text-3: #62626b;
+  --text-4: #3e3e45;
+
+  /* --- Accent --- */
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-dim: rgba(99,102,241,0.12);
+  --accent-glow: rgba(99,102,241,0.25);
+
+  /* --- Semantic Colors --- */
+  --green: #34d399;
+  --green-dim: rgba(52,211,153,0.10);
+  --green-strong: #7de2a9;
+  --red: #f87171;
+  --red-dim: rgba(248,113,113,0.10);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251,191,36,0.10);
+  --cyan: #22d3ee;
+  --cyan-dim: rgba(34,211,238,0.10);
+  --yellow: #facc15;
+  --yellow-dim: rgba(250,204,21,0.10);
+  --blue: #4d8dff;
+  --orange: #d69552;
+  --purple: #b39bff;
+
+  /* --- Typography --- */
+  --font: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  /* --- Spacing / Layout --- */
+  --radius: 12px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+  --max-width: 980px;
+  --max-width-wide: 1280px;
+
+  /* --- Elevation --- */
+  --shadow: 0 22px 48px rgba(0,0,0,.34);
+  --shadow-sm: 0 12px 28px rgba(0,0,0,.24);
+
+  /* ═══ Transition Aliases ═══ */
+  /* 旧 dashboard 变量名 → v3 变量名。Phase 6 删除。 */
+  --bg: var(--bg-0);
+  --bg2: var(--bg-1);
+  --bg3: var(--bg-2);
+  --bg4: var(--bg-3);
+  --text: var(--text-1);
+  --text2: var(--text-2);
+  --text3: var(--text-3);
+  --panel: var(--bg-panel);
+  --mono: var(--font-mono);
+  --green-soft: var(--green-dim);
+  --border-w: 1px;
+  --white: #fff;
+}
+
+/* Dashboard scope override removed in v2. All pages now share :root tokens.
+   Green is semantic-only (status dots, badges, positive signals). */

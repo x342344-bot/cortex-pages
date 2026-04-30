@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex — 投研认知中枢</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tokens.css">
+<link rel="stylesheet" href="./assets/base.css">
+<link rel="stylesheet" href="./assets/components.css">
+<style>
+/* ═══════════ PAGE: HOME ═══════════ */
+.hero-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.hero-wrap::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, rgba(167,139,250,0.08) 40%, transparent 70%);
+  pointer-events: none;
+}
+.hero {
+  position: relative;
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 80px 32px 56px;
+}
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent-light);
+  margin-bottom: 24px;
+}
+.hero-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(180deg, var(--text-1) 0%, var(--text-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-desc {
+  font-size: 16px;
+  color: var(--text-2);
+  max-width: 480px;
+  line-height: 1.7;
+}
+
+/* Four Layers */
+.layers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+.layers::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 40px;
+  right: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--cyan), var(--accent-light), var(--amber), var(--green));
+  opacity: 0.25;
+}
+.layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 0 8px;
+}
+.layer-dot-wrap {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
+}
+.layer-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.layer-dot-human {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--bg-0);
+}
+.layer-arrow {
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--text-4);
+  z-index: 2;
+}
+.layer-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.layer-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.layer-who {
+  font-size: 9px;
+  margin-bottom: 10px;
+}
+.layer-desc {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.layer-tools {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-4);
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+  margin-top: auto;
+}
+@media (max-width: 768px) {
+  .hero { padding: 56px 20px 40px; }
+  .hero h1 { font-size: 32px; }
+  .layers {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .layers::before { display: none; }
+  .layer-arrow { display: none; }
+}
+@media (max-width: 480px) {
+  .hero h1 { font-size: 28px; }
+  .layers { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="./index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="./universe.html">仓库</a></li>
+      <li><a href="./methodology/index.html">方法论</a></li>
+      <li><a href="./beliefs.html">信念</a></li>
+      <li><a href="./faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero">
+    <div class="hero-label">Investment Research System</div>
+    <h1>投研认知中枢</h1>
+    <p class="hero-desc">
+      AI投研系统主要分为四层：事实层 + 探索层 + 观点层 + 追踪层<br>
+      AI 核查事实、驱动探索、执行追踪；人类负责凝练观点。
+    </p>
+  </div>
+</div>
+
+<!-- FOUR LAYERS -->
+<div class="section" id="layers">
+  <div class="section-header">
+    <div class="section-title">四层体系</div>
+  </div>
+
+  <div class="layers">
+    <div class="layer">
+      <div class="layer-dot-wrap">
+        <div class="layer-dot" style="background: var(--cyan); box-shadow: 0 0 12px var(--cyan-dim)"></div>
+        <span class="layer-arrow">&rarr;</span>
+      </div>
+      <div class="layer-content">
+        <div class="layer-name" style="color: var(--cyan)">事实层</div>
+        <span class="tag tag-system layer-who">AI</span>
+        <div class="layer-desc">核查信息真伪，交叉验证数据源，建立可靠的事实基础。</div>
+        <div class="layer-tools">Sentinel 扫描<br>链上数据<br>财报解析<br>新闻核查</div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-dot-wrap">
+        <div class="layer-dot" style="background: var(--accent-light); box-shadow: 0 0 12px var(--accent-dim)"></div>
+        <span class="layer-arrow">&rarr;</span>
+      </div>
+      <div class="layer-content">
+        <div class="layer-name" style="color: var(--accent-light)">探索层</div>
+        <span class="tag tag-system layer-who">AI</span>
+        <div class="layer-desc">多角度研究赛道与标的，挖掘未被定价的信息差。</div>
+        <div class="layer-tools">赛道研究管道<br>标的深度报告<br>竞争格局分析<br>估值建模</div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-dot-wrap">
+        <div class="layer-dot layer-dot-human" style="background: var(--amber); box-shadow: 0 0 12px var(--amber-dim)"></div>
+        <span class="layer-arrow">&rarr;</span>
+      </div>
+      <div class="layer-content">
+        <div class="layer-name" style="color: var(--amber)">观点层</div>
+        <span class="tag tag-method layer-who">人类</span>
+        <div class="layer-desc">凝练 conviction，构建假设树，形成可证伪的投资判断。</div>
+        <div class="layer-tools">河流模型<br>假设树 + 拐点<br>贝叶斯更新</div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-dot-wrap">
+        <div class="layer-dot" style="background: var(--green); box-shadow: 0 0 12px var(--green-dim)"></div>
+      </div>
+      <div class="layer-content">
+        <div class="layer-name" style="color: var(--green)">追踪层</div>
+        <span class="tag tag-system layer-who">AI</span>
+        <div class="layer-desc">24/7 监控拐点，假设置信度自动更新，异常触发告警。</div>
+        <div class="layer-tools">拐点追踪<br>置信度引擎<br>黑天鹅监控<br>日报推送</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="./assets/app.js"></script>
+</body>
+</html>

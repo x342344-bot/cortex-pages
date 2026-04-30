@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投资方法论总纲 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+/* ═══════════ PAGE: CONTENT ═══════════ */
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 72px 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero .container {
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.page-hero .page-subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-top: 10px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-breadcrumb a:hover { color: var(--accent-light); }
+
+/* ========== TWO-COLUMN LAYOUT ========== */
+.page-layout {
+  display: flex;
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 8px 32px 80px;
+  gap: 56px;
+}
+.page-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ========== SIDEBAR TOC ========== */
+.page-toc {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.page-toc::-webkit-scrollbar { display: none; }
+.toc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 12px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  margin-left: -1px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.toc-list a.active {
+  color: var(--accent-light);
+  border-left-color: var(--accent-light);
+  font-weight: 600;
+}
+.toc-list .toc-h3 {
+  padding-left: 26px;
+  font-size: 11px;
+  font-weight: 400;
+}
+@media (max-width: 960px) {
+  .page-toc { display: none; }
+  .page-layout { max-width: var(--max-width); }
+}
+
+/* ========== MARKDOWN BODY ========== */
+
+/* --- H2: Section Headers --- */
+.md-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 56px 0 20px;
+  padding: 0 0 12px;
+  color: var(--text-1);
+  border: none;
+  position: relative;
+  scroll-margin-top: 72px;
+  letter-spacing: -0.01em;
+}
+.md-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-light), transparent);
+  border-radius: 1px;
+}
+.md-body h2:first-child { margin-top: 8px; }
+
+/* --- H3: Sub-sections --- */
+.md-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 36px 0 12px;
+  color: var(--text-1);
+  scroll-margin-top: 72px;
+  letter-spacing: -0.005em;
+}
+
+/* --- H4: Detail headers --- */
+.md-body h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  color: var(--accent-light);
+  letter-spacing: 0.02em;
+}
+
+/* --- H5: Fine detail --- */
+.md-body h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+  color: var(--text-2);
+}
+
+/* --- Body text --- */
+.md-body p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+.md-body strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.md-body em {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ========== LISTS ========== */
+.md-body > ul,
+.md-body > ol {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.md-body > ul > li,
+.md-body > ol > li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  padding: 10px 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.md-body > ul > li:hover,
+.md-body > ol > li:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-2);
+}
+.md-body > ul > li strong,
+.md-body > ol > li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Nested lists */
+.md-body li ul,
+.md-body li ol {
+  margin: 8px 0 2px;
+  padding-left: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.md-body li li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-2);
+  padding: 2px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  padding-left: 14px;
+}
+.md-body li li:hover {
+  border-color: transparent;
+  background: none;
+}
+.md-body li li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.md-body li li li::before {
+  background: transparent;
+  border: 1px solid var(--text-3);
+  width: 3px;
+  height: 3px;
+}
+.md-body li li strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ========== BLOCKQUOTE ========== */
+.md-body blockquote {
+  border: none;
+  padding: 14px 20px;
+  margin: 20px 0;
+  background: var(--accent-glow);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+.md-body blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-light);
+}
+.md-body blockquote p {
+  color: var(--text-1);
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+/* ========== CODE ========== */
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-2);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--accent-light);
+  border: 1px solid var(--border);
+}
+.md-body pre {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.md-body pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ========== TABLE ========== */
+.md-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.md-body th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.md-body td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.md-body tr:last-child td { border-bottom: none; }
+.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0 8px;
+}
+
+/* ========== INDEX CARDS ========== */
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.index-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.index-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-glow), transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.index-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+.index-card:hover::before { opacity: 1; }
+.index-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+}
+.index-card p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.index-card .index-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+}
+.index-tag-invest { background: var(--green-dim); color: var(--green); }
+.index-tag-model { background: rgba(188,140,255,0.1); color: #bc8cff; }
+
+/* ========== FAQ CARDS ========== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
+  gap: 12px;
+}
+.page-layout:has(.faq-grid) .page-content { max-width: 1100px; }
+.faq-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.faq-card:hover { border-color: var(--border-hover); }
+.faq-question {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.faq-answer p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.faq-answer strong { color: var(--text-1); }
+.faq-answer ul, .faq-answer ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.faq-answer li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.faq-answer li::before { display: none; }
+.faq-answer li strong { color: var(--text-1); }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../../universe.html">仓库</a></li>
+      <li><a href="../../methodology/index.html" class="active">方法论</a></li>
+      <li><a href="../../beliefs.html">信念</a></li>
+      <li><a href="../../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-breadcrumb"><a href="../../index.html">首页</a> / <a href="../../methodology/index.html">方法论</a> / <a href="../../methodology/investment/index.html">投资方法论</a></div>
+    <h1>投资方法论总纲</h1>
+    <p class="page-subtitle"></p>
+  </div>
+</section>
+
+<!-- CONTENT WITH TOC -->
+<div class="page-layout">
+  <article class="page-content">
+    <div class="md-body">
+<hr />
+<h2>一、战略层</h2>
+<h3>第一性原理</h3>
+<p><strong>投资的目标 = 在不断增长的世界总财富中，占有更高比例的交换权。</strong>
+<strong>投资是意义 = 体验生命，不仅是交换权，更重要的对世界线的投票权</strong></p>
+<ul>
+<li><strong>"不断增长"</strong> — 前提。知识复利 + 技术演进让总量扩张成为历史主旋律</li>
+<li><strong>"世界总财富"</strong> — 人类文明创造的全部秩序总和（商品、服务、技术、网络、尚未被创造的可能性）</li>
+<li><strong>"更高比例"</strong> — 不是更多的绝对数量，而是更大的相对份额。在膨胀的宇宙里，唯一有意义的度量是比例</li>
+<li>
+<p><strong>"交换权"</strong> — 不是拥有，而是能够调动。在未来任意时点，将你的份额兑换为任何资源/服务/体验的权力</p>
+</li>
+<li>
+<p><strong>"Conviction"</strong> = 相信某条世界线会实现（相信相信的力量，核心不是"我还对吗"，是"我还信吗"）</p>
+</li>
+<li><strong>"投资"</strong> = 用资本为这条世界线投票</li>
+<li><strong>"交换权增长"</strong> = 投对票的奖励</li>
+</ul>
+<h3>客观认知</h3>
+<ul>
+<li>
+<p>每个人赚自己阶段的钱。有自己的框架再学习，不照搬。</p>
+<ul>
+<li>
+<p><strong>投资方法论的第一步是阶段识别</strong> — 所有投资框架都遵循同一结构：定义阶段 → 选择参与哪些阶段 → 阶段对应的方法论。</p>
+<ul>
+<li>
+<p>多个阶段框架是互补镜头，不是互斥选择：</p>
+<ul>
+<li><strong>TALC（Technology Adoption Life Cycle，技术采用生命周期）</strong>：看技术生命周期 — 早期市场 → 鸿沟 → 保龄球道 → 龙卷风 → 主街（出自《猩猩游戏》）</li>
+<li><strong>T0-T5 叙事传播链</strong>：看信息怎么传播 — 事件发生 → 感知者 → 叙事者 → 数据者 → 结构者 → 投机者（出自《存在与投资》）</li>
+<li><strong>变化窗口期</strong>：看变化什么时候被定价 — Stan 做变化浮现的前 18 个月，赌方向不赌终局</li>
+<li><strong>业务成长阶段</strong>：看公司在哪 — N0（0→1 产品验证）→ N1（10→100 规模化）→ 稳态现金流</li>
+<li><strong>行业发展阶段</strong>：看技术到哪了 - 技术可行性 → 商业可用性（PMF）→ 行业依赖性（权力）→ 金融共识</li>
+</ul>
+</li>
+<li>
+<p><strong>我的选择：赔率驱动，不限阶段，偏早期。</strong> 更像 Stan — 识别异常模式 + 赔率思维。大部分阶段都可以参与，只要存在变化和不对称赔率。但这些机会天然集中在早期（T0-T2、鸿沟到龙卷风前），因为定价效率低 = 赔率好。后期（T4-T5、主街）参与条件更严：conviction 必须极高，或有结构性信息差。（除了客观认知，下面大部分的内容是只适合我的投资方法论）</p>
+</li>
+<li><strong>我的仓位核心战略：</strong><ul>
+<li>前置过滤：粗估 EV（p×b vs q）— EV≤0 直接 pass，不进入研究流程</li>
+<li>阶梯：初始 5% → conviction 验证 8% → 极高 conviction 15%（硬上限 20%）</li>
+<li>第一跳小（还在测试假设），第二跳大（假设已验证，边际信息很难再改变判断）</li>
+<li>出去的越久，越知道自己想要做什么，（Stan 做变化的前18个月，南添做 N1（10→100），巴菲特做稳态现金流。）</li>
+<li>知道 ≠ 能做到，要及时review，降低框架下的犯错概率。</li>
+</ul>
+</li>
+<li>相信相信的力量（做个傻逼，相信自己）</li>
+<li>积累在平时，不要急于求成，做自己擅长的事，并让自己变得很擅长，同时准备好交学费。</li>
+<li>判断是最重要的输出 — 判断意味着失去借口、承担失败、接受孤独。（用仓位看清一个人）<ul>
+<li>没有判断不叫研究</li>
+<li>多数人不是在寻找信息，而是在寻找免责机制（回测/专家评级/等共识 = 责任外包）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>注意力指导仓位，仓位反向校验注意力（<strong>注意力管理 / 仓位管理</strong>）</p>
+<ol>
+<li>注意力是有限的，需要放在更有性价比的地方<ul>
+<li>判断标准：能承载自己总资金至少 20% 的策略机会</li>
+</ul>
+</li>
+<li>注意力管理和仓位管理需要匹配（放了注意力的一定要敢多放仓位，放了仓位的一定要多放注意力）<ul>
+<li>一定要定期 review 仓位的占比</li>
+</ul>
+</li>
+<li>不同资产阶段的投入产出比是不同的，因此需要调整注意力<ul>
+<li>首要目标是活下去，风险管理最重要：仓位管理<ul>
+<li>个人目前阶段：1M 以下：纯 Crypto U 本位（不是通过本金投入来计算仓位占比，而是通过 99% 置信度的最大亏损来计算）<ol>
+<li>大周期仓位：3% → 5%（ETH 2% + Hype 1% + SOL/Pump 2%）更多是作为短期情绪指标的体感实验</li>
+<li>理财收益（项目补贴 / 时间套利 / 资费收益）：6% → 25%</li>
+<li>一级市场（项目挖矿、ICO、Launchpad）：30% → 50%</li>
+<li>二级市场（期权、pair trading、事件交易）：10% → 20%</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3>自我认知</h3>
+<ul>
+<li>即使投资方法论完全一致（第一性原理一致），但因为经历/性格的不同，投资决策仍有巨大不同（类似于 AI 的 context 不一样）</li>
+<li>个人核心战略：赔率思维+事件交易</li>
+<li>挣钱不是线形的，是阶梯式的<ul>
+<li>收益是幂律分布</li>
+<li>投资里胜率没有赔率重要</li>
+<li>正确的亏损是成本，不是错误（ 存在自由 = 不用盈亏定义自己）</li>
+<li>行情好的时候要坐得住</li>
+</ul>
+</li>
+<li>一定要高抛低吸（大大提升赚钱的概率和持仓的心理体验）<ul>
+<li>不可能也不需要赚市场上的每笔钱（大周期下的 20 次 conviction 交易）</li>
+</ul>
+</li>
+<li>贝叶斯更新：如果 conviction 没变，尽量降低决策次数，提高决策质量<ul>
+<li>不要在有事情（时间紧）、有压力的时候做决策（宁可错过）</li>
+</ul>
+</li>
+<li>下跌的钱可以不赚（没有99%的把握不考虑做空策略，以及仓位要限制死）<ul>
+<li><strong>现象</strong>：<ul>
+<li>做多本质上是越赚钱越加仓，越亏钱越减仓的被动行为（被动顺周期）</li>
+<li>做空本质上是越亏钱越加仓，越赚钱越减仓的被动行为（被动逆周期）</li>
+</ul>
+</li>
+<li><strong>原因</strong>：<ul>
+<li>赚周期的钱更好赚，Crypto 的周期性更强（赚下跌周期的钱要比赚上涨周期的钱难得多，要想达到对等的收益率，需要不断的主动调仓，同时还涉及到借贷、支付利息等因素，会增加巨大的决策风险和操作风险等）</li>
+<li>做空符合理性人的逻辑，因此不符合本能（人性）。同样是长期的做多和做空策略，面对"无限亏损"的潜在风险，做空所承担的持仓心理压力会巨大</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>现金仓位 = 免费看跌期权<ul>
+<li>保持 <strong>10-15% 现金</strong></li>
+<li>不是因为看空，是因为极端回撤 = 加仓最好标的的机会</li>
+<li>现金本身就是一个免费的看跌期权</li>
+</ul>
+</li>
+</ul>
+<h3>市场认知</h3>
+<ul>
+<li>周期判断<ul>
+<li>大周期：流动性（外循环）+ 新共识升级/聚合（新秩序）+ 参与者博弈研究（筹码结构/利益关系/权力关系）</li>
+<li>小周期：流动性（内循环）+ 叙事 + 参与者博弈研究（短期情绪/筹码结构）</li>
+<li>周期交替的核心判断指标：价格 + 情绪（不追求准确）<ul>
+<li>简单情绪阶段判断框架：（参考投资与存在）<ul>
+<li>T0 事件发生（未被语言化）</li>
+<li>T1 感知型他者发文（分析师/内部人）</li>
+<li>T2 叙事型他者认同（媒体传播）</li>
+<li>T3 数据型他者跟进（业绩兑现）</li>
+<li>T4 结构型他者被动加仓（基金经理/指数纳入）</li>
+<li>T5 投机型他者入场（情绪高潮）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>参与者博弈研究：<ul>
+<li>人是核心变量 — 不仅在投资上，所有事都是人构成的。公司团队、产品用户、机构、散户都在博弈，传统投资理论容易忽略这层。<ul>
+<li>猩猩游戏提到了科技产品的5类用户对应的产品周期阶段</li>
+</ul>
+</li>
+<li>看人（WHAT → WHY → NEXT）：<ul>
+<li><strong>WHAT</strong>：他在做什么 — 拆解行为序列（公开行为、发言变化、资金流向、社交对象）</li>
+<li><strong>WHY</strong>：他为什么这么做 — 推断底层驱动（利益结构、恐惧/欲望、身份认同、过往模式）</li>
+<li><strong>NEXT</strong>：下一步会做什么 — 如果动机是 X，行为链应该走 Y 而不是 Z；不一致时就是信号</li>
+<li>矛盾点最有信息量：说的 vs 做的 | 对谁说 vs 对谁不说 | 什么时候沉默 | 行为链突然中断</li>
+</ul>
+</li>
+<li>博弈最有效的指标：价格 — 不只是信息聚合，也是认知的交互，是所有参与者的认知结构在碰撞，本身就是最有效的聚合市场和所有信息的博弈结果。</li>
+</ul>
+</li>
+<li>事件研究（叙事研究）：<ul>
+<li>不等于秩序，但可能是打破旧秩序、创造新秩序的断裂点（超额回报来自识别范式转换，不是在旧范式里做优化）</li>
+<li>旧秩序碎了、新秩序还没定型的分叉区间 = 赔率最大的下注窗口（下注速度根据市场特性，参考stan的18个月是良好的下注期）</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>股票市场认知详见 [[股票投资方法论]]，Crypto 市场认知详见 [[Crypto投资方法论]]</p>
+</blockquote>
+<h3>策略认知</h3>
+<p><strong>明确赚的是什么钱</strong>（靠胜率还是赔率赚钱），即明确收益风险结构。</p>
+<blockquote>
+<p>股票策略详见 [[股票投资方法论#策略认知]]，Crypto 策略详见 [[Crypto投资方法论#策略认知]]</p>
+</blockquote>
+<hr />
+<h2>二、战术层</h2>
+<p><em>战略决定了战术的边界。选了什么战略，研究框架、仓位管理、退出标准都得匹配。</em></p>
+<h3>研究框架</h3>
+<p><em>研究 → 决策 → 执行 → 复盘（反馈全流程到策略层）。研究是战术的起点。</em></p>
+<p>通用步骤（不分资产类别）：</p>
+<ol>
+<li>
+<p><strong>赛道/市场研究</strong> — 行业本质、TAM、利润率、市占率</p>
+</li>
+<li>
+<p><strong>标的研究</strong> — 基本面（团队、产品、商业模式）、差异化、核心竞争力</p>
+</li>
+<li>
+<p><strong>事件研究</strong> — 事件发展周期、参与者博弈分析</p>
+</li>
+<li>
+<p><strong>估值/定价</strong> — 合理区间、赔率计算</p>
+</li>
+<li>
+<p><strong>风险与拐点</strong> — 下行风险清单、关键拐点识别、退出条件预设</p>
+</li>
+<li>
+<p><strong>结论</strong> — 河流模型（河岸 → 河流 → 分叉 → Asset Judgment）</p>
+</li>
+</ol>
+<p>调研方式：
+- 搜"别人怎么说，怎么做"（用户评价、KOL 争议、竞品对比）
+- 评估顺序：商业逻辑 → 实际体验 → 别人评价 → 技术细节</p>
+<blockquote>
+<p>股票研究模板详见 [[股票投资方法论#公司深度研究]]，Crypto 研究模板详见 [[Crypto投资方法论#策略执行]]</p>
+</blockquote>
+<h3>设计执行策略（周期研究判断的指导作用）</h3>
+<ul>
+<li>买入计划</li>
+<li>核心拐点追踪和贝叶斯更新</li>
+<li>卖出计划</li>
+</ul>
+<h3>战术优化</h3>
+<ul>
+<li>复盘：四种类型必须给出判断（同时是决策流程还是执行流程出了问题）<ul>
+<li>输得起才能赢得起（正确的亏损是成本，不是错误）</li>
+</ul>
+</li>
+<li>优化执行流程（学习别人决策流程）</li>
+</ul>
+<blockquote>
+<p>股票研究框架详见 [[股票投资方法论#战术]]，Crypto 执行框架详见 [[Crypto投资方法论#战术]]</p>
+</blockquote>
+    </div>
+  </article>
+  <aside class="page-toc" id="pageToc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="tocList"></ul>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../../assets/app.js"></script>
+<script>
+// Auto-generate TOC
+(function() {
+  const body = document.querySelector('.md-body');
+  const tocList = document.getElementById('tocList');
+  const tocAside = document.getElementById('pageToc');
+  if (!body || !tocList) return;
+
+  const headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocAside) tocAside.style.display = 'none';
+    return;
+  }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 's-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    if (h.tagName === 'H3') a.classList.add('toc-h3');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Scroll spy
+  const tocLinks = tocList.querySelectorAll('a');
+  let current = null;
+  const update = () => {
+    let found = null;
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 100) found = h;
+    });
+    if (found && found !== current) {
+      current = found;
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = tocList.querySelector('a[href="#' + found.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

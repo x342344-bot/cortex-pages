@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<link rel="stylesheet" href="../../assets/dashboard.css">
+<style>
+/* Page-specific: sector tier colors */
+.tier-t1 { border-left: 4px solid var(--green); }
+.tier-t2 { border-left: 4px solid var(--blue); }
+.tier-t3 { border-left: 4px solid var(--yellow); }
+.tier-t4 { border-left: 4px solid var(--red); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../../universe.html" class="active">仓库</a></li>
+      <li><a href="../../methodology/index.html">方法论</a></li>
+      <li><a href="../../beliefs.html">信念</a></li>
+      <li><a href="../../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="dashboard" id="app"></div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../../assets/app.js"></script>
+<script src="../../assets/dashboard.js"></script>
+<script>
+const D = {"title": "全球支付", "slug": "global-payments", "status": "mature", "conviction_level": "", "updated_at": "2026-04-25", "one_liner": "**价值转移的信任基础设施**——利润沉淀在规则制定+争议解决层，三轨并行（卡/A2A/稳定币）提供分层下注机会", "what_it_is": "", "core_summary": "", "why_now": "", "core_thesis": "**多轨并行终态下，规则权和编排权是最有价值的位置；VAS 转型和全栈编排是超额收益来源**\n- **规则网络层**(Visa/Mastercard): 双寡头 CR2 ~90%，53% 净利率零风险。VAS +22-28% 对冲 A2A 蚕食。Visa 24x fwd P/E = 5 年低位\n- **处理编排层**(Stripe/Adyen): 两极分化加速。Adyen 唯一三重达标（好公司+好生意+好投资），24x P/E 对 21% 增速无溢价\n- **稳定币发行层**(Tether/Circle): 95% 利息收入，每 100bps 降息=-$618M。$106 vs 公允 ~$36 = 严重高估\n- **跨境汇款层**(Wise/Remitly): Platform 化转型是最大预期差。Wise Nasdaq 5/11 催化在即\n", "market_structure": "四层分化——**规则网络**（双寡头 Visa/Mastercard）→ **处理编排**（全栈 vs 传统两极分化）→ **稳定币发行**（Tether/Circle 双寡头面临银行入场）→ **跨境汇款**（数字替代物理加速，Wise Platform 化）", "what_confirms": "Visa VAS 持续>20% + Wero POS 渗透缓慢(\u003c10% 3年内) + Adyen growth 维持>18% cc; Wise Platform volume >10%; Stripe S-1 filing", "what_breaks": "A2A 发达市场POS渗透>30% + Visa/Mastercard VAS增速\u003c10% + 稳定币消费端突破10%; Adyen EBITDA\u003c45%; Wise Platform停滞\u003c8%", "conviction": "", "hypotheses": [{"id": "GP-RB1", "title": "支付利润沉淀在规则层", "layer": "riverbank", "statement": "支付利润沉淀在风险最低、不可绕过的节点——规则制定权+争议仲裁权。风险承担程度决定利润率分配", "why": "决定谁在支付链中有定价权。如果利润不是规则层租金，则V/MA护城河被高估", "status": "open", "confidence": "92", "state": "active", "tipping_points": []}, {"id": "GP-RB3", "title": "多轨并行是终态结构", "layer": "riverbank", "statement": "多轨并行是终态结构——卡（争议保护）/ A2A（低成本小额）/ 稳定币（跨境B2B清算），各有优势场景，不会一家通吃", "why": "决定赛道结构是否收敛至单一轨道", "status": "open", "confidence": "90", "state": "active", "tipping_points": []}, {"id": "GP-RB4", "title": "全球价值转移数字化不可逆", "layer": "riverbank", "statement": "全球价值转移数字化不可逆", "why": "整个赛道增长的底层驱动力。如果现金反弹，赛道TAM缩小", "status": "open", "confidence": "99", "state": "active", "tipping_points": []}, {"id": "GP-H1", "title": "VAS转型对冲A2A蚕食", "layer": "river", "statement": "V/MA 利润锚点从交易抽成向 VAS（风控/数据分析/开放银行API）迁移，VAS 收入占比 35-40% 区间内能对冲 A2A 蚕食；35% 是必要门槛 / >40% 是上限（B2B SaaS 渗透接近饱和），上限触顶后转入证伪通道", "why": "决定V/MA是否继续作为高质量底仓", "status": "open", "confidence": "47", "state": "active", "tipping_points": [{"id": "GP-H1-TP1", "event": "A2A实时支付在发达国家渗透", "current": "FedNow 2025全年$853.4B; 1600+家FI接入; 平均$101K(大额/机构为主)", "quantitative": "FedNow年交易量突破$1T且零售支付占比>20%", "qualitative": "消费者主动选择A2A替代刷卡", "data_source": "https://www.federalreserve.gov/paymentsystems/fednow.htm", "if_triggered": "降低V/MA仓位", "if_failed": "维持V/MA底仓", "weight": "20", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H1-TP2", "event": "Interchange限价立法", "current": "Durbin仅限借记卡", "quantitative": "美国信用卡interchange被限\u003c0.5%", "qualitative": "两党法案获委员会通过", "data_source": "https://www.congress.gov", "if_triggered": "V/MA利润率结构性压缩", "if_failed": "V/MA定价权维持", "weight": "15", "score_status": "watching", "tp_type": "event"}, {"id": "GP-H1-TP3", "event": "V/MA VAS增速vs interchange压缩", "current": "VAS+23% vs interchange稳定", "quantitative": "VAS YoY growth \u003c15% 连续2Q = failing; >20% = strong; >25% = confirmed", "qualitative": "", "data_source": "V/MA季报", "if_triggered": "VAS对冲成立，维持V/MA", "if_failed": "VAS对冲不足，减仓V/MA", "weight": "35", "score_status": "approaching", "tp_type": "threshold"}, {"id": "GP-H1-TP4", "event": "V VAS revenue as % of net revenue", "current": "VAS ~30% of net revenue (FY2025), +23% YoY", "quantitative": "VAS占比>35% = approaching; >40% = strong", "qualitative": "Visa Direct / Risk Solutions / Open Banking API 增长趋势", "data_source": "Visa 10-K/10-Q, Investor Day", "if_triggered": "路径A概率上升（利润结构实质性转型）", "if_failed": "路径C概率上升（平台化能力不足）", "weight": "30", "score_status": "watching", "tp_type": "event"}]}, {"id": "GP-H2", "title": "全栈编排层捕获价值", "layer": "river", "statement": "全栈编排层在多轨时代捕获更多价值", "why": "决定编排层标的估值，Stripe/Adyen核心逻辑", "status": "open", "confidence": "50", "state": "active", "tipping_points": [{"id": "GP-H2-TP1", "event": "Adyen revenue growth + EBITDA margin", "current": "Revenue +21% cc, EBITDA 53%", "quantitative": "Revenue growth >18% cc + EBITDA >50% = strong", "qualitative": "UC客户数和收入占比提升", "data_source": "Adyen半年报", "if_triggered": "维持/加仓Adyen", "if_failed": "降级为卫星或退出", "weight": "50", "score_status": "approaching", "tp_type": "threshold"}, {"id": "GP-H2-TP2", "event": "Stripe估值/IPO信号", "current": "私有$159B估值, IPO时间未定", "quantitative": "S-1 filing = approaching; IPO定价>$200B = strong", "qualitative": "管理层IPO表态、投行mandate披露", "data_source": "SEC/Bloomberg/WSJ", "if_triggered": "Adyen重估催化，编排层价值确认", "if_failed": "编排层估值缺锚定", "weight": "50", "score_status": "watching", "tp_type": "event"}]}, {"id": "GP-H3", "title": "跨境代理行层利润被永久性压缩", "layer": "river", "statement": "跨境代理行层利润被永久性压缩——FX隐性加价被透明化是核心攻击向量", "why": "决定WISE等标的投资逻辑", "status": "open", "confidence": "54", "state": "active", "tipping_points": [{"id": "GP-H3-TP1", "event": "稳定币跨境结算量", "current": "稳定币2026年3月全口径$7.5T; 调整后真实支付约10%; USDC以太坊单链3月>$1.8T创新高", "quantitative": "年度真实支付交易量突破$50T且真实支付>10%", "qualitative": "主流商户直接接受稳定币", "data_source": "https://app.artemis.xyz/stablecoins", "if_triggered": "跨境代理行加速被替代", "if_failed": "传统跨境渠道维持", "weight": "35", "score_status": "strong", "tp_type": "threshold"}, {"id": "GP-H3-TP2", "event": "Wise Platform volume占比", "current": "Platform ~5% of cross-border volume, 85+ partners", "quantitative": "Platform volume占比>15% = strong; >25% = confirmed", "qualitative": "Tier-1银行partner签约", "data_source": "Wise季报/年报", "if_triggered": "Wise估值框架切换(汇款→基础设施)", "if_failed": "Wise回归纯汇款估值", "weight": "35", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H3-TP3", "event": "跨境汇款平均take rate变化", "current": "全球平均~6.2%(World Bank), Wise ~0.6%", "quantitative": "全球平均降至\u003c4% = approaching; \u003c3% = strong", "qualitative": "银行跨境费率主动下调", "data_source": "World Bank Remittance Prices", "if_triggered": "代理行利润加速压缩", "if_failed": "代理行利润韧性超预期", "weight": "30", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "GP-H4", "title": "稳定币发行层利润是利率周期产物", "layer": "river", "statement": "稳定币发行层利润是利率周期产物，降息将暴露Circle错配", "why": "决定CRCL只能作为beta而非核心仓位", "status": "open", "confidence": "40", "state": "active", "tipping_points": [{"id": "GP-H4-TP1", "event": "Fed Funds Rate路径", "current": "4.25-4.5%", "quantitative": "降至\u003c3%→承压; \u003c2%→危机", "qualitative": "FOMC转向更激进降息", "data_source": "https://fred.stlouisfed.org/series/FEDFUNDS", "if_triggered": "降低CRCL配置", "if_failed": "高利率维持,稳定币利润丰厚", "weight": "50", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H4-TP2", "event": "Circle净利润率变化", "current": "~9%", "quantitative": "连续2季\u003c5%或转亏", "qualitative": "Circle开始交易费变现", "data_source": "Circle季报(NYSE:CRCL)", "if_triggered": "确认利率敏感性", "if_failed": "Circle利润稳定", "weight": "50", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "GP-H5", "title": "Agentic Commerce不改变支付法律关系", "layer": "river", "statement": "Agentic Commerce不改变支付法律关系——agent=委托代理，用户=责任人", "why": "投资机会在现有框架内扩展授权粒度（Stripe），不在agent支付基础设施概念", "status": "open", "confidence": "40", "state": "active", "tipping_points": [{"id": "GP-H5-TP1", "event": "Agent支付标准化框架进展", "current": "无标准化框架; 各平台自行实现", "quantitative": "W3C/ISO/行业联盟发布agent支付标准草案", "qualitative": "主要支付网络参与标准制定", "data_source": "W3C/ISO公告, Stripe/V开发者文档", "if_triggered": "Agent可能绕过现有支付框架→重新评估", "if_failed": "现有框架继续适用→维持判断", "weight": "50", "score_status": "watching", "tp_type": "event"}, {"id": "GP-H5-TP2", "event": "Stripe/V agent-pay产品采用", "current": "Stripe Agent Toolkit已发布; Visa CLI概念阶段", "quantitative": "Agent-initiated交易量占平台>1%", "qualitative": "企业实际部署agent支付流程", "data_source": "Stripe/Visa开发者博客, 企业案例", "if_triggered": "Agent支付走现有轨道→强化H5判断", "if_failed": "Agent支付走独立轨道→弱化H5", "weight": "50", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "GP-H6", "title": "V/MA 捆绑销售定价权被模块化解构", "layer": "river", "statement": "V/MA '清算+规则+争议解决' 捆绑销售的整体定价权被模块化解构——清算被高效替代品（稳定币/A2A/issuer 自营网络）侵蚀，规则与争议被编排层（Stripe/Adyen）补全，导致 V/MA 整体 take rate 议价权下行（client incentives 比例上升 / scheme fee 涨价空间收窄）。3 条解构路径：A B2B 跨境已发生（稳定币+Stripe Bridge）/ B 2026-2028 欧洲（A2A+Adyen）/ C 2027+ 大 issuer 自营（COF/DFS 首例）", "why": "决定 V/MA 整体 take rate 议价权和编排层捕获价值的物理基础", "status": "open", "confidence": "60", "state": "active", "tipping_points": [{"id": "GP-H6-TP1", "event": "V/MA client incentives / net revenue 比例", "current": "~35% (FY24 行业披露)", "quantitative": "突破 40% = 议价权下行加速", "qualitative": "反映 V/MA 给 issuer 的\"回扣\"水平 / 大 issuer 议价权", "data_source": "Visa/MA 10-K + 10-Q 财报", "if_triggered": "V/MA 仓位降一档（H6 strong 信号）", "if_failed": "", "weight": "30", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H6-TP2", "event": "V/MA Service yield 年涨幅放缓", "current": "V Service yield 0.095%→0.104% (2022-24, +9.5%/3y)", "quantitative": "Service yield 涨速 \u003c2%/yr 持续 2 年 = 定价权见顶", "qualitative": "Service revenue 是 V/MA 的\"网络访问权\"涨价线，scheme fee 5y +33.9%", "data_source": "Visa/MA 财报 (Service revenue / Payments volume)", "if_triggered": "H6 转 strong / V/MA 仓位降一档", "if_failed": "", "weight": "25", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H6-TP3", "event": "编排层 take rate 上升（Stripe/Adyen 收单费率）", "current": "Adyen blended take rate ~15bps (FY24)", "quantitative": "编排层 take rate 趋势上升 + V/MA 网络费占比下降", "qualitative": "反映规则功能从 V/MA 向编排层迁移的物理证据", "data_source": "Adyen IR / Stripe 公开披露", "if_triggered": "H6 strong / 加仓 Adyen", "if_failed": "", "weight": "20", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H6-TP4", "event": "V/MA B2B 跨境市占率下降", "current": "V/MA B2B 跨境 volume 仍主导，但 Stripe Bridge 等抢份额", "quantitative": "V/MA B2B 跨境 volume 增速持续低于赛道总盘 5pp+", "qualitative": "稳定币清算在 B2B 跨境是已发生路径（H6 路径 A）", "data_source": "Visa/MA 财报 + Artemis stablecoin payment data", "if_triggered": "H6 路径 A 兑现 / 加仓 Adyen + 减 V/MA 边际仓位", "if_failed": "", "weight": "25", "score_status": "watching", "tp_type": "threshold"}]}, {"id": "GP-H2-F1", "title": "Stripe 18个月内是否IPO", "layer": "fork", "statement": "Stripe 18个月内是否IPO", "why": "验证全栈编排层估值和竞争格局", "status": "open", "confidence": "40", "state": "open", "tipping_points": [{"id": "GP-H2-TP2", "event": "Stripe估值/IPO信号", "current": "私有$159B估值, IPO时间未定", "quantitative": "S-1 filing = approaching; IPO定价>$200B = strong", "qualitative": "管理层IPO表态、投行mandate披露", "data_source": "SEC/Bloomberg/WSJ", "if_triggered": "Adyen重估催化，编排层价值确认", "if_failed": "编排层估值缺锚定", "weight": "50", "score_status": "watching", "tp_type": "event"}]}, {"id": "GP-H4-F1", "title": "GENIUS Act最终规则", "layer": "fork", "statement": "GENIUS Act最终规则对银行vs非银行的竞争条件", "why": "稳定币合规框架决定发行层竞争格局", "status": "open", "confidence": "47", "state": "open", "tipping_points": [{"id": "GP-H4-F1-TP1", "event": "GENIUS Act银行牌照申请", "current": "GENIUS Act参议院已通过; Top10银行申请数仍为0", "quantitative": "≥3家Top10银行申请稳定币发行牌照", "qualitative": "银行公开表态拥抱稳定币", "data_source": "https://www.occ.gov", "if_triggered": "确认制度拐点", "if_failed": "制度拐点延迟", "weight": "35", "score_status": "approaching", "tp_type": "event"}, {"id": "GP-H4-F1-TP2", "event": "众议院金融服务委员会审议进度", "current": "委员会已通过，等全院排期", "quantitative": "全院投票排入日程", "qualitative": "两党委员公开支持度", "data_source": "", "if_triggered": "GP-H4-F1 路径 A 概率上升", "if_failed": "GP-H4-F1 路径 B 概率上升", "weight": "40", "score_status": "watching", "tp_type": "event"}, {"id": "GP-H4-F1-TP3", "event": "总统/白宫对稳定币立法的表态", "current": "白宫一般性支持加密监管框架", "quantitative": "明确签署意愿表态", "qualitative": "行政命令或公开演讲提及", "data_source": "", "if_triggered": "GP-H4-F1 路径 A 概率大幅上升", "if_failed": "GP-H4-F1 路径 C 概率上升（限制性）", "weight": "25", "score_status": "watching", "tp_type": "event"}]}, {"id": "GP-H6-F1", "title": "消费者侧 AI 智能路由突破阈值", "layer": "fork", "statement": "消费者侧 AI 决策层（钱包/agent/超级 app）默认路由非卡占比突破 10%（≥1 个 1B+ MAU 钱包/超级 app 默认非卡比例 >10% 持续 2 季）— 触发后立即按预设 path 调整 V/MA / Adyen / Apple / PYPL 仓位", "why": "消费者侧 AI 智能路由是 H6 模块化解构的实施工具；触发后是离散事件需立即调仓", "status": "open", "confidence": "0", "state": "open", "tipping_points": [{"id": "GP-H6-F1-TP1", "event": "Apple Pay 默认非卡路由比例", "current": "当前 Apple Pay 主要走 V/MA tokenized 卡（~95%）", "quantitative": "默认非卡路由（ACH / Apple Cash / Stablecoin）比例 >10% 持续 2 季 = 触发 path B", "qualitative": "Apple Pay 是 1B+ MAU 钱包，默认路由变化是 H6-F1 最强触发器", "data_source": "Apple WWDC + Apple IR + 第三方支付数据 (Worldpay 等)", "if_triggered": "触发 path B（钱包内嵌 A2A 主导）/ 减 V/MA 5-10% / 加 AAPL", "if_failed": "", "weight": "35", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H6-F1-TP2", "event": "Cash App / PYPL 默认 ACH 比例", "current": "Cash App 已支持 ACH p2p / PYPL Venmo 也支持", "quantitative": "商户结算默认 ACH/RTP/FedNow 比例 >10%", "qualitative": "反映商户/消费者放弃卡网络的实际意愿", "data_source": "Block (Cash App) / PYPL 财报 + 商户调研", "if_triggered": "触发 path B / 减 V/MA / 加 PYPL（如经营改善）", "if_failed": "", "weight": "30", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H6-F1-TP3", "event": "Stripe Bridge stablecoin volume", "current": "Stripe Bridge ($1.1B 收购) 已整合，volume 数据未单独披露", "quantitative": "Bridge stablecoin 处理 volume 季度 >$10B / 年 >$50B", "qualitative": "稳定币 + 编排层组合（path A）的核心物理证据", "data_source": "Stripe 公开披露 / Bridge dashboard", "if_triggered": "触发 path A / 加 Adyen + Stripe (如 IPO) / 减 V/MA", "if_failed": "", "weight": "20", "score_status": "watching", "tp_type": "threshold"}, {"id": "GP-H6-F1-TP4", "event": "AI agent payment 默认路由数据", "current": "Stripe Agentic Protocol / V Agent Pay 都在早期，agent 实际默认路由未成形", "quantitative": "首个 agent 完成 >$1M 自主支付且默认非卡路由 >50%", "qualitative": "agent 时代支付决策方式（H6-F1 长期演化指标）", "data_source": "Stripe / V / MA 产品更新 + 开发者社区", "if_triggered": "触发 path A 或 B / 减 V/MA", "if_failed": "", "weight": "15", "score_status": "watching", "tp_type": "threshold"}]}], "asset_judgment": [{"symbol": "V", "action": "买入", "position_type": "核心", "depends_on": ["GP-H1"], "valuation_range": "$260-280 / $340-360 / $380-420"}, {"symbol": "ADYEY", "action": "买入", "position_type": "核心", "depends_on": ["GP-H2", "GP-H2-F1"], "valuation_range": "EUR700-750 / EUR950-1050 / EUR1200-1400"}, {"symbol": "WISE", "action": "买入", "position_type": "卫星", "depends_on": ["GP-H3"], "valuation_range": "GBP750-850 / GBP1100-1200 / GBP1500-1700"}, {"symbol": "MA", "action": "观望", "position_type": "卫星", "depends_on": ["GP-H1"], "valuation_range": "$420-450 / $530-560 / $620-680"}, {"symbol": "GPN", "action": "观望", "position_type": "投机", "depends_on": ["GP-H2"], "valuation_range": "$50-55 / $68-80 / $100-130"}, {"symbol": "CRCL", "action": "观望", "position_type": null, "depends_on": ["GP-H4", "GP-H4-F1"], "valuation_range": "$8-15 / $36-70 / $120-180"}, {"symbol": "RELY", "action": "观望", "position_type": null, "depends_on": ["GP-H3"], "valuation_range": "$14-16 / $20-22 / $28-32"}], "bull_case": "", "main_risk": "", "key_metrics": [{"label": "全球支付收入池", "value": "$1.9T→$2.5T (5% CAGR)", "note": "McKinsey GPR 2025"}, {"label": "Visa fwd P/E", "value": "~24x (5年均值~30x)", "note": "5年低位，VAS +28%"}, {"label": "Adyen EBITDA margin", "value": "53% (H2: 55%)", "note": "全栈编排最佳可投表达"}, {"label": "USDC 流通量", "value": "$78.6B", "note": "需突破$120B才证明可对冲利率下行"}, {"label": "Wero 用户", "value": "52M+ (POS 2026 H2上线)", "note": "关键分叉事件"}, {"label": "Wise Platform partners", "value": "85+", "note": "突破120+为加速拐点"}], "rating": "B+", "review_date": "2026-07-25", "essence": "- **支付 = 价值转移的信任基础设施**\n- **4 个硬约束**：身份授权 / 余额确认 / 结算最终性 / 争议解决\n", "tam": [{"label": "TAM（全球支付收入池）", "value": "$1.9T→$2.5T (5% CAGR)", "growth": "5%", "source": "McKinsey GPR 2025"}, {"label": "SAM（数字支付可投部分）", "value": "~$1T", "growth": "8-10%", "source": "BCG/McKinsey"}, {"label": "SOM（卡网络+处理+跨境）", "value": "~$300B", "growth": "10-12%", "source": "Visa/Mastercard/Adyen/Wise IR"}, {"label": "稳定币真实支付", "value": "$390B YoY >100%", "growth": ">100%", "source": "Artemis/TRM Labs"}, {"label": "Agentic Commerce（潜在）", "value": "$1-5T (2027-2030)", "growth": "N/A", "source": "ARK/Stripe估算"}], "layer_overview": {"example": "$100 卡支付（净利润 ~$0.32）", "trends": ["卡支付", "A2A 支付", "稳定币支付", "Agentic Commerce 支付"], "rows": [{"layer": "用户接入层", "pct": 6, "amount": "$0.02", "fee_type": "入口 / 用户分发权", "penetration": {"卡支付": {"current": 14, "limit": 15, "note": "成熟"}, "稳定币支付": {"current": 2, "limit": 10, "note": "钱包接入早期"}, "Agentic Commerce 支付": {"current": 5, "limit": 30, "note": "主战场（agent 是新接入点）"}, "A2A 支付": {"current": 7, "limit": 10, "note": "Apple Pay / Cash App 内嵌"}}}, {"layer": "发卡持牌层", "pct": 53, "amount": "$0.17", "fee_type": "信用风险 / 资金归属 / 合规 & AML", "highlight": true, "penetration": {"卡支付": {"current": 24, "limit": 25, "note": "银行 + Fintech issuer 主导"}, "稳定币支付": {"current": 2, "limit": 10, "note": "U 卡 wrap 传统链路 = 伪渗透；Circle/Tether 持币但实际发卡维度不算"}, "Agentic Commerce 支付": {"current": 5, "limit": 40, "note": "CAW 等 agent 钱包提供身份授权 / liability 归属（agent 时代的发卡持牌人）"}, "A2A 支付": {"current": 6, "limit": 10, "note": "银行联盟接入"}}}, {"layer": "编排层", "pct": 22, "amount": "$0.07", "fee_type": "编排权 / 商户欺诈风险", "penetration": {"卡支付": {"current": 19, "limit": 20, "note": "Stripe / Adyen 标准"}, "稳定币支付": {"current": 8, "limit": 20, "note": "Stripe Bridge / Adyen 借势扩张"}, "Agentic Commerce 支付": {"current": 2, "limit": 10, "note": "Stripe Atlas 雏形"}, "A2A 支付": {"current": 7, "limit": 15, "note": "Adyen 多轨编排"}}}, {"layer": "网络层", "pct": 18, "amount": "$0.06", "fee_type": "规则制定权 / 仲裁权", "penetration": {"卡支付": {"current": 24, "limit": 25, "note": "V/MA 主导"}, "稳定币支付": {"current": 15, "limit": 30, "note": "链网络本身就是 network 功能（信息聚合+路由），与 V/MA 网络层并列改变"}, "Agentic Commerce 支付": {"current": 1, "limit": 10, "note": "agent 必走现有网络 rails，不重要"}, "A2A 支付": {"current": 26, "limit": 45, "note": "Pix / UPI / Wero / RTP / FedNow"}}}, {"layer": "清结算层", "pct": 1, "amount": "$0.003", "fee_type": "结算最终性 / 央行特许", "penetration": {"卡支付": {"current": 14, "limit": 15, "note": "Fedwire / CHIPS / ACH"}, "稳定币支付": {"current": 10, "limit": 30, "note": "链上原子结算，与网络层合二为一（信息+资金原子化），同时改变 Fedwire/CHIPS"}, "Agentic Commerce 支付": {"current": 1, "limit": 10, "note": "触及不到"}, "A2A 支付": {"current": 12, "limit": 20, "note": "FedNow / RTP"}}}], "trends_summary": {"卡支付": {"status": "全层均衡"}, "稳定币支付": {"status": "主打颠覆网络 + 清结算层（链网络合二为一）"}, "Agentic Commerce 支付": {"status": "主打用户接入"}, "A2A 支付": {"status": "主打网络层"}}, "insights": ["**利润切片真相：发卡持牌层吃 53% 净利润，但 V/MA 网络层 6% 收入吃 18% 净利**（53% 净利率是 V/MA 估值溢价的结构性根源 / GP-RB1）", "**稳定币支付的核心战场 = 网络层 + 清结算层的标准之争**：Stripe Tempo / Circle Arc / Visa 都在抢这稳定币链路下这两层的市场标准制定权——链网络合二为一（信息+资金原子化）。当前木桶 10% 卡在用户接入 + 发卡持牌（做稳定币的合规），全链路通至少还需 2+ 年", "**Agentic Commerce 支付的核心战场 = 发卡持牌层 + 用户接入层**：发卡持牌层（limit 40）定义 agent 身份授权规则——本质是接不接受你这个钱；用户接入层（limit 30）解决谁带 agent 进更多商户/用户。当前木桶约 13% — 两大主战场都在早期"]}, "business_models": [], "role_table": [], "transaction_paths": [{"name": "卡网络", "flow": "消费者→发卡行→Visa/Mastercard→收单行→商户", "total_cost": "~$2.23/笔($100)", "value_split": {"network": "10-15bps", "issuer": "150-200bps", "acquirer": "20-60bps"}, "dispute": "完善(chargeback 60天)"}, {"name": "A2A 实时", "flow": "消费者→银行→央行/即时支付系统→收款银行→商户", "total_cost": "$0.12-0.25/笔", "value_split": {"scheme": "0-5bps", "bank": "5-15bps"}, "dispute": "弱/无标准", "missing": "争议解决+信用功能"}, {"name": "稳定币", "flow": "消费者→钱包→链上→收款钱包→商户(+编排层争议保护)", "total_cost": "$0.41-4.01/笔", "value_split": {"gas": "variable", "orchestrator": "10-50bps"}, "dispute": "极弱(不可逆)，编排层可补"}, {"name": "SWIFT/电汇", "flow": "发送行→代理行→收款行", "total_cost": "$7-20/笔", "value_split": {"correspondent": "大部分"}, "dispute": "中等"}], "competition_layers": [{"layer": "用户接入层", "representatives": "Apple Pay / Google Pay / Cash App / Venmo / Zelle / 微信支付 / Alipay / MELI / 银行 app / 物理&虚拟卡", "function": "消费者最终触点 / 钱包 / Super-app / 卡", "revenue_scale": "Apple Pay 抽成 ~0.15% interchange 分成 / Cash App ~$1B 卡支付收入 / Zelle 2024 交易量 ~$1T", "margin": "钱包业务 10-20% / Apple Pay 抽成净利极高（无重资产）/ Cash App ~10% margin", "profit_quality": "中-低（依赖底层卡网络 + 银行账户 + 平台抽成）", "core_risk": "Apple/Google 平台抽成 / 银行联盟反扑（Zelle）/ 监管反垄断", "权利不对等": "依赖底层 V/MA 网络 + 银行账户 / 但拥有消费者关系（GP-H6-F1 路由决定权）", "stability": "中（钱包战争激烈，Apple/Cash App/Zelle 集中度上升）", "cr2": "美国：Apple Pay + Google Pay + Cash App + Venmo + Zelle 主流但碎片", "key_dynamic": "- **Apple Pay**：iOS 装机优势 + 默认走 V/MA tokenized 卡 → **但内嵌 ACH/稳定币是 GP-H6-F1 关键变量**\n- **Cash App / Venmo / Zelle**：美国 P2P 三巨头；Zelle 2024 交易量 ~$1T 已超 Venmo+Cash App 总和（银行联盟产物）\n- **微信/Alipay/MELI**：区域 super-app 主导（中国国内 + 拉美），跨境场景对 V/MA 替代力强\n- **战略价值**：钱包是 GP-H6-F1 的\"路由决定者\"——它们选默认非卡 = V/MA volume 蚕食加速\n"}, {"layer": "发卡/持牌层", "representatives": "银行 issuer（JPM/BAC/Citi/Wells/COF）/ Fintech issuer（Apple Card/SoFi/Robinhood）/ 稳定币发行（Circle/Tether/PYPL）", "highlight": true, "function": "发卡 / 授信 / KYC / 资金归属 / 持牌 / 信用风险承担", "revenue_scale": "Tether ~$9.5B / Circle ~$2.75B / Wise GBP 1.65B / 银行 issuer 万亿级", "margin": "银行 NIM 10-15% / Tether 80%+（储备利息）/ Circle 15%（被 Coinbase 分走）/ EMI 10-17%", "profit_quality": "中-低（承担信用风险 + 资本要求）/ Tether 极高（基于储备利息）/ Circle 利率敏感", "core_risk": "信用风险 / 监管 / 利率周期（稳定币）/ 大 issuer 合并威胁 V/MA（COF/DFS）", "权利不对等": "大型 issuer（Top 10 银行）议价权强 / Tether 极不对等 / Circle 被 Coinbase 分走", "stability": "中（银行联盟 vs fintech 长期博弈 + 稳定币新增）", "cr2": "美国 Top 10 银行发卡 ~70%；稳定币 ~80% (Tether 56% + Circle 24%)", "key_dynamic": "- **大型 issuer（JPM/BAC/Citi/COF）** 通过 TCH 拥有支付基础设施，议价权强（V/MA client incentives 占 net revenue 35%）\n- **COF/DFS 合并** 是首例\"大 issuer + 自营网络\"垂直整合 → 挤压 V/MA prime issuer 端议价（GP-H6 路径 C）\n- **稳定币发行方（Circle/Tether/PYPL）**：持币层（类似银行储备模型），95% 收入是储备利息。GENIUS Act 后银行入场将稀释 CR2 至 60-70%\n- **Circle 估值**：$106 vs 公允 ~$36（S5 DCF）= 严重高估；CPN $5.7B TPV / 55 FI 远未达 $100B 门槛\n- **EMI（Wise/Airwallex）**：持牌跨境基础设施，绕过 SWIFT 代理行。Wise 70+ 国家持牌 + Faster Payments 直连（首家非银行获 BoE 批准）\n- **跨境分发转型**：Wise Platform 化（85+ partners, 5/11 Nasdaq 双上市催化），WU 结构性衰退（yield trap），RELY 增速减速至 19-20%\n"}, {"layer": "编排层", "representatives": "Stripe / Adyen / PayPal/Braintree / Fiserv / Global Payments", "function": "路由 / 风控 / 多支付方式整合 / 软层补全（争议解决/欺诈保护/Tokenization）", "revenue_scale": "Stripe ~$6.9B / Adyen EUR 2.36B / Fiserv $20B+ / Global Payments $9.7B / PayPal $32B", "margin": "15-53% EBITDA（分化）", "profit_quality": "分化——全栈高（Stripe/Adyen 50%+ EBITDA）/ 传统低（GPN/Fiserv 30-40%）", "core_risk": "三明治挤压（V/MA 上压 + 商户下压）+ 多轨复杂度 + 模块化解构（GP-H6 受益但需保持领先）", "权利不对等": "分化中（高端编排层议价权上升 / 传统收单被挤压）", "stability": "中（两极分化加速）", "moat_score": "Stripe 22/25, Adyen 7.5/10, Global Payments 2/5", "key_dynamic": "- **Adyen 唯一三重达标**：53% EBITDA + 21% cc + fwd P/E ~24x。零债务 + 创始人 20年\n- **Stripe $159B 私有巨头**：7Powers 22/25 处理层最高。IPO 30-40%/18月 = Adyen 重估催化\n- **PayPal/Braintree**：服务 Top 大商户（Uber/Airbnb），但 branded checkout 衰退\n- **Global Payments 4.9x fwd P/E**极端 deep value，但 TSYS 前科 + $22.3B 债务 = 高赔率低胜率\n- **稳定币整合分化**：Stripe 领先 Adyen 12-18 月（Bridge $1.1B + OCC charter）\n"}, {"layer": "网络层", "representatives": "V / MA / AXP / DFS / Pix（巴西央行）/ UPI（NPCI 印度）/ Wero（EPI 欧洲）/ RTP（TCH）/ FedNow（美联储）/ Wise / Airwallex / SWIFT（跨境支付网络）", "function": "定规则 / 信息聚合 / 争议仲裁 / 清算指令", "revenue_scale": "Visa $41.4B / Mastercard $32.8B / AXP ~$60B / DFS ~$17B", "margin": "V/MA 50-53% 净利率（零风险）/ AXP 15-18%（承担信用风险）/ A2A 网络多为公共/银行联盟（不盈利）", "profit_quality": "极高（V/MA 零风险收租）/ 中（AXP/DFS 3 方闭环双层风险）/ 公共物品（A2A 央行/联盟）", "core_risk": "A2A 蚕食 + interchange 监管压缩 + AI 智能路由（GP-H6-F1）+ 大 issuer 自营网络（GP-H6 路径 C）", "权利不对等": "极度不对等（V/MA：利润最高 / 风险最低）/ AXP/DFS 闭环议价权但承担风险", "stability": "极高（CR2 ~90%，60年未变）", "cr2": "~90% (V+MA)", "moat_score": "22-24/25", "key_dynamic": "- **Visa fwd P/E 24x = 5年低位**（均值 ~30x，折价 20-25%），VAS +28% 加速中\n- **Mastercard 增速更快**（+16.4%）但 A2A 暴露更大（国际收入 67%），fwd P/E 25.5x 缺安全边际\n- **AXP/DFS 3 方闭环**：网络 + 发卡合一，take rate 高（2.5-3.5%）但净利率低（15-18%），承担信用风险\n- **A2A 网络（Pix/UPI/Wero/RTP/FedNow）** 是新兴竞争者；Wero POS 2026 H2 上线是关键节点（GP-H1-F1）\n- **Scheme fee +34% 5年**——定价权最强证据。Interchange 受压但 scheme fee 不受 IFR 约束\n"}, {"layer": "清结算层", "representatives": "Fedwire（美联储 RTGS）/ CHIPS（私营 TCH）/ RTP（私营 TCH）/ FedNow（美联储 2023）/ ACH（FedACH+EPN）/ 稳定币（USDC/USDT/PYUSD）/ 链上 Ethereum/Tron/Solana", "function": "实际资金转移 / 最终性 / 跨境美元结算 / 链上原子结算", "revenue_scale": "Fedwire $4-5T/day / CHIPS $1.8T/day / 稳定币 $326B 流通", "margin": "Fedwire/FedNow 央行不盈利（公共物品）/ CHIPS/RTP TCH 银行联盟自营 / 稳定币基础设施 by 公链 gas fee", "profit_quality": "央行不盈利（公共物品）/ TCH 战略价值（银行联盟控股）/ 稳定币链上零信任", "core_risk": "稳定币侵蚀 CHIPS（已发生）/ FedNow vs RTP 竞争 / 稳定币缺央行最终性", "权利不对等": "央行 RTGS 制度护城河（不可复制）/ 稳定币链上零信任但缺最终性", "stability": "极高（央行 + 私营 TCH 双轨制 + 稳定币链上新路径）", "cr2": "Fedwire 央行垄断大额；CHIPS+RTP 私营；稳定币（USDC+USDT）链上新增", "key_dynamic": "- **Fedwire（美联储 RTGS）**：$4-5T/day 大额 + 工作日 + 央行最终性，护城河无法复制\n- **CHIPS（私营 TCH）**：$1.8T/day 跨境美元清算，**被稳定币侵蚀但 Fedwire 兜底**\n- **FedNow vs RTP**：实时零售双轨竞争（Fed 2023 vs 银行联盟 2017）— 长期对 V/MA debit 业务构成威胁\n- **稳定币（USDC/USDT/PYUSD）**：链上原子清算+结算，24/7 + 跨境数量级降本，威胁 CHIPS + SWIFT 信息层（**GP-H6 路径 A 已发生**）\n- **稳定币天花板**：缺央行最终性（不是央行直接负债），大额跨境扛监管+反洗钱+制裁风险\n"}], "scenario_grid": {"description": "按消费场景切——**国内 vs 国际** × **消费 vs B2B** 的四象限定位。卡网络/稳定币因跨四象限基础设施属性，单列为 Underlying Rails。渗透 chip：●●● 高 / ●● 中 / ● 低 / ○ 无", "axes": {"x": {"label": "地理", "values": ["国内 Domestic", "国际 Cross-border"]}, "y": {"label": "客户", "values": ["消费 Consumer", "B2B"]}}, "quadrants": [{"key": "domestic_consumer", "label": "国内消费", "note": "本土 P2P / 钱包 / 银行卡消费 — A2A 替代风险最大的象限"}, {"key": "cross_border_consumer", "label": "国际消费", "note": "跨境 P2P / 海淘 / 个人汇款 — 卡网络 + 稳定币 off-ramp 的主战场"}, {"key": "domestic_b2b", "label": "国内 B2B", "note": "本土收单 / 商户 SaaS / 企业账户 — PoS 垂直 SaaS 蚕食通用收单"}, {"key": "cross_border_b2b", "label": "国际 B2B", "note": "跨境收单 / 企业汇款 / 全栈编排 — take rate 最厚 + 利润沉淀"}], "companies": [{"name": "Block", "ticker": "SQ", "main": "domestic_consumer", "penetration": {"domestic_b2b": "high"}, "position": {"x": 28, "y": 45}, "cortex_tier": "ref", "note": "Cash App (P2P) + Square (商户) 双引擎"}, {"name": "Venmo", "ticker": "PYPL", "main": "domestic_consumer", "penetration": {}, "position": {"x": 15, "y": 18}, "cortex_tier": "T4", "note": "PYPL 旗下 US P2P 龙头之一"}, {"name": "Zelle", "ticker": "私有 (银行联盟)", "main": "domestic_consumer", "penetration": {}, "position": {"x": 35, "y": 12}, "cortex_tier": "uncovered", "note": "Early Warning Services，已超 Venmo 交易额"}, {"name": "PayPal", "ticker": "PYPL", "main": "domestic_consumer", "penetration": {"cross_border_consumer": "high", "domestic_b2b": "medium"}, "position": {"x": 42, "y": 32}, "cortex_tier": "T4", "note": "Branded Checkout + Braintree (B2B) 跨多象限"}, {"name": "Apple Pay", "ticker": "AAPL", "main": "domestic_consumer", "penetration": {"cross_border_consumer": "medium"}, "position": {"x": 10, "y": 35}, "cortex_tier": "uncovered", "note": "产品名（公司=Apple 非支付公司）；iOS 装机，跨境走 Visa/MC rails"}, {"name": "MercadoLibre", "ticker": "MELI", "main": "domestic_consumer", "penetration": {"domestic_b2b": "high", "cross_border_consumer": "low"}, "position": {"x": 40, "y": 50}, "cortex_tier": "uncovered", "note": "Mercado Pago：拉美 P2P+钱包+商户支付"}, {"name": "Wise", "ticker": "WISE", "main": "cross_border_consumer", "penetration": {"cross_border_b2b": "high"}, "position": {"x": 72, "y": 38}, "cortex_tier": "T2", "note": "Personal (跨境个人) + Business (Platform 85+ partners)"}, {"name": "Remitly", "ticker": "RELY", "main": "cross_border_consumer", "penetration": {}, "position": {"x": 75, "y": 22}, "cortex_tier": "T3", "note": "新兴市场 corridor 强势"}, {"name": "Western Union", "ticker": "WU", "main": "cross_border_consumer", "penetration": {}, "position": {"x": 88, "y": 12}, "cortex_tier": "T4", "note": "Yield trap，结构性衰退"}, {"name": "Toast", "ticker": "TOST", "main": "domestic_b2b", "penetration": {}, "position": {"x": 12, "y": 65}, "cortex_tier": "uncovered", "note": "餐饮垂直 SaaS"}, {"name": "Global Payments", "ticker": "GPN", "main": "domestic_b2b", "penetration": {"cross_border_b2b": "medium"}, "position": {"x": 32, "y": 75}, "cortex_tier": "T3", "note": "传统收单整合，4.9x deep value"}, {"name": "Plaid", "ticker": "私有", "main": "domestic_b2b", "penetration": {}, "position": {"x": 10, "y": 88}, "cortex_tier": "uncovered", "note": "A2A 数据基础设施"}, {"name": "Airwallex", "ticker": "私有", "main": "cross_border_b2b", "penetration": {"domestic_b2b": "low", "cross_border_consumer": "low"}, "position": {"x": 60, "y": 82}, "cortex_tier": "uncovered", "note": "亚太/澳洲起家，SMB 跨境收付 + 全球账户 + 卡发行"}, {"name": "SWIFT", "ticker": "合作组织", "main": "cross_border_b2b", "penetration": {}, "position": {"x": 88, "y": 90}, "cortex_tier": "uncovered", "note": "传统电汇 rails，被稳定币挤压"}], "rails": [{"name": "Visa", "ticker": "V", "category": "卡网络 protocol", "exposure": {"domestic_consumer": "high", "cross_border_consumer": "high", "domestic_b2b": "medium", "cross_border_b2b": "high"}, "cortex_tier": "T1", "note": "国际消费收单 = 最大单一收入；VAS 跨四象限赋能"}, {"name": "Mastercard", "ticker": "MA", "category": "卡网络 protocol", "exposure": {"domestic_consumer": "medium", "cross_border_consumer": "high", "domestic_b2b": "medium", "cross_border_b2b": "high"}, "cortex_tier": "T2", "note": "国际暴露 67%，A2A 风险更大"}, {"name": "Adyen", "ticker": "ADYEY", "category": "处理 platform", "exposure": {"domestic_consumer": "medium", "cross_border_consumer": "medium", "domestic_b2b": "medium", "cross_border_b2b": "high"}, "cortex_tier": "T1", "note": "唯一三重达标处理层；服务全球大商户跨四象限"}, {"name": "Stripe", "ticker": "私有", "category": "处理 platform", "exposure": {"domestic_consumer": "medium", "cross_border_consumer": "medium", "domestic_b2b": "high", "cross_border_b2b": "high"}, "cortex_tier": "ref", "note": "$159B 私有；US 国内 B2B + 国际 B2B 双引擎，IPO 催化 Adyen 重估"}, {"name": "Tether", "ticker": "USDT", "category": "稳定币", "exposure": {"cross_border_b2b": "high", "cross_border_consumer": "low"}, "cortex_tier": "ref", "note": "$170B 流通量，跨境结算/OTC 主导"}, {"name": "Circle", "ticker": "CRCL", "category": "稳定币", "exposure": {"cross_border_b2b": "high", "domestic_b2b": "low"}, "cortex_tier": "T3", "note": "CPN 想做收单，$5.7B TPV 远未达 $100B 门槛"}]}, "tier_ranking": [{"tier": "T1 核心", "targets": [{"symbol": "V", "rationale": "5年估值低位 + VAS被低估 + 争议解决是隐性结构护城河。24x fwd P/E，概率加权 $355"}, {"symbol": "ADYEY", "rationale": "唯一三重达标处理层。53% EBITDA + 21% + 24x无溢价。Stripe IPO未定价催化"}]}, {"tier": "T2 卫星", "targets": [{"symbol": "WISE", "rationale": "Platform化 = 跨境层最大预期差。Nasdaq 5/11催化。29x P/E未含Platform溢价"}, {"symbol": "MA", "rationale": "VAS +23% 领先V但25.5x缺安全边际。等$440-460回调"}]}, {"tier": "T3 观望", "targets": [{"symbol": "GPN", "rationale": "4.9x极端deep value。等5/6 Q1验证协同on track"}, {"symbol": "CRCL", "rationale": "$106 vs 公允$36 = 严重高估。等$50-70 + CPN验证"}, {"symbol": "RELY", "rationale": "15x有折价但增速减速+CEO交接。等$15-16+增速企稳"}]}, {"tier": "T4 回避", "targets": [{"symbol": "WU", "rationale": "Yield trap，结构性衰退"}, {"symbol": "PYPL", "rationale": "Branded checkout衰退"}]}, {"tier": "Ref", "targets": [{"symbol": "Stripe", "rationale": "$159B私有。IPO直接影响Adyen重估。7Powers 22/25处理层最高 / GP-H6-F1 路径 A 主导者"}, {"symbol": "EPI/Wero", "rationale": "52M用户。POS上线决定Visa/Mastercard欧洲天花板"}, {"symbol": "Tether", "rationale": "$170B流通量。56%市占率。影响Circle竞争地位"}, {"symbol": "AXP", "rationale": "3 方闭环 / 高端客户 + 闭环议价权 = 规则网络层次优表达。GP-H6 兑现时受冲击更小（17-19x P/E vs V 24x 的信用风险折价反映对应风险）"}, {"symbol": "COF", "rationale": "合并 DFS 后 = 大型 issuer + 自营网络垂直整合首例 / GP-H6 路径 C 核心观察对象 / 挤压 V/MA prime issuer 端议价权"}, {"symbol": "DFS", "rationale": "Pulse 是美国 debit CR3（V/MA/Pulse）/ 合并 COF 待 verify 是否已交割 / Discover Network + Diners Club 海外联盟"}]}], "scoring_matrix": [{"symbol": "V", "valuation": 4.5, "moat": 5, "management": 3.8, "growth": 4.5, "downside": 1.5, "upside": 3}, {"symbol": "ADYEY", "valuation": 4, "moat": 4, "management": 4.5, "growth": 4, "downside": 2, "upside": 4}, {"symbol": "WISE", "valuation": 3, "moat": 3.5, "management": 4, "growth": 3.5, "downside": 2.5, "upside": 4}, {"symbol": "MA", "valuation": 3, "moat": 5, "management": 4, "growth": 4, "downside": 2, "upside": 3}, {"symbol": "GPN", "valuation": 5, "moat": 2, "management": 3, "growth": 2, "downside": 3, "upside": 4.5}, {"symbol": "CRCL", "valuation": 1, "moat": 2, "management": 3, "growth": 2, "downside": 5, "upside": 2}, {"symbol": "RELY", "valuation": 4, "moat": 3, "management": 3, "growth": 3.5, "downside": 2.5, "upside": 3.5}], "scenario_matrix": {"paths": [{"path": "VAS主导", "probability": 45, "description": "卡网络VAS成功转型，A2A渗透缓慢", "impact": "Visa/Mastercard大幅受益，Adyen中性，Circle边缘化", "portfolio_return": "+14-18%"}, {"path": "多轨编排", "probability": 35, "description": "A2A和稳定币显著渗透，编排层价值上升", "impact": "Adyen大幅受益，V维持，Wise受益", "portfolio_return": "+10-12%"}, {"path": "去中介化", "probability": 20, "description": "稳定币P2P+A2A大规模替代传统中介", "impact": "Visa/Mastercard受损，Circle大幅受益", "portfolio_return": "-12 to -15%"}], "expected_return": "V+ADYEY核心组合概率加权 +6.9%/年"}, "edge_conclusion": "**Alpha 来自两个核心判断：Visa 的临时折价和 Adyen 的未定价催化**\n- **Visa 24x → 28x+ 修复**（+15-20%）：如果 VAS 持续 >20% 且 A2A 渗透缓慢 = 宏观恐慌消退后的估值均值回归\n- **ADYEY 24x → 30x+ 重估**（+25-30%）：Stripe IPO 催化（30% 概率），且增速维持 >18% cc\n- **WISE Platform 突破**（+40-60%）：5%→15% volume = 估值框架从 P/E 切换到 P/S\n- **如果全错**：V+ADYEY 组合路径 3 下亏 -12.5%，53% 净利率 + 零债务提供极强下行保护\n", "contrarian": [{"reason": "A2A渗透速度被严重低估——Wero POS重演Pix路径在2年内", "probability": 15, "impact": "Visa/Mastercard欧洲收入-20-30%，VAS无法覆盖"}, {"reason": "消费者侧 AI 决策层（钱包/agent/超级 app）默认路由非卡占比突破 10% — 升格为 GP-H6-F1 fork（路径 A 稳定币+编排 25% / B 钱包内嵌 A2A 30%）", "probability": 25, "impact": "V/MA 北美 volume -10-15% / RB1 受挑战"}, {"reason": "利率长期高位+CPN成为Stripe级支付网络", "probability": 15, "impact": "GP-H4 invalidated，应建仓Circle"}, {"reason": "VAS是会计重分类非真正增量", "probability": 10, "impact": "Visa/Mastercard估值永久降级到18-20x公用事业级"}], "catalysts": [{"date": "2026-04-28", "event": "Visa Q2 FY26财报", "targets": ["V"], "expected_impact": "VAS增速>25%=叙事强化"}, {"date": "2026-04-30", "event": "Mastercard Q1 2026财报", "targets": ["MA"], "expected_impact": "VAS增速+BVNK进展"}, {"date": "2026-05-06", "event": "Adyen Q1 Update + Global Payments Q1", "targets": ["ADYEY", "GPN"], "expected_impact": "Growth on track? 协同首次验证"}, {"date": "2026-05-11", "event": "Circle Q1 + Wise Nasdaq上市", "targets": ["CRCL", "WISE"], "expected_impact": "CPN进展 + 流动性事件"}, {"date": "2026 H2", "event": "GENIUS Act最终规则 + Wero POS上线", "targets": ["CRCL", "V", "MA"], "expected_impact": "两个关键分叉resolve"}], "risks": [{"risk": "A2A欧洲超预期渗透", "probability": 25, "impact": "高", "most_impacted": "Visa/Mastercard", "hedge": "VAS对冲 + Adyen多轨编排"}, {"risk": "利率大幅下行", "probability": 30, "impact": "中-高", "most_impacted": "Circle", "hedge": "不持有Circle"}, {"risk": "全球经济衰退", "probability": 25, "impact": "中", "most_impacted": "全赛道", "hedge": "Visa/Mastercard FCF韧性"}, {"risk": "AI Agent绕过卡网络", "probability": 10, "impact": "高", "most_impacted": "Visa/Mastercard", "hedge": "时间维度远(2028+)"}, {"risk": "稳定币脱锚事件", "probability": 5, "impact": "极高", "most_impacted": "Circle+生态", "hedge": "不可对冲"}], "evolution": [{"period": "12个月内", "event": "GENIUS Act最终规则落地", "probability": 80, "investment_impact": "Circle短期利好但中期利空（银行路径明确）"}, {"period": "12个月内", "event": "Visa VAS占比突破35%", "probability": 70, "investment_impact": "Visa叙事转变加速"}, {"period": "1-2年", "event": "Stripe启动IPO", "probability": 30, "investment_impact": "Adyen重估催化+25-30%"}, {"period": "1-2年", "event": "Wise Platform volume 5%→10-12%", "probability": 60, "investment_impact": "Wise估值框架切换"}, {"period": "2-3年", "event": "A2A欧洲POS渗透10-15%", "probability": 40, "investment_impact": "Visa/Mastercard欧洲interchange可测量受影响"}], "terminal_state": "**5年后Visa/Mastercard仍拿最多利润但份额从60%→50%，编排层份额从15%→25%**\n- **规则层**: Visa/Mastercard从\"支付税\"转为\"多轨商业智能平台\"，利润率从53%降到45-48%但绝对利润+8-10% CAGR\n- **编排层**: 2-3家全栈巨头(Stripe+Adyen+?)吃走企业级客户\n- **稳定币**: B2B跨境和M2M成为重要轨道(15-20%)，消费端\u003c10%\n- **跨境**: 数字化>65%，Wise成为基础设施标准\n", "exit_framework": "- 结构性失败: A2A POS >30% + VAS \u003c10% → 退 Visa/Mastercard\n- 结构性失败: Adyen EBITDA \u003c40% → 退 Adyen\n- 权利剥夺: Interchange 压缩 >30bps → 退 Visa/Mastercard\n- 组织断裂: 创始人离职+战略漂移 → 退 Adyen\n- 期权失效: Stripe 3Y 不IPO + Adyen \u003c15% → 降 Adyen\n- 赔率反转: V >30x + VAS \u003c15% → 退 V\n", "discussion_notes": "[S5→S4修正摘要]\n- Mastercard估值区间上调: S4 bear $420→S5 bear $400, base $580→$730(S5发现VAS 40%+BVNK稳定币被低估)。Challenge修正: base $730→$660，BVNK待条件验证后再上调\n- Circle估值区间下调: S4 base $110→S5 base $80-90($30.3B vs 公允$12-18B = 严重高估)\n- Global Payments新增观望标的(S4未覆盖，S5发现合并后6M商户+5.5x P/E有条件价值)\n\n[Challenge Review修正记录]\n- C-1: PayPal bear case加标~15%联合概率\n- C-2: Mastercard base $730→$660(BVNK待条件验证保守处理)\n- C-3: Circle bull $250→$120-180($250作为极端牛市\u003c10%)\n- C-4: GP-RB1 p=92→83(TP计算70, override≤15)\n- C-5: GP-H1 p=62→55(正面A级证据仅PYUSD流量, 真实支付证据B级+负面)\n- C-6: GP-H3-F1 路径C 25%→30%, 路径A 35%→30%(branded +1% QoQ是\"ICU心跳\"不是稳定)\n- C-7: PayPal三重期权 $10-25→$10-15(当前)/$20-25(催化后)\n- C-8: GP-RB3 \"永久\"→\"可见投资期限内(5-10年)\"\n\n[2026-04-22讨论]\n- 角色功能表缺少义务/权利不对等两列 — 已补全\n- 稳定币链路无原生chargeback → 编排层(PayPal/Stripe)必须自己提供争议保护 → 编排层在稳定币轨道value capture可能比卡轨道更大\n- S6 merge-not-summarize规则确立：压缩≠整合，必须用反例约束(缩写/砍列/概括)\n- S6章节重构：旧七~十二(6章) → 新七(标的综合7.1-7.6) + 新八(催化剂/风险/演变/终态8.1-8.4)\n\n[S6整合 2026-04-25]\n- 完成S0-S5全量整合，s6_report-2026-04-25.md 含8章+结论+参考文献\n- 假设体系重构: S4的GP-H1~H4含义变更（旧H1稳定币重构→新H1 VAS转型，旧H2卡网主导→新H2编排层，旧H3编排层→新H3跨境压缩，旧H4发行层→新H4）\n- PayPal从T1降至T4回避（branded checkout衰退，S5未单独覆盖）\n- ADYEY升入T1核心（三重达标：好公司+好生意+好投资）\n- Circle估值大幅下修: S4 $40-49/$81-105/$130-162 → S5导向 $8-15/$36-70/$120-180（概率加权~$36 vs 市价$106）\n- Mastercard从T2卫星降为\"观望(T2卫星)\"：概率加权仅+3.3%无安全边际，等$440-460回调\n- 核心组合确立: V+ADYEY，概率加权+6.9%/年，3条路径中2/3正回报，路径3仅亏-12.5%\n- Global Payments S5 DCF: bear $52-58 / base $75-85 / bull $110-130，4.9x fwd P/E定价了\"几乎所有坏事都发生\""};
+
+var hypotheses = normalizeHypotheses();
+var allTippingPoints = hypotheses.flatMap(function(h) {
+  return (h.tipping_points || []).map(function(tp) {
+    return Object.assign({}, tp, { hypothesis_id: h.id, hypothesis_title: h.title });
+  });
+});
+
+// Normalize asset_judgment: support both string and array
+function normalizeAssetJudgment() {
+  if (Array.isArray(D.asset_judgment)) return D.asset_judgment;
+  if (typeof D.asset_judgment === 'string' && D.asset_judgment) {
+    return [{ symbol: '—', action: '', position_type: '', valuation_range: '', depends_on: [], _raw: D.asset_judgment }];
+  }
+  return [];
+}
+var assetJudgments = normalizeAssetJudgment();
+
+// Rating color
+function ratingColor(rating) {
+  if (!rating) return 'var(--text3)';
+  var r = String(rating).toUpperCase();
+  if (r.startsWith('A')) return 'var(--green)';
+  if (r.startsWith('B')) return 'var(--blue)';
+  if (r.startsWith('C')) return 'var(--yellow)';
+  if (r.startsWith('D')) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+// Action badge
+function actionBadge(action) {
+  if (!action) return '';
+  var a = String(action);
+  var aLow = a.toLowerCase();
+  var cls = 'b-gr';
+  if (aLow.includes('买入') || aLow.includes('buy') || aLow.includes('加仓')) cls = 'b-g';
+  else if (aLow.includes('观望') || aLow.includes('hold') || aLow.includes('wait')) cls = 'b-y';
+  else if (aLow.includes('回避') || aLow.includes('sell') || aLow.includes('avoid') || aLow.includes('减仓')) cls = 'b-r';
+  return '<span class="b ' + cls + '">' + e(a) + '</span>';
+}
+
+// Tier color
+function tierColor(tier) {
+  var t = String(tier || '').toUpperCase();
+  if (t === 'T1') return 'var(--green)';
+  if (t === 'T2') return 'var(--blue)';
+  if (t === 'T3') return 'var(--yellow)';
+  if (t === 'T4') return 'var(--red)';
+  if (t === 'REF') return 'var(--text3)';
+  return 'var(--text3)';
+}
+
+// Format probability — avoids double-% (e.g. "30%" + "%" → "30%%")
+function fmtProb(v) {
+  if (v == null || v === '') return '\u2014';
+  var s = String(v).trim();
+  if (s.endsWith('%')) return s;
+  var n = Number(s);
+  if (!isNaN(n)) return n + '%';
+  return s; // "高/中/低" etc.
+}
+
+// Heatmap class for score 1-5
+function hmClass(val) {
+  var n = parseInt(val);
+  if (n >= 5) return 'hm-5';
+  if (n === 4) return 'hm-4';
+  if (n === 3) return 'hm-3';
+  if (n === 2) return 'hm-2';
+  if (n <= 1) return 'hm-1';
+  return '';
+}
+
+// Scenario cell class
+function scenarioClass(text) {
+  var t = String(text || '');
+  if (t.includes('\u2705')) return 'scenario-green';
+  if (t.includes('\u26A0')) return 'scenario-yellow';
+  if (t.includes('\u274C')) return 'scenario-red';
+  return '';
+}
+
+// Probability color
+function probColor(prob) {
+  var p = parseFloat(prob);
+  if (isNaN(p)) {
+    var s = String(prob || '').toLowerCase();
+    if (s.includes('high') || s.includes('\u9AD8')) return 'var(--red)';
+    if (s.includes('med') || s.includes('\u4E2D')) return 'var(--yellow)';
+    return 'var(--green)';
+  }
+  if (p > 30) return 'var(--red)';
+  if (p >= 15) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+// Parse valuation range "bear $X / base $Y / bull $Z"
+function parseValRange(str) {
+  if (!str) return null;
+  var parts = String(str).split('/').map(function(s) { return s.trim(); });
+  var result = {};
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    var m = p.match(/(bear|base|bull|low|mid|high)[\s:]*\$?([\d,.]+)/i);
+    if (m) {
+      var key = m[1].toLowerCase();
+      if (key === 'low') key = 'bear';
+      if (key === 'mid') key = 'base';
+      if (key === 'high') key = 'bull';
+      result[key] = parseFloat(m[2].replace(/,/g, ''));
+    }
+  }
+  if (result.bear !== undefined || result.base !== undefined || result.bull !== undefined) return result;
+  return null;
+}
+
+// ---- BUILD HTML ----
+var h = '';
+
+// Header
+var rc = ratingColor(D.rating);
+h += '<header class="header">';
+h += '<div>';
+h += '<div class="eyebrow">Sector Dashboard</div>';
+h += '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">';
+h += '<h1>' + e(D.title) + '</h1>';
+if (D.rating) {
+  h += '<div class="rating-circle" style="color:' + rc + ';border-color:' + rc + '">' + e(D.rating) + '</div>';
+}
+h += '</div>';
+var subParts = [];
+if (D.review_date) subParts.push('Review ' + e(D.review_date));
+if (D.updated_at) subParts.push('Updated ' + e(D.updated_at));
+if (subParts.length) h += '<div class="header-sub">' + subParts.join(' \u00B7 ') + '</div>';
+h += '</div>';
+h += '<div class="header-right"></div>';
+h += '</header>';
+
+// Tabs
+h += '<div class="tabs">';
+h += '<button class="tab active" onclick="showTab(\'overview\',this)">\u603B\u89C8</button>';
+h += '<button class="tab" onclick="showTab(\'industry\',this)">\u884C\u4E1A</button>';
+h += '<button class="tab" onclick="showTab(\'assets\',this)">\u6807\u7684</button>';
+h += '<button class="tab" onclick="showTab(\'monitor\',this)">\u76D1\u63A7</button>';
+h += '</div>';
+
+// ========== TAB 1: OVERVIEW ==========
+h += '<div id="overview" class="page-panel active">';
+h += '<div class="section-stack">';
+
+// 1. Core Thesis
+if (D.core_thesis) {
+  h += '<div class="quote-block">' + renderBlock(D.core_thesis) + '</div>';
+}
+
+// 2. River Model
+var layerGroups = { riverbank: [], river: [], fork: [] };
+for (var hi = 0; hi < hypotheses.length; hi++) {
+  var layer = (hypotheses[hi].layer || 'river').toLowerCase();
+  if (layer === 'riverbank') layerGroups.riverbank.push(hypotheses[hi]);
+  else if (layer === 'fork') layerGroups.fork.push(hypotheses[hi]);
+  else layerGroups.river.push(hypotheses[hi]);
+}
+// Sort each layer by confidence descending
+function _sortByConf(a, b) { return (parseInt(b.confidence) || 0) - (parseInt(a.confidence) || 0); }
+layerGroups.riverbank.sort(_sortByConf);
+layerGroups.river.sort(_sortByConf);
+// Build hypothesis → assets map from asset_judgment
+var hypoAssets = {};
+if (assetJudgments.length) {
+  for (var aj = 0; aj < assetJudgments.length; aj++) {
+    var jd = assetJudgments[aj];
+    var deps = jd.depends_on || [];
+    for (var di = 0; di < deps.length; di++) {
+      if (!hypoAssets[deps[di]]) hypoAssets[deps[di]] = [];
+      hypoAssets[deps[di]].push({ symbol: jd.symbol, action: jd.action || '', position_type: jd.position_type || '' });
+    }
+  }
+}
+// Build fork → parent river map (GP-H1-F1 → GP-H1)
+var forkParent = {};
+for (var fi = 0; fi < layerGroups.fork.length; fi++) {
+  var fid = layerGroups.fork[fi].id || '';
+  var pm = fid.match(/^(.+-H\d+)-F\d+$/);
+  if (pm) forkParent[fid] = pm[1];
+}
+if (hypotheses.length) {
+  h += '<div class="panel">';
+  h += '<div class="panel-title" style="margin-bottom:14px">\u6CB3\u6D41\u6A21\u578B</div>';
+
+  // === RIVERBANKS ===
+  if (layerGroups.riverbank.length) {
+    h += '<div style="margin-bottom:18px">';
+    h += '<div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">\u6CB3\u5CB8 \u00B7 \u7ED3\u6784\u6027\u4FE1\u5FF5</div>';
+    for (var rb = 0; rb < layerGroups.riverbank.length; rb++) {
+      var rbItem = layerGroups.riverbank[rb];
+      var rbConf = parseInt(rbItem.confidence) || 0;
+      h += '<div style="display:flex;gap:12px;align-items:start;padding:10px 0;' + (rb < layerGroups.riverbank.length - 1 ? 'border-bottom:1px solid rgba(255,255,255,.06)' : '') + '">';
+      // Left: ID + confidence
+      h += '<div style="flex-shrink:0;width:56px;text-align:center">';
+      h += '<div class="mono" style="font-size:22px;font-weight:800;color:rgba(255,255,255,.9);line-height:1">' + rbConf + '</div>';
+      h += '<div class="mono" style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px">' + e(rbItem.id.replace(/^.*-/, '')) + '</div>';
+      h += '</div>';
+      // Right: statement
+      h += '<div style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;flex:1">' + md(rbItem.statement) + '</div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+
+  // === RIVERS with inline forks ===
+  if (layerGroups.river.length) {
+    h += '<div>';
+    h += '<div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">\u6CB3\u6D41 \u00B7 \u53EF\u8BC1\u4F2A\u5047\u8BBE</div>';
+    for (var rv = 0; rv < layerGroups.river.length; rv++) {
+      var rvItem = layerGroups.river[rv];
+      var rvConf = parseInt(rvItem.confidence) || 0;
+      var isLast = rv === layerGroups.river.length - 1;
+      h += '<div style="padding:8px 0;' + (!isLast ? 'border-bottom:1px solid rgba(255,255,255,.06)' : '') + '">';
+      // Header: ID + confidence + bar + assets
+      h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">';
+      h += '<span class="mono" style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);min-width:24px">' + e(rvItem.id.replace(/^.*-(H\d+)$/, '$1')) + '</span>';
+      h += '<span class="mono" style="font-size:15px;font-weight:800;color:rgba(255,255,255,.85)">' + rvConf + '</span>';
+      // Thin bar
+      h += '<div style="width:48px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;flex-shrink:0">';
+      h += '<div style="width:' + rvConf + '%;height:100%;background:rgba(255,255,255,.35);border-radius:2px"></div></div>';
+      // Assets
+      var rvAssets = hypoAssets[rvItem.id] || [];
+      if (rvAssets.length) {
+        for (var ra = 0; ra < rvAssets.length; ra++) {
+          var aBold = rvAssets[ra].action === '\u4E70\u5165';
+          h += '<span class="mono" style="font-size:10px;font-weight:700;color:rgba(255,255,255,' + (aBold ? '.8' : '.4') + ');padding:1px 4px;background:rgba(255,255,255,' + (aBold ? '.08' : '.03') + ');border-radius:3px">' + e(rvAssets[ra].symbol) + '</span>';
+        }
+      }
+      h += '</div>';
+      // Statement
+      h += '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.65;padding-left:32px">' + md(rvItem.statement) + '</div>';
+      // Inline forks
+      var childForks = [];
+      for (var cf = 0; cf < layerGroups.fork.length; cf++) {
+        if (forkParent[layerGroups.fork[cf].id] === rvItem.id) childForks.push(layerGroups.fork[cf]);
+      }
+      for (var cfi = 0; cfi < childForks.length; cfi++) {
+        var fk = childForks[cfi];
+        var fkState = (fk.state || 'open').toLowerCase();
+        var fkAssets = hypoAssets[fk.id] || [];
+        h += '<div style="display:flex;align-items:center;gap:6px;padding:4px 0 0 32px">';
+        h += '<span style="font-size:9px;color:rgba(255,255,255,.3)">\u25C6</span>';
+        h += '<span style="font-size:11px;color:rgba(255,255,255,.5)">' + e(fk.statement) + '</span>';
+        for (var fa = 0; fa < fkAssets.length; fa++) {
+          h += '<span class="mono" style="font-size:10px;color:rgba(255,255,255,.4)">' + e(fkAssets[fa].symbol) + '</span>';
+        }
+        h += '<span style="font-size:9px;color:rgba(255,255,255,.3)">' + (fkState === 'resolved' ? '\u2713' : '\u2022 \u5F85\u51B3') + '</span>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+
+  // Orphan forks
+  var orphanForks = [];
+  for (var of2 = 0; of2 < layerGroups.fork.length; of2++) {
+    if (!forkParent[layerGroups.fork[of2].id]) orphanForks.push(layerGroups.fork[of2]);
+  }
+  if (orphanForks.length) {
+    h += '<div style="margin-top:12px;font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">\u5206\u53C9 \u00B7 \u5F85\u51B3\u4E8B\u4EF6</div>';
+    for (var ofi = 0; ofi < orphanForks.length; ofi++) {
+      var ofk = orphanForks[ofi];
+      h += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0">';
+      h += '<span style="font-size:9px;color:rgba(255,255,255,.3)">\u25C6</span>';
+      h += '<span style="font-size:11px;color:rgba(255,255,255,.5)">' + e(ofk.statement) + '</span>';
+      h += '</div>';
+    }
+  }
+  h += '</div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end overview
+
+// ========== TAB 2: INDUSTRY ==========
+h += '<div id="industry" class="page-panel">';
+h += '<div class="section-stack">';
+
+// 1. Essence
+if (D.essence) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u672C\u8D28 (Essence)</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div style="font-size:13px;color:var(--text2)">' + renderBlock(D.essence) + '</div>';
+  h += '</div></div>';
+}
+
+// 2. TAM (supports both object {total,sam,som,cagr} and array [{label,value,growth,source},...])
+if (D.tam) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">TAM / SAM / SOM</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  if (Array.isArray(D.tam)) {
+    h += '<div class="table-wrap"><table class="data-tbl" style="min-width:500px"><thead><tr>';
+    h += '<th>\u6307\u6807</th><th>\u89C4\u6A21</th><th>\u589E\u901F</th><th>\u6570\u636E\u6E90</th>';
+    h += '</tr></thead><tbody>';
+    for (var tami = 0; tami < D.tam.length; tami++) {
+      var tamItem = D.tam[tami];
+      h += '<tr>';
+      h += '<td style="font-weight:600;color:var(--text)">' + e(tamItem.label) + '</td>';
+      h += '<td class="mono" style="color:var(--green-strong)">' + e(tamItem.value || '\u2014') + '</td>';
+      h += '<td style="color:var(--text2)">' + e(tamItem.growth || '\u2014') + '</td>';
+      h += '<td style="color:var(--text3);font-size:11px">' + e(tamItem.source || '\u2014') + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+  } else {
+    var tam = D.tam;
+    var tamTotal = parseFloat(tam.total) || 0;
+    var tamSam = parseFloat(tam.sam) || 0;
+    var tamSom = parseFloat(tam.som) || 0;
+    h += '<div class="tam-bar-wrap">';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">TAM</div>';
+    h += '<div class="tam-bar" style="width:100%;background:rgba(82,199,140,.15);color:var(--green-strong)">' + e(tam.total || '\u2014') + '</div>';
+    h += '</div>';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">SAM</div>';
+    var samPct = tamTotal > 0 ? Math.max(15, (tamSam / tamTotal * 100)) : 60;
+    h += '<div class="tam-bar" style="width:' + samPct + '%;background:rgba(77,141,255,.15);color:#9db8ff">' + e(tam.sam || '\u2014') + '</div>';
+    h += '</div>';
+    h += '<div class="tam-bar-row">';
+    h += '<div class="tam-bar-label">SOM</div>';
+    var somPct = tamTotal > 0 ? Math.max(10, (tamSom / tamTotal * 100)) : 30;
+    h += '<div class="tam-bar" style="width:' + somPct + '%;background:rgba(179,155,255,.15);color:#c8b8ff">' + e(tam.som || '\u2014') + '</div>';
+    h += '</div>';
+    if (tam.cagr) {
+      h += '<div style="margin-top:8px;font-size:13px;color:var(--text3)">CAGR: <span class="mono" style="color:var(--green-strong);font-weight:700">' + e(tam.cagr) + '</span></div>';
+    }
+    h += '</div>';
+  }
+  h += '</div></div>';
+}
+
+// 4. Role Table
+if ((D.role_table || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u89D2\u8272\u529F\u80FD\u8868</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  var roleFields = [];
+  var roleFieldLabels = {
+    role: '\u89D2\u8272', companies: '\u4EE3\u8868\u516C\u53F8', representative: '\u4EE3\u8868\u516C\u53F8', function: '\u529F\u80FD', revenue_source: '\u6536\u5165\u6765\u6E90',
+    revenue_scale: '\u6536\u5165\u89C4\u6A21', margin: '\u5229\u6DA6\u7387', risk: '\u98CE\u9669',
+    obligations: '\u4E49\u52A1', '\u4E49\u52A1': '\u4E49\u52A1', parity: '\u5BF9\u7B49\u6027', '\u6743\u5229\u4E0D\u5BF9\u7B49': '\u6743\u5229\u4E0D\u5BF9\u7B49', moat: '\u62A4\u57CE\u6CB3',
+    replaceable: '\u53EF\u66FF\u4EE3\u6027', trend: '\u8D8B\u52BF'
+  };
+  var allRoleKeys = ['role','companies','representative','function','revenue_source','revenue_scale','margin','risk','obligations','\u4E49\u52A1','parity','\u6743\u5229\u4E0D\u5BF9\u7B49','moat','replaceable','trend'];
+  for (var ki = 0; ki < allRoleKeys.length; ki++) {
+    var k = allRoleKeys[ki];
+    for (var ri = 0; ri < D.role_table.length; ri++) {
+      if (D.role_table[ri][k] !== undefined && D.role_table[ri][k] !== '') {
+        roleFields.push(k);
+        break;
+      }
+    }
+  }
+  var layerColors = ['var(--green)', 'var(--blue)', 'var(--purple)', 'var(--orange)', 'var(--cyan)', 'var(--yellow)', 'var(--red)'];
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:' + (roleFields.length * 100) + 'px"><thead><tr>';
+  for (var fi = 0; fi < roleFields.length; fi++) {
+    h += '<th>' + e(roleFieldLabels[roleFields[fi]] || roleFields[fi]) + '</th>';
+  }
+  h += '</tr></thead><tbody>';
+  for (var ri2 = 0; ri2 < D.role_table.length; ri2++) {
+    var row = D.role_table[ri2];
+    var lc = layerColors[ri2 % layerColors.length];
+    h += '<tr style="border-left:3px solid ' + lc + '">';
+    for (var fi2 = 0; fi2 < roleFields.length; fi2++) {
+      var val = row[roleFields[fi2]];
+      var cellVal = val !== undefined && val !== '' ? String(val) : '\u2014';
+      if (roleFields[fi2] === 'margin') {
+        h += '<td class="mono" style="color:var(--green-strong)">' + e(cellVal) + '</td>';
+      } else if (roleFields[fi2] === 'risk') {
+        h += '<td style="color:#ef8f7d">' + md(cellVal) + '</td>';
+      } else {
+        h += '<td>' + md(cellVal) + '</td>';
+      }
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div>';
+  h += '</div></div>';
+}
+
+// 5. Business Models
+if ((D.business_models || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u5546\u4E1A\u6A21\u5F0F</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+  h += '<th>\u5C42\u7EA7</th><th>\u4EE3\u8868</th><th>\u5229\u6DA6\u7387</th><th>\u5229\u6DA6\u8D28\u91CF</th><th>\u6838\u5FC3\u98CE\u9669</th>';
+  h += '</tr></thead><tbody>';
+  for (var bi = 0; bi < D.business_models.length; bi++) {
+    var bm = D.business_models[bi];
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text);white-space:nowrap">' + e(bm.layer) + '</td>';
+    h += '<td>' + md(bm.representative || bm.example || '\u2014') + '</td>';
+    h += '<td class="mono" style="color:var(--green-strong);white-space:nowrap">' + e(bm.margin || '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:11px">' + md(bm.profit_quality || bm.revenue_source || '\u2014') + '</td>';
+    h += '<td style="color:#ef8f7d;font-size:11px">' + md(bm.core_risk || bm.risk || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div>';
+  h += '</div></div>';
+}
+
+// 7. Sector Layers (赛道格局 — 含 business_models + role_table 合并字段)
+if ((D.competition_layers || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">赛道格局</span>';
+  h += '<span class="arrow">▼</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  h += '<div style="display:flex;flex-direction:column;gap:16px">';
+  for (var ci = 0; ci < D.competition_layers.length; ci++) {
+    var cl = D.competition_layers[ci];
+    var clCr = cl.cr2 || cl.cr || '';
+    var clBorder = cl.highlight === true ? 'var(--accent)' : 'rgba(255,255,255,.12)';
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;border-left:3px solid ' + clBorder + '">';
+    h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">';
+    h += '<span style="font-size:13px;font-weight:700;color:var(--text)">' + e(cl.layer) + '</span>';
+    if (cl.stability) h += '<span class="b b-gr" style="font-size:9px;padding:2px 6px">稳定性: ' + e(cl.stability) + '</span>';
+    if (clCr) h += '<span class="b b-b" style="font-size:9px;padding:2px 6px">Top 2 集中度: ' + e(clCr) + '</span>';
+    if (cl.moat_score) h += '<span class="b b-g" style="font-size:9px;padding:2px 6px">护城河: ' + e(cl.moat_score) + '</span>';
+    h += '</div>';
+    var metaFields = [
+      ['representatives', '代表玩家'],
+      ['function', '功能定位'],
+      ['margin', '利润率'],
+      ['profit_quality', '利润质量'],
+      ['revenue_scale', '收入规模'],
+      ['core_risk', '核心风险'],
+      ['权利不对等', '权利对等性']
+    ];
+    var hasMeta = false;
+    for (var mfi = 0; mfi < metaFields.length; mfi++) {
+      if (cl[metaFields[mfi][0]] !== undefined && cl[metaFields[mfi][0]] !== '') { hasMeta = true; break; }
+    }
+    if (hasMeta) {
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:4px;font-size:11px;margin-bottom:8px;padding:8px;background:rgba(255,255,255,.02);border-radius:6px">';
+      for (var mfi2 = 0; mfi2 < metaFields.length; mfi2++) {
+        var mfk = metaFields[mfi2][0];
+        var mfl = metaFields[mfi2][1];
+        var mfval = cl[mfk];
+        if (mfval !== undefined && mfval !== '') {
+          h += '<div style="color:var(--text3);font-weight:600;white-space:nowrap">' + e(mfl) + '</div>';
+          h += '<div style="color:var(--text2)">' + md(String(mfval)) + '</div>';
+        }
+      }
+      h += '</div>';
+    }
+    if (cl.key_dynamic) {
+      h += '<div style="font-size:12px;color:var(--text2);line-height:1.6">' + renderBlock(cl.key_dynamic) + '</div>';
+    }
+    if ((cl.players || []).length) {
+      var playerFields = ['symbol','revenue','growth','margin','moat_score','pe'];
+      var playerLabels = { symbol:'标的', revenue:'收入', growth:'增速', margin:'利润率', moat_score:'护城河', pe:'PE' };
+      var activePFields = [];
+      for (var pfi = 0; pfi < playerFields.length; pfi++) {
+        var pf = playerFields[pfi];
+        for (var pli = 0; pli < cl.players.length; pli++) {
+          if (cl.players[pli][pf] !== undefined && cl.players[pli][pf] !== '') { activePFields.push(pf); break; }
+        }
+      }
+      if (activePFields.length) {
+        h += '<div class="table-wrap" style="margin-top:6px"><table class="data-tbl"><thead><tr>';
+        for (var pfi2 = 0; pfi2 < activePFields.length; pfi2++) {
+          h += '<th>' + e(playerLabels[activePFields[pfi2]] || activePFields[pfi2]) + '</th>';
+        }
+        h += '</tr></thead><tbody>';
+        for (var pli2 = 0; pli2 < cl.players.length; pli2++) {
+          var player = cl.players[pli2];
+          h += '<tr>';
+          for (var pfi3 = 0; pfi3 < activePFields.length; pfi3++) {
+            var pval = player[activePFields[pfi3]];
+            var pcell = pval !== undefined && pval !== '' ? String(pval) : '—';
+            if (activePFields[pfi3] === 'symbol') h += '<td style="font-weight:700;color:var(--text)">' + e(pcell) + '</td>';
+            else h += '<td class="mono">' + e(pcell) + '</td>';
+          }
+          h += '</tr>';
+        }
+        h += '</tbody></table></div>';
+      }
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+// 0. Layer Overview (PPT-style: 利润切片 + 趋势渗透矩阵 + 关键洞察)
+if (D.layer_overview && D.layer_overview.rows && D.layer_overview.rows.length) {
+  var lo = D.layer_overview;
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">支付层级利润切片</span>';
+  h += '<span class="arrow">▼</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+
+  // 副标题
+  if (lo.example) {
+    h += '<div style="font-size:13px;color:var(--text2);margin-bottom:16px;font-style:italic">';
+    h += e(lo.example) + ' — 哪一层吃多少净利润 + 哪些趋势在渗透哪一层';
+    h += '</div>';
+  }
+
+  // Part 1: 利润切片 horizontal stacked bar (单色调 + peak 高亮)
+  h += '<div style="margin-bottom:20px">';
+  h += '<div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:8px;letter-spacing:0.05em">利润切片</div>';
+  h += '<div style="display:flex;width:100%;height:64px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">';
+  for (var lri = 0; lri < lo.rows.length; lri++) {
+    var lr = lo.rows[lri];
+    var lpct = parseInt(lr.pct) || 1;
+    var isHighlight = lr.highlight === true || lpct >= 50;
+    var bgColor = isHighlight ? 'var(--accent)' : 'rgba(255,255,255,.08)';
+    var txColor = isHighlight ? 'white' : 'var(--text2)';
+    h += '<div title="' + e(lr.layer + ': ' + (lr.fee_type || '')) + '" style="flex:' + lpct + ';background:' + bgColor + ';display:flex;flex-direction:column;justify-content:center;align-items:center;color:' + txColor + ';padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;border-right:1px solid rgba(255,255,255,.05)">';
+    if (lpct >= 30) {
+      // Peak: % (大) + layer + fee_type
+      h += '<div style="font-weight:800;font-size:16px">' + lpct + '%</div>';
+      h += '<div style="font-size:11px;opacity:0.95;font-weight:600;margin-top:2px">' + e(lr.layer) + '</div>';
+      if (lr.fee_type) {
+        h += '<div style="font-size:10px;opacity:0.85;margin-top:2px">' + e(lr.fee_type) + '</div>';
+      }
+    } else {
+      // 小段: 只显示 %（layer name + fee_type 留给下方 inline cards 看）
+      h += '<div style="font-weight:700;font-size:11px">' + lpct + '%</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '</div>';
+
+  // Part 1.5: 每层本质（统一灰底 + peak 用 accent border）
+  h += '<div style="margin-bottom:18px;display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:8px">';
+  for (var ldi = 0; ldi < lo.rows.length; ldi++) {
+    var lrow = lo.rows[ldi];
+    var ldpct = parseInt(lrow.pct) || 1;
+    var isPeak = lrow.highlight === true || ldpct >= 50;
+    var bdColor = isPeak ? 'var(--accent)' : 'rgba(255,255,255,.12)';
+    h += '<div style="padding:8px 10px;background:rgba(255,255,255,.02);border-left:3px solid ' + bdColor + ';border-radius:0 6px 6px 0;font-size:11px">';
+    h += '<div style="font-weight:700;color:var(--text);margin-bottom:3px">' + e(lrow.layer) + ' <span style="color:var(--text3);font-weight:500">· ' + ldpct + '%</span></div>';
+    if (lrow.fee_type) {
+      h += '<div style="color:var(--text2)">' + e(lrow.fee_type) + '</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+
+  // Part 2: 趋势渗透矩阵 (转置：趋势作行 / 层作列)
+  if (lo.trends && lo.trends.length) {
+    h += '<div style="margin-bottom:18px">';
+    h += '<div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:8px;letter-spacing:0.05em">新趋势改变传统链条的强度</div>';
+    h += '<div class="table-wrap"><table class="data-tbl" style="font-size:12px"><thead><tr>';
+    h += '<th style="text-align:left;width:18%">趋势</th>';
+    for (var ri = 0; ri < lo.rows.length; ri++) {
+      h += '<th style="text-align:center;font-size:10px">' + e(lo.rows[ri].layer) + '</th>';
+    }
+    h += '<th style="text-align:center;width:10%;font-size:10px">全链路通<br><span style="color:var(--text3);font-weight:400">(木桶)</span></th>';
+    h += '</tr></thead><tbody>';
+    function scoreColor(s) {
+      if (s >= 50) return 'background:var(--accent);color:white';
+      if (s >= 25) return 'background:rgba(155,138,250,.55);color:white';
+      if (s >= 10) return 'background:rgba(155,138,250,.28);color:var(--text)';
+      if (s > 0) return 'background:rgba(155,138,250,.12);color:var(--text2)';
+      return 'background:rgba(255,255,255,.03);color:var(--text3)';
+    }
+    function bucketColor(b) {
+      if (b >= 80) return 'background:var(--green);color:white';
+      if (b >= 30) return 'background:var(--yellow);color:#000';
+      return 'background:#ef8f7d;color:white';
+    }
+    for (var ti = 0; ti < lo.trends.length; ti++) {
+      var trendName = lo.trends[ti];
+      // 木桶 = min(current/limit) ratio; tracks weakest layer's progress %
+      var minRatio = 1000;
+      for (var pi = 0; pi < lo.rows.length; pi++) {
+        var p = (lo.rows[pi].penetration || {})[trendName];
+        var pc = p ? (parseInt(p.current) || 0) : 0;
+        var pl = p ? (parseInt(p.limit) || 0) : 0;
+        var ratio = pl > 0 ? Math.round(pc / pl * 100) : 0;
+        if (ratio < minRatio) minRatio = ratio;
+      }
+      var minCur = minRatio;
+      h += '<tr>';
+      h += '<td style="font-weight:700;color:var(--text)">' + e(trendName) + '</td>';
+      for (var ri2 = 0; ri2 < lo.rows.length; ri2++) {
+        var pen = (lo.rows[ri2].penetration || {})[trendName];
+        var cur = pen ? (parseInt(pen.current) || 0) : 0;
+        var lim = pen ? (parseInt(pen.limit) || 0) : 0;
+        var note = pen ? (pen.note || '') : '';
+        h += '<td style="text-align:center;cursor:help" title="' + e(note) + '">';
+        h += '<span style="' + scoreColor(cur) + ';padding:3px 9px;border-radius:6px;font-weight:700;font-size:11px;display:inline-block;min-width:48px">' + cur + '<span style="opacity:.6;font-weight:500">/' + lim + '</span></span>';
+        h += '</td>';
+      }
+      h += '<td style="text-align:center"><span style="' + bucketColor(minCur) + ';padding:3px 10px;border-radius:6px;font-weight:800;font-size:11px;display:inline-block;min-width:36px">' + minCur + '%</span></td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    h += '<div style="font-size:10px;color:var(--text3);margin-top:6px">每行 limit 总和 = 100；cell = 当前进展 / 上限；末尾"全链路通 %" = min(current/limit) = 最弱层进展率（木桶）</div>';
+    h += '</div>';
+  }
+
+  // Part 3: 关键洞察
+  if ((lo.insights || []).length) {
+    h += '<div style="background:rgba(255,255,255,.02);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0">';
+    h += '<div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:6px;letter-spacing:0.05em">💡 关键洞察</div>';
+    h += '<ul style="margin:0;padding-left:18px;font-size:12px;color:var(--text2);line-height:1.7">';
+    for (var ii = 0; ii < lo.insights.length; ii++) {
+      h += '<li style="margin-bottom:4px">' + md(String(lo.insights[ii])) + '</li>';
+    }
+    h += '</ul>';
+    h += '</div>';
+  }
+
+  h += '</div></div>';
+}
+
+// 6. Transaction Paths
+if ((D.transaction_paths || []).length) {
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">\u4EA4\u6613\u94FE\u8DEF\u5BF9\u6BD4</span>';
+  h += '<span class="arrow">\u25BC</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+  var pathCount = D.transaction_paths.length;
+  var pathCols = pathCount <= 3 ? 'repeat(' + pathCount + ', 1fr)' : 'repeat(auto-fill, minmax(240px, 1fr))';
+  h += '<div style="display:grid;grid-template-columns:' + pathCols + ';gap:8px">';
+  for (var pi = 0; pi < D.transaction_paths.length; pi++) {
+    var tp = D.transaction_paths[pi];
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px">';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+    h += '<span style="font-size:14px;font-weight:700;color:var(--text)">' + e(tp.name) + '</span>';
+    if (tp.total_cost) h += '<span class="b b-y">' + e(tp.total_cost) + '</span>';
+    h += '</div>';
+    if (tp.flow) {
+      h += '<div style="font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.7">' + md(tp.flow) + '</div>';
+    }
+    if ((tp.steps || []).length) {
+      h += '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">';
+      for (var si = 0; si < tp.steps.length; si++) {
+        h += '<div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2)">';
+        h += '<span style="color:var(--text3);flex-shrink:0;font-weight:700;font-family:var(--mono)">' + (si + 1) + '</span>';
+        h += '<span>' + md(tp.steps[si]) + '</span>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    if (tp.value_split && typeof tp.value_split === 'object') {
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;margin-bottom:8px">';
+      var vsKeys = Object.keys(tp.value_split);
+      for (var vsi = 0; vsi < vsKeys.length; vsi++) {
+        h += '<span style="color:var(--text3)">' + e(vsKeys[vsi]) + '</span>';
+        h += '<span class="mono" style="color:var(--green-strong)">' + e(tp.value_split[vsKeys[vsi]]) + '</span>';
+      }
+      h += '</div>';
+    }
+    h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">';
+    if (tp.settlement) h += '<span style="color:var(--text3)">\u7ED3\u7B97</span><span style="color:var(--text2)">' + e(tp.settlement) + '</span>';
+    if (tp.dispute) h += '<span style="color:var(--text3)">\u4E89\u8BAE</span><span style="color:var(--text2)">' + md(tp.dispute) + '</span>';
+    if (tp.missing) h += '<span style="color:var(--text3)">\u7F3A\u5931</span><span style="color:#ef8f7d">' + md(tp.missing) + '</span>';
+    if (tp.note) h += '<span style="color:var(--text3)">\u5907\u6CE8</span><span style="color:var(--text2)">' + md(tp.note) + '</span>';
+    h += '</div></div>';
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end industry
+
+// ========== TAB 3: ASSETS ==========
+h += '<div id="assets" class="page-panel">';
+h += '<div class="section-stack">';
+// 0. Scenario Grid (消费场景矩阵 — 标的页顶部)
+if (D.scenario_grid) {
+  var sg = D.scenario_grid;
+  var sgTierClass = { T1:'b-g', T2:'b-b', T3:'b-y', T4:'b-r', ref:'b-p', uncovered:'b-gr' };
+  var sgTierLabel = { T1:'T1', T2:'T2', T3:'T3', T4:'T4', ref:'Ref', uncovered:'未覆盖' };
+  var sgPenDot = { high:'●●●', medium:'●●', low:'●' };
+  var sgPenClass = { high:'b-g', medium:'b-y', low:'b-gr' };
+  var sgQLabel = { domestic_consumer:'国内消费', cross_border_consumer:'国际消费', domestic_b2b:'国内 B2B', cross_border_b2b:'国际 B2B' };
+  var sgQOrder = ['domestic_consumer','cross_border_consumer','domestic_b2b','cross_border_b2b'];
+  var sgQColors = ['var(--green)','var(--blue)','var(--purple)','var(--orange)'];
+
+  h += '<div class="collapsible open">';
+  h += '<div class="collapsible-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+  h += '<span class="collapsible-title">使用场景矩阵</span>';
+  h += '<span class="arrow">▼</span>';
+  h += '</div>';
+  h += '<div class="collapsible-body">';
+
+  if (sg.description) {
+    h += '<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px">' + md(sg.description) + '</div>';
+  }
+
+  // ── Compute (x, y) per company: from main + penetration, or page.md override ──
+  var sgQCenters = { domestic_consumer:[25,25], cross_border_consumer:[75,25], domestic_b2b:[25,75], cross_border_b2b:[75,75] };
+  var sgPenWeight = { high:0.4, medium:0.2, low:0.05 };
+  function sgCalcCoord(c){
+    var mq = sgQCenters[c.main]; if (!mq) return [50, 50];
+    var sx = mq[0], sy = mq[1], wt = 1.0;
+    var pen = c.penetration || {};
+    Object.keys(pen).forEach(function(k){
+      var w = sgPenWeight[pen[k]] || 0;
+      var qq = sgQCenters[k];
+      if (qq) { sx += qq[0]*w; sy += qq[1]*w; wt += w; }
+    });
+    return [sx/wt, sy/wt];
+  }
+  // Stagger same-quadrant companies along Y (and a small X jitter) to avoid overlap
+  var sgQGroups = {};
+  (sg.companies || []).forEach(function(c){
+    var k = c.main || 'unknown';
+    sgQGroups[k] = sgQGroups[k] || [];
+    sgQGroups[k].push(c);
+  });
+  Object.keys(sgQGroups).forEach(function(k){
+    var arr = sgQGroups[k];
+    arr.forEach(function(c, i){
+      var xy = (c.position && typeof c.position.x === 'number') ? [c.position.x, c.position.y] : sgCalcCoord(c);
+      if (!c.position && arr.length > 1) {
+        var spread = (i / (arr.length - 1) - 0.5) * 38; // ±19% Y stagger
+        xy[1] += spread;
+        var dx = (i % 2 === 0 ? -8 : 8);
+        xy[0] += dx;
+      }
+      c._x = Math.max(4, Math.min(96, xy[0]));
+      c._y = Math.max(6, Math.min(94, xy[1]));
+    });
+  });
+
+  // ── SVG scatter plot ──
+  var sgW = 1000, sgH = 600;
+  var sgPad = { t:38, r:30, b:38, l:80 };
+  var sgPw = sgW - sgPad.l - sgPad.r;
+  var sgPh = sgH - sgPad.t - sgPad.b;
+  function sgPx(x){ return sgPad.l + (x/100) * sgPw; }
+  function sgPy(y){ return sgPad.t + (y/100) * sgPh; }
+  var sgTierColor = { T1:'#52c78c', T2:'#9db8ff', T3:'#ebb175', T4:'#ef8f7d', ref:'#c8b8ff', uncovered:'#888' };
+
+  h += '<div style="margin:0 auto 12px;max-width:760px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px">';
+  h += '<svg viewBox="0 0 ' + sgW + ' ' + sgH + '" style="width:100%;height:auto;display:block">';
+
+  // plot background + border
+  h += '<rect x="' + sgPad.l + '" y="' + sgPad.t + '" width="' + sgPw + '" height="' + sgPh + '" fill="rgba(255,255,255,.015)" stroke="rgba(255,255,255,.14)" stroke-width="1"/>';
+  // quadrant subtle tints
+  var sgTintQ = ['rgba(82,199,140,.05)','rgba(77,141,255,.05)','rgba(179,155,255,.05)','rgba(214,149,82,.05)'];
+  h += '<rect x="' + sgPad.l + '" y="' + sgPad.t + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[0] + '"/>';
+  h += '<rect x="' + (sgPad.l + sgPw/2) + '" y="' + sgPad.t + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[1] + '"/>';
+  h += '<rect x="' + sgPad.l + '" y="' + (sgPad.t + sgPh/2) + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[2] + '"/>';
+  h += '<rect x="' + (sgPad.l + sgPw/2) + '" y="' + (sgPad.t + sgPh/2) + '" width="' + (sgPw/2) + '" height="' + (sgPh/2) + '" fill="' + sgTintQ[3] + '"/>';
+  // center cross (dashed)
+  h += '<line x1="' + sgPx(50) + '" y1="' + sgPad.t + '" x2="' + sgPx(50) + '" y2="' + (sgPad.t+sgPh) + '" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 4" stroke-width="1"/>';
+  h += '<line x1="' + sgPad.l + '" y1="' + sgPy(50) + '" x2="' + (sgPad.l+sgPw) + '" y2="' + sgPy(50) + '" stroke="rgba(255,255,255,.22)" stroke-dasharray="5 4" stroke-width="1"/>';
+
+  // X axis labels (top, above plot)
+  h += '<text x="' + sgPx(25) + '" y="' + (sgPad.t-12) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700">国内 Domestic ←</text>';
+  h += '<text x="' + sgPx(75) + '" y="' + (sgPad.t-12) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700">→ 国际 Cross-border</text>';
+  // Y axis labels (rotated, left of plot) — use → / ← so they render visually as ↑ / ↓ after rotate(-90)
+  h += '<text x="' + (sgPad.l-26) + '" y="' + sgPy(25) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700" transform="rotate(-90 ' + (sgPad.l-26) + ' ' + sgPy(25) + ')">消费 Consumer →</text>';
+  h += '<text x="' + (sgPad.l-26) + '" y="' + sgPy(75) + '" text-anchor="middle" fill="#b8c4d3" font-size="19" font-weight="700" transform="rotate(-90 ' + (sgPad.l-26) + ' ' + sgPy(75) + ')">← B2B</text>';
+
+  // Plot company points
+  (sg.companies || []).forEach(function(c){
+    var cx = sgPx(c._x), cy = sgPy(c._y);
+    var col = sgTierColor[c.cortex_tier] || '#888';
+    // halo for T1
+    if (c.cortex_tier === 'T1') {
+      h += '<circle cx="' + cx + '" cy="' + cy + '" r="15" fill="' + col + '" fill-opacity="0.18"/>';
+    }
+    h += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="' + col + '" fill-opacity="0.92" stroke="#0a0e15" stroke-width="1.5"/>';
+    // label: right-anchored if point is in right half, else left-anchored
+    var isRight = c._x > 50;
+    var lx = isRight ? (cx - 13) : (cx + 13);
+    var anchor = isRight ? 'end' : 'start';
+    h += '<text x="' + lx + '" y="' + (cy+5) + '" text-anchor="' + anchor + '" fill="#e8edf2" font-size="16" font-weight="500" style="paint-order:stroke;stroke:#0a0e15;stroke-width:3px;stroke-linejoin:round">' + e(c.name) + '</text>';
+  });
+
+  h += '</svg>';
+
+  // Legend (tier colors)
+  h += '<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:6px">';
+  ['T1','T2','T3','T4','ref','uncovered'].forEach(function(tk){
+    h += '<span style="display:inline-flex;align-items:center;gap:5px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + sgTierColor[tk] + '"></span>' + e(sgTierLabel[tk]) + '</span>';
+  });
+  h += '</div>';
+  h += '</div>';
+
+  // Underlying Rails
+  if ((sg.rails || []).length) {
+    h += '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-bottom:12px">';
+    h += '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Underlying Rails — 跨四象限基础设施</div>';
+    h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+    h += '<th>名称</th><th>类型</th>';
+    for (var sgrh = 0; sgrh < sgQOrder.length; sgrh++) {
+      h += '<th>' + e(sgQLabel[sgQOrder[sgrh]]) + '</th>';
+    }
+    h += '<th>说明</th>';
+    h += '</tr></thead><tbody>';
+    for (var sgri = 0; sgri < sg.rails.length; sgri++) {
+      var sgR = sg.rails[sgri];
+      h += '<tr>';
+      h += '<td style="white-space:nowrap"><span style="font-weight:700;color:var(--text)">' + e(sgR.name) + '</span>';
+      if (sgR.ticker) h += ' <span class="mono" style="font-size:10px;color:var(--text3)">' + e(sgR.ticker) + '</span>';
+      h += ' <span class="b ' + (sgTierClass[sgR.cortex_tier] || 'b-gr') + '" style="font-size:9px;padding:1px 5px">' + e(sgTierLabel[sgR.cortex_tier] || sgR.cortex_tier || '') + '</span>';
+      h += '</td>';
+      h += '<td style="white-space:nowrap;font-size:11px;color:var(--text2)">' + e(sgR.category || '') + '</td>';
+      for (var sgrk = 0; sgrk < sgQOrder.length; sgrk++) {
+        var sgEv = (sgR.exposure || {})[sgQOrder[sgrk]] || '';
+        var sgCls = sgPenClass[sgEv] || 'b-gr';
+        var sgDot = sgPenDot[sgEv] || '○';
+        h += '<td style="text-align:center"><span class="b ' + sgCls + '" style="font-size:10px;padding:2px 6px" title="' + e(sgEv || '无') + '">' + sgDot + '</span></td>';
+      }
+      h += '<td style="font-size:11px;color:var(--text3)">' + e(sgR.note || '') + '</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    h += '</div>';
+  }
+
+  h += '</div></div>';
+}
+
+
+// 1. Tier Ranking (inline tags per tier)
+if ((D.tier_ranking || []).length) {
+  var tiers = {};
+  var tierNames = {};
+  var tierOrder = ['T1','T2','T3','T4','REF'];
+  for (var ti = 0; ti < D.tier_ranking.length; ti++) {
+    var tr = D.tier_ranking[ti];
+    var tierRaw = String(tr.tier || 'T4');
+    var tierKey = tierRaw.split(/\s/)[0].toUpperCase();
+    if (!tiers[tierKey]) { tiers[tierKey] = []; tierNames[tierKey] = tierRaw; }
+    var targets = tr.targets || [];
+    for (var tti = 0; tti < targets.length; tti++) { tiers[tierKey].push(targets[tti]); }
+  }
+  h += '<div class="panel"><div class="panel-title">\u6807\u7684\u5206\u5C42</div>';
+  h += '<div style="display:flex;flex-direction:column;gap:8px">';
+  for (var toi = 0; toi < tierOrder.length; toi++) {
+    var tKey = tierOrder[toi];
+    if (!tiers[tKey] || !tiers[tKey].length) continue;
+    var tc = tierColor(tKey);
+    var displayName = tierNames[tKey] || tKey;
+    h += '<div style="display:flex;align-items:center;gap:12px">';
+    h += '<span style="font-size:11px;font-weight:700;color:' + tc + ';min-width:72px;flex-shrink:0;padding-left:8px;border-left:3px solid ' + tc + '">' + e(displayName) + '</span>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
+    for (var tri = 0; tri < tiers[tKey].length; tri++) {
+      var asset = tiers[tKey][tri];
+      var tip = asset.rationale ? ' title="' + e(asset.rationale).replace(/"/g,'&quot;') + '"' : '';
+      h += '<span class="mono" style="font-size:13px;font-weight:700;color:var(--text);background:rgba(255,255,255,.06);padding:3px 10px;border-radius:4px;cursor:default"' + tip + '>' + e(asset.symbol) + '</span>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 2. Scoring Matrix
+if ((D.scoring_matrix || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u8BC4\u5206\u77E9\u9635</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:700px"><thead><tr>';
+  h += '<th>\u6807\u7684</th><th>\u4F30\u503C</th><th>\u62A4\u57CE\u6CB3</th><th>\u7BA1\u7406\u5C42</th><th>\u589E\u957F</th><th>\u4E0B\u884C</th><th>\u4E0A\u884C</th>';
+  h += '</tr></thead><tbody>';
+  for (var smi = 0; smi < D.scoring_matrix.length; smi++) {
+    var sm = D.scoring_matrix[smi];
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text)">' + e(sm.symbol) + '</td>';
+    var numFields = ['valuation','moat','management','growth'];
+    for (var nfi = 0; nfi < numFields.length; nfi++) {
+      var nfv = sm[numFields[nfi]];
+      var nfn = parseInt(nfv);
+      if (!isNaN(nfn) && nfn >= 1 && nfn <= 5) {
+        h += '<td><span class="heatmap-cell ' + hmClass(nfn) + '">' + e(nfv) + '</span></td>';
+      } else {
+        h += '<td class="mono">' + e(nfv !== undefined ? nfv : '\u2014') + '</td>';
+      }
+    }
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(sm.downside || '\u2014') + '</td>';
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(sm.upside || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 3. Asset Judgment Table (replaces valuation bar chart — different currencies/scales can't share one axis)
+if (assetJudgments.length) {
+  h += '<div class="panel"><div class="panel-title">\u6807\u7684\u5224\u65AD</div>';
+  h += '<div class="table-wrap"><table class="data-tbl"><thead><tr>';
+  h += '<th>\u6807\u7684</th><th>\u884C\u52A8</th><th>\u4ED3\u4F4D</th><th>\u4F30\u503C\u533A\u95F4</th><th>\u4F9D\u8D56\u5047\u8BBE</th>';
+  h += '</tr></thead><tbody>';
+  for (var aji = 0; aji < assetJudgments.length; aji++) {
+    var aj2 = assetJudgments[aji];
+    h += '<tr>';
+    h += '<td style="font-weight:700;font-family:var(--mono);font-size:14px;color:var(--text)">' + e(aj2.symbol) + '</td>';
+    h += '<td>' + actionBadge(aj2.action) + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + e(aj2.position_type || '\u2014') + '</td>';
+    if (aj2.valuation_range) {
+      // Parse and color-code bear/base/bull
+      var vrParts = String(aj2.valuation_range).split('/').map(function(s) { return s.trim(); });
+      h += '<td class="mono" style="font-size:12px;white-space:nowrap">';
+      for (var vpi = 0; vpi < vrParts.length; vpi++) {
+        var vp = vrParts[vpi];
+        var vpColor = 'var(--text2)';
+        if (vp.toLowerCase().indexOf('bear') >= 0) vpColor = 'var(--red)';
+        else if (vp.toLowerCase().indexOf('base') >= 0) vpColor = 'var(--text)';
+        else if (vp.toLowerCase().indexOf('bull') >= 0) vpColor = 'var(--green)';
+        if (vpi > 0) h += ' <span style="color:var(--text3)">/</span> ';
+        h += '<span style="color:' + vpColor + '">' + e(vp) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    var deps = Array.isArray(aj2.depends_on) ? aj2.depends_on : (aj2.depends_on ? [String(aj2.depends_on)] : []);
+    if (deps.length) {
+      h += '<td style="font-size:11px">';
+      for (var dpi = 0; dpi < deps.length; dpi++) {
+        if (dpi > 0) h += ' ';
+        h += '<span class="b b-g" style="font-size:9px;padding:2px 6px">' + e(deps[dpi]) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 4. Scenario Matrix (supports both {paths:[...], expected_return} and flat array)
+var smPaths = Array.isArray(D.scenario_matrix) ? D.scenario_matrix : (D.scenario_matrix && D.scenario_matrix.paths ? D.scenario_matrix.paths : []);
+var smExpRet = D.scenario_matrix && D.scenario_matrix.expected_return ? D.scenario_matrix.expected_return : '';
+if (smPaths.length) {
+  h += '<div class="panel"><div class="panel-title">\u60C5\u666F\u77E9\u9635</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:600px"><thead><tr>';
+  h += '<th>\u8DEF\u5F84</th><th>\u6982\u7387</th><th>\u63CF\u8FF0</th><th>\u5F71\u54CD</th><th>\u7EC4\u5408\u56DE\u62A5</th>';
+  h += '</tr></thead><tbody>';
+  for (var sci2 = 0; sci2 < smPaths.length; sci2++) {
+    var scenario = smPaths[sci2];
+    var pColor = probColor(scenario.probability);
+    h += '<tr>';
+    h += '<td style="font-weight:700;color:var(--text)">' + md(scenario.path) + '</td>';
+    h += '<td class="mono" style="color:' + pColor + ';font-weight:700">' + e(fmtProb(scenario.probability)) + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + md(scenario.description || '\u2014') + '</td>';
+    h += '<td style="color:var(--text2);font-size:12px">' + md(scenario.impact || '\u2014') + '</td>';
+    h += '<td class="mono" style="color:var(--green);font-weight:600">' + e(scenario.portfolio_return || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  if (smExpRet) {
+    h += '<tr style="border-top:2px solid rgba(255,255,255,.1)"><td colspan="4" style="font-weight:700;color:var(--text);text-align:right">\u671F\u671B\u56DE\u62A5</td>';
+    h += '<td class="mono" style="font-weight:700;color:var(--green);font-size:16px">' + e(smExpRet) + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 5. Edge Conclusion
+if (D.edge_conclusion) {
+  h += '<div class="quote-block" style="border-color:var(--green);margin-top:6px">' + renderBlock(D.edge_conclusion) + '</div>';
+}
+
+// 6. Contrarian
+if ((D.contrarian || []).length) {
+  h += '<div class="panel" style="border-left:4px solid var(--red)"><div class="panel-title" style="color:#ef8f7d">\u53CD\u5411\u8BBA\u8BC1</div>';
+  h += '<div class="panel-body">';
+  for (var cti = 0; cti < D.contrarian.length; cti++) {
+    var ct = D.contrarian[cti];
+    var ctReason = typeof ct === 'string' ? ct : (ct.reason || '');
+    var ctProb = typeof ct === 'object' ? ct.probability : '';
+    var ctImpact = typeof ct === 'object' ? ct.impact : '';
+    h += '<div style="padding:8px 12px;background:rgba(212,74,50,.06);border:1px solid rgba(212,74,50,.15);border-radius:8px;display:flex;gap:12px;align-items:flex-start">';
+    if (ctProb) h += '<span class="mono" style="color:var(--red);font-weight:700;font-size:13px;flex-shrink:0;min-width:32px">' + e(fmtProb(ctProb)) + '</span>';
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div style="font-size:13px;font-weight:600;color:#ef8f7d;line-height:1.5">' + md(ctReason) + '</div>';
+    if (ctImpact) h += '<div style="font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5">\u2192 ' + md(ctImpact) + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+h += '</div>'; // section-stack
+h += '</div>'; // end assets
+
+// ========== TAB 4: MONITOR ==========
+h += '<div id="monitor" class="page-panel">';
+
+// Status legend
+h += '<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em">';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot confirmed" style="width:8px;height:8px"></span>\u5DF2\u9A8C\u8BC1</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot strong" style="width:8px;height:8px"></span>\u8D8B\u52BF\u5411\u597D</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot approaching" style="width:8px;height:8px"></span>\u63A5\u8FD1\u89E6\u53D1</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot watching" style="width:8px;height:8px"></span>\u89C2\u5BDF\u4E2D</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot weakening" style="width:8px;height:8px"></span>\u8F6C\u5F31</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot failing" style="width:8px;height:8px"></span>\u8BC1\u4F2A</span>';
+h += '</div>';
+
+h += '<div class="section-stack">';
+
+// 1. Tipping Points Table
+if (allTippingPoints.length) {
+  h += '<div class="panel"><div class="panel-title">\u62D0\u70B9\u76D1\u63A7</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:780px"><thead><tr>';
+  h += '<th>\u62D0\u70B9</th><th>\u5F53\u524D</th><th>\u9608\u503C</th><th>\u5047\u8BBE</th><th>\u6743\u91CD</th><th>\u6570\u636E\u6E90</th><th>\u72B6\u6001</th>';
+  h += '</tr></thead><tbody>';
+  for (var tpi = 0; tpi < allTippingPoints.length; tpi++) {
+    var ip = allTippingPoints[tpi];
+    var state = ipState(ip);
+    var dotHtml = '<span class="tp-dot ' + state + '" style="width:8px;height:8px;margin-right:6px"></span>';
+    var ds = ip.data_source || '';
+    var isUrl = /^https?:\/\//.test(ds);
+    var dsHtml = isUrl
+      ? '<a href="' + e(ds) + '" target="_blank" rel="noopener noreferrer" style="color:var(--purple);font-size:11px">' + e(ds.replace(/^https?:\/\/(www\.)?/, '').split('/').slice(0, 2).join('/')) + '</a>'
+      : '<span style="color:var(--text3);font-size:11px">' + e(ds || '\u2014') + '</span>';
+    h += '<tr>';
+    h += '<td style="font-weight:600">' + e(ip.event) + '</td>';
+    h += '<td class="mono" style="color:var(--green-strong)">' + e(ip.current || '\u2014') + '</td>';
+    h += '<td>' + e(ip.quantitative || ip.qualitative || '\u2014') + '</td>';
+    h += '<td style="color:var(--green);white-space:nowrap">' + (ip.hypothesis_id ? e(ip.hypothesis_id) : '\u2014') + '</td>';
+    h += '<td class="mono">' + e(ip.weight || '\u2014') + '</td>';
+    h += '<td>' + dsHtml + '</td>';
+    h += '<td style="white-space:nowrap">' + dotHtml + statusCn(state) + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 2. Catalysts Timeline
+if ((D.catalysts || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u50AC\u5316\u5242\u65F6\u95F4\u7EBF</div>';
+  h += '<div class="timeline">';
+  var sortedCatalysts = D.catalysts.slice().sort(function(a, b) {
+    return (a.date || '') < (b.date || '') ? -1 : (a.date || '') > (b.date || '') ? 1 : 0;
+  });
+  for (var cai = 0; cai < sortedCatalysts.length; cai++) {
+    var cat = sortedCatalysts[cai];
+    h += '<div class="tl-item">';
+    h += '<span class="tl-date">' + e(cat.date) + '</span>';
+    h += '<div class="tl-content">';
+    h += '<div style="font-weight:600;color:var(--text)">' + md(cat.event) + '</div>';
+    if (cat.targets) {
+      var assetList = Array.isArray(cat.targets) ? cat.targets : String(cat.targets).split(',').map(function(s) { return s.trim(); });
+      h += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">';
+      for (var ali = 0; ali < assetList.length; ali++) {
+        h += '<span class="b b-g" style="font-size:9px;padding:3px 8px">' + e(assetList[ali]) + '</span>';
+      }
+      h += '</div>';
+    }
+    if (cat.expected_impact) h += '<div style="font-size:12px;color:var(--text3);margin-top:4px">' + md(cat.expected_impact) + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 3. Risks Table
+if ((D.risks || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u98CE\u9669\u8BC4\u4F30</div>';
+  h += '<div class="table-wrap"><table class="data-tbl" style="min-width:700px"><thead><tr>';
+  h += '<th>\u98CE\u9669</th><th>\u6982\u7387</th><th>\u5F71\u54CD</th><th>\u6CE2\u53CA\u6807\u7684</th><th>\u5BF9\u51B2</th>';
+  h += '</tr></thead><tbody>';
+  for (var rki = 0; rki < D.risks.length; rki++) {
+    var risk = D.risks[rki];
+    var pColor = probColor(risk.probability);
+    h += '<tr>';
+    h += '<td style="font-weight:600;color:var(--text)">' + md(risk.risk) + '</td>';
+    h += '<td class="mono" style="color:' + pColor + ';font-weight:700">' + e(fmtProb(risk.probability)) + '</td>';
+    h += '<td style="color:var(--text2)">' + md(risk.impact || '\u2014') + '</td>';
+    if (risk.most_impacted) {
+      var affList = Array.isArray(risk.most_impacted) ? risk.most_impacted : String(risk.most_impacted).split(',').map(function(s) { return s.trim(); });
+      h += '<td>';
+      for (var afi = 0; afi < affList.length; afi++) {
+        h += '<span class="b b-o" style="font-size:9px;padding:3px 8px;margin:2px">' + e(affList[afi]) + '</span>';
+      }
+      h += '</td>';
+    } else {
+      h += '<td style="color:var(--text3)">\u2014</td>';
+    }
+    h += '<td style="font-size:12px;color:var(--text2)">' + md(risk.hedge || '\u2014') + '</td>';
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// 4. Evolution Timeline
+if ((D.evolution || []).length) {
+  h += '<div class="panel"><div class="panel-title">\u957F\u671F\u6F14\u53D8</div>';
+  h += '<div class="timeline">';
+  for (var evi = 0; evi < D.evolution.length; evi++) {
+    var ev = D.evolution[evi];
+    h += '<div class="tl-item">';
+    h += '<span class="tl-date">' + e(ev.period) + '</span>';
+    h += '<div class="tl-content">';
+    h += '<div style="font-weight:600;color:var(--text)">' + md(ev.event) + '</div>';
+    h += '<div style="display:flex;gap:10px;margin-top:4px;font-size:12px">';
+    if (ev.probability) h += '<span class="mono" style="color:var(--text3)">\u6982\u7387: ' + e(ev.probability) + '</span>';
+    if (ev.investment_impact) h += '<span style="color:var(--text2)">\u5F71\u54CD: ' + md(ev.investment_impact) + '</span>';
+    h += '</div>';
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+}
+
+// 4b. Terminal State
+if (D.terminal_state) {
+  h += '<div class="panel"><div class="panel-title">\u7EC8\u6001\u5224\u65AD</div>';
+  h += '<div class="panel-body"><div style="font-size:13px;color:var(--text2)">' + renderBlock(D.terminal_state) + '</div></div></div>';
+}
+
+// 5. Exit Framework — removed (internal module)
+// 6. Discussion Notes — removed (internal module)
+
+h += '</div>'; // section-stack
+h += '</div>'; // end monitor
+
+// Inject into DOM
+$('app').innerHTML = h;
+document.title = (D.title || 'Sector') + ' \u2014 Cortex';
+
+</script>
+</body>
+</html>

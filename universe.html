@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仓库 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/tokens.css">
+<link rel="stylesheet" href="./assets/base.css">
+<link rel="stylesheet" href="./assets/components.css">
+<style>
+/* ═══════════ PAGE: UNIVERSE ═══════════ */
+.page-header {
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 72px 32px 16px;
+}
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+  margin-bottom: 8px;
+}
+.page-header p {
+  font-size: 15px;
+  color: var(--text-2);
+  max-width: 480px;
+}
+.river-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-3);
+}
+.river-legend strong {
+  color: var(--text-2);
+  font-weight: 600;
+  margin-right: 4px;
+}
+.universe-section {
+  max-width: var(--max-width-wide);
+  margin: 0 auto;
+  padding: 24px 32px 40px;
+}
+.universe-section h2 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 16px;
+}
+@media (max-width: 768px) {
+  .page-header { padding: 48px 20px 12px; }
+  .page-header h1 { font-size: 24px; }
+  .universe-section { padding: 16px 20px 32px; }
+  .river-legend { flex-direction: column; gap: 6px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="./index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="./universe.html" class="active">仓库</a></li>
+      <li><a href="./methodology/index.html">方法论</a></li>
+      <li><a href="./beliefs.html">信念</a></li>
+      <li><a href="./faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>仓库</h1>
+  <p>赛道研究、标的分析、事件追踪。</p>
+  <div class="river-legend">
+    <span><strong>Riverbank</strong> 结构性信念 — 错了就不看这个赛道</span>
+    <span><strong>River</strong> 可证伪假设 — 错了就动仓位</span>
+    <span><strong>Fork</strong> 待决事件 — 结果不同，动作不同</span>
+  </div>
+</div>
+
+<div class="universe-section"><h2>赛道</h2>
+<div class="card-grid grid-2">
+<a class="card" href="./universe/sector/global-payments.html">
+        <div class="card-tags"><span class="tag tag-sector">赛道报告</span> <span class="tag tag-rating">B+</span></div>
+        <div class="card-title">全球支付</div>
+        <div class="card-desc">**价值转移的信任基础设施**——利润沉淀在规则制定+争议解决层，三轨并行（卡/A2A/稳定币）提供分层下注机会</div>
+        <div class="card-meta">
+          <span>3 Riverbank · 6 River · 3 Fork</span>
+          <span>2026-04-25</span>
+        </div>
+      </a>
+<a class="card" href="./universe/sector/space-economy.html">
+        <div class="card-tags"><span class="tag tag-sector">赛道报告</span> <span class="tag tag-rating">B</span></div>
+        <div class="card-title">太空经济 (Space Economy)</div>
+        <div class="card-desc">**物理层垄断租金 + 政府合同锁定 + 网络效应溢价**，6 层结构中 **L4 国防太空**是风险调整后最优层</div>
+        <div class="card-meta">
+          <span>3 Riverbank · 4 River · 3 Fork</span>
+          <span>2026-04-27</span>
+        </div>
+      </a>
+</div></div>
+
+
+
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="./assets/app.js"></script>
+</body>
+</html>
