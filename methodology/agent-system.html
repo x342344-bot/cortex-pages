@@ -159,14 +159,21 @@
 }
 .md-body h2:first-child { margin-top: 8px; }
 
-/* --- H3: Sub-sections --- */
+/* --- H3: Sub-sections (module boundary: hairline + whitespace) --- */
 .md-body h3 {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
-  margin: 36px 0 12px;
+  margin: 56px 0 16px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
   color: var(--text-1);
   scroll-margin-top: 72px;
   letter-spacing: -0.005em;
+}
+.md-body h2 + h3 {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 28px;
 }
 
 /* --- H4: Detail headers --- */
@@ -202,82 +209,81 @@
   font-style: italic;
 }
 
-/* ========== LISTS ========== */
-.md-body > ul,
-.md-body > ol {
-  margin: 16px 0;
+/* ========== LISTS (editorial outline, no boxes) ========== */
+.md-body ul,
+.md-body ol {
+  margin: 14px 0 20px;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
-.md-body > ul > li,
-.md-body > ol > li {
+.md-body li {
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.75;
   color: var(--text-2);
-  padding: 10px 16px;
-  background: var(--bg-1);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
 }
-.md-body > ul > li:hover,
-.md-body > ol > li:hover {
-  border-color: var(--border-hover);
-  background: var(--bg-2);
-}
-.md-body > ul > li strong,
-.md-body > ol > li strong {
+.md-body li strong {
   color: var(--text-1);
   font-weight: 600;
 }
-
-/* Nested lists */
-.md-body li ul,
-.md-body li ol {
-  margin: 8px 0 2px;
+.md-body li p {
+  font-size: inherit;
+  margin-bottom: 6px;
+}
+/* unordered markers: solid dot → small dot → hollow dot by depth */
+.md-body ul > li::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-2);
+}
+.md-body ul ul > li::before {
+  width: 4px;
+  height: 4px;
+  background: var(--text-3);
+}
+.md-body ul ul ul > li::before {
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  border: 1px solid var(--text-3);
+}
+/* ordered markers: mono counters */
+.md-body ol { counter-reset: mdol; }
+.md-body ol > li {
+  counter-increment: mdol;
+  padding-left: 24px;
+}
+.md-body ol > li::before {
+  content: counter(mdol) ".";
+  position: absolute;
+  left: 0;
+  top: 0.14em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+/* nested lists: indent guide line, sizes stay readable */
+.md-body li > ul,
+.md-body li > ol {
+  margin: 8px 0 4px 2px;
   padding-left: 16px;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  border-left: 1px solid var(--border);
 }
 .md-body li li {
   font-size: 13px;
-  line-height: 1.65;
-  color: var(--text-2);
-  padding: 2px 0;
-  background: none;
-  border: none;
-  border-radius: 0;
-  position: relative;
-  padding-left: 14px;
+  margin-bottom: 6px;
+  padding-left: 18px;
 }
-.md-body li li:hover {
-  border-color: transparent;
-  background: none;
-}
-.md-body li li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 10px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--text-3);
-}
-.md-body li li li::before {
-  background: transparent;
-  border: 1px solid var(--text-3);
-  width: 3px;
-  height: 3px;
-}
-.md-body li li strong {
-  color: var(--text-1);
-  font-weight: 600;
+.md-body li li li {
+  margin-bottom: 4px;
 }
 
 /* ========== BLOCKQUOTE ========== */
@@ -545,10 +551,12 @@
 <pre><code>目标函数 → 传感器（采集执行数据）→ 比较器（actual vs target）
     → 控制器（生成优化提案）→ 执行器（改 prompt/参数）→ 反馈
 </code></pre>
-<p>具体落地：
-- <strong>投研报告</strong>：初稿完成后 spawn 独立 agent 做对抗审查，修正后才交付
-- <strong>假设系统</strong>：置信度是数学算的（加权拐点分数），不是 AI 拍脑袋。每个拐点有 weight + score_status，假设置信度 = Σ(weight × 分值)
-- <strong>Agent 自迭代</strong>：采集每次执行的质量数据，和目标对比，生成 prompt 优化提案，人确认后执行</p>
+<p>具体落地：</p>
+<ul>
+<li><strong>投研报告</strong>：初稿完成后 spawn 独立 agent 做对抗审查，修正后才交付</li>
+<li><strong>假设系统</strong>：置信度是数学算的（加权拐点分数），不是 AI 拍脑袋。每个拐点有 weight + score_status，假设置信度 = Σ(weight × 分值)</li>
+<li><strong>Agent 自迭代</strong>：采集每次执行的质量数据，和目标对比，生成 prompt 优化提案，人确认后执行</li>
+</ul>
 <p>关键原则：<strong>人在回路</strong>。闭环的"执行器"必须等人确认，不 auto-apply。AI 可以建议，不能替你决策。</p>
 <h2>三路验证</h2>
 <p>所有重要输出经过三路交叉验证：</p>
@@ -604,7 +612,7 @@
   }
 
   headings.forEach((h, i) => {
-    if (!h.id) h.id = 's-' + i;
+    if (!h.id) h.id = h.textContent.trim() || ('s-' + i);
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = '#' + h.id;
