@@ -2,12 +2,12 @@
 /* Shell Isolation hack removed — .dashboard scope in tokens.css now handles
    the separation: nav/footer outside .dashboard div → v3 defaults apply. */
 
-/* ========== NAV ========== */
+/* ========== NAV (cold white) ========== */
 nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(8,8,10,0.7);
+  background: rgba(255,255,255,0.86);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--border);
@@ -31,20 +31,21 @@ nav {
 .logo-mark {
   width: 28px;
   height: 28px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
+  border-radius: var(--radius-md);
+  background: #17181c;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
   color: #fff;
 }
 .logo-text {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .nav-links {
   display: flex;
@@ -61,11 +62,11 @@ nav {
 }
 .nav-links a:hover {
   color: var(--text-1);
-  background: rgba(255,255,255,0.04);
+  background: rgba(0,0,0,0.04);
 }
 .nav-links a.active {
   color: var(--text-1);
-  background: rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.06);
 }
 .nav-toggle {
   display: none;
@@ -111,19 +112,19 @@ nav {
 .footer-mark {
   width: 20px;
   height: 20px;
-  border-radius: 5px;
-  background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
+  border-radius: var(--radius-sm);
+  background: #17181c;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
   color: #fff;
 }
 .footer-text {
   font-size: 12px;
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .footer-links {
   display: flex;
@@ -173,7 +174,7 @@ nav {
 .section-count {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-4);
+  color: var(--text-3);
 }
 
 /* ========== CARDS ========== */
@@ -186,16 +187,17 @@ nav {
 .grid-1 { grid-template-columns: 1fr; max-width: 720px; }
 
 .card {
-  background: var(--bg-2);
+  background: var(--bg-1);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
   display: block;
   text-decoration: none;
   color: inherit;
-  transition: all 0.25s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 .card::before {
   content: '';
@@ -204,11 +206,11 @@ nav {
   border-radius: var(--radius);
   opacity: 0;
   transition: opacity 0.25s;
-  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.03), transparent 40%);
+  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(94,95,218,0.05), transparent 40%);
 }
 .card:hover {
   border-color: var(--border-hover);
-  background: var(--bg-3);
+  background: var(--bg-1);
   transform: translateY(-1px);
   text-decoration: none;
 }
@@ -270,8 +272,8 @@ nav {
 .tag-method { background: var(--amber-dim);  color: var(--amber); }
 .tag-system { background: var(--cyan-dim);   color: var(--cyan); }
 .tag-held   { background: var(--green-dim);  color: var(--green); }
-.tag-watch  { background: rgba(255,255,255,0.06); color: var(--text-2); }
-.tag-rating { background: rgba(255,255,255,.06); color: var(--text-2); font-weight: 600; }
+.tag-watch  { background: var(--bg-2); color: var(--text-2); }
+.tag-rating { background: var(--bg-2); color: var(--text-2); font-weight: 600; }
 
 /* ========== KEY-VALUE ========== */
 .kv {
@@ -316,9 +318,9 @@ nav {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.dot-green  { background: var(--green); box-shadow: 0 0 6px var(--green-dim); }
-.dot-amber  { background: var(--amber); box-shadow: 0 0 6px var(--amber-dim); }
-.dot-red    { background: var(--red);   box-shadow: 0 0 6px var(--red-dim); }
+.dot-green  { background: var(--green); box-shadow: 0 0 0 3px var(--green-dim); }
+.dot-amber  { background: var(--amber); box-shadow: 0 0 0 3px var(--amber-dim); }
+.dot-red    { background: var(--red);   box-shadow: 0 0 0 3px var(--red-dim); }
 
 /* ========== CONVICTION BAR ========== */
 .conviction-row {
@@ -331,7 +333,7 @@ nav {
   flex: 1;
   height: 4px;
   border-radius: 2px;
-  background: rgba(255,255,255,0.05);
+  background: var(--bg-3);
   overflow: hidden;
 }
 .conviction-fill {
@@ -495,7 +497,7 @@ nav {
 .method-meta {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-4);
+  color: var(--text-3);
   margin-top: auto;
 }
 @media (max-width: 768px) {
@@ -505,7 +507,7 @@ nav {
 /* ========== FORMULA BOX ========== */
 .formula-box {
   background: var(--accent-dim);
-  border: 1px solid rgba(99,102,241,0.15);
+  border: 1px solid rgba(94,95,218,0.20);
   border-radius: var(--radius-sm);
   padding: 16px 20px;
   font-family: var(--font-mono);
@@ -522,7 +524,7 @@ nav {
   left: 0;
   width: 0%;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--green));
+  background: var(--accent);
   z-index: 99;
   transition: width 0.08s linear;
   opacity: 0.9;

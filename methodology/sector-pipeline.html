@@ -6,7 +6,7 @@
 <title>Sector Research Pipeline — Cortex</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/tokens.css">
 <link rel="stylesheet" href="../assets/base.css">
 <link rel="stylesheet" href="../assets/components.css">
@@ -20,7 +20,7 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--green));
+  background: var(--accent);
   z-index: 99;
   transition: width 0.08s linear;
   opacity: 0.9;
@@ -30,28 +30,17 @@
 .page-hero {
   padding: 72px 20px 24px;
   position: relative;
-  overflow: hidden;
-}
-.page-hero::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 500px;
-  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
-  pointer-events: none;
 }
 .page-hero .container {
   max-width: var(--max-width-wide);
   margin: 0 auto;
 }
 .page-hero h1 {
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
   color: var(--text-1);
 }
 .page-hero .page-subtitle {
@@ -160,24 +149,25 @@
 
 /* --- H2: Section Headers --- */
 .md-body h2 {
-  font-size: 20px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 600;
   margin: 56px 0 20px;
   padding: 0 0 12px;
   color: var(--text-1);
   border: none;
   position: relative;
   scroll-margin-top: 72px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
 }
 .md-body h2::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 40px;
+  width: 28px;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent-light), transparent);
+  background: var(--accent);
   border-radius: 1px;
 }
 .md-body h2:first-child { margin-top: 8px; }
@@ -385,7 +375,7 @@
   vertical-align: top;
 }
 .md-body tr:last-child td { border-bottom: none; }
-.md-body tr:hover td { background: rgba(255,255,255,0.02); }
+.md-body tr:hover td { background: rgba(0,0,0,0.03); }
 
 .md-body hr {
   border: none;

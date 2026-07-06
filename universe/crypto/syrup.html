@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<link rel="stylesheet" href="../../assets/dashboard.css">
+<style>
+/* === Asset-page overrides on dashboard.css === */
+.dashboard { padding-top:40px; padding-bottom:96px; }
+.header { padding:0 0 28px; margin-bottom:24px; }
+.header h1 { font-size:clamp(38px, 5vw, 56px); }
+.header-sub { margin-top:12px; }
+.b { font-size:10px; padding:7px 12px; }
+.tabs { margin-bottom:32px; }
+.tab { padding:12px 18px; }
+.section-stack { gap:24px; }
+.split-grid { gap:24px; }
+.panel { padding:24px 24px 22px; }
+.panel::after {
+  content:'';position:absolute;
+  left:24px;right:24px;top:0;height:1px;
+  background:linear-gradient(90deg, rgba(94,95,218,.35), rgba(94,95,218,0));
+}
+.panel-title { margin-bottom:18px; }
+.panel-body { gap:14px; }
+.km-grid { grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); }
+.km-item { padding:12px 14px; }
+.km-value { font-size:16px; margin-top:4px; }
+.km-note { margin-top:2px; }
+.timeline { gap:16px; }
+.tl-date { min-width:96px; }
+.eyebrow { margin-bottom:12px; }
+.note-card { padding:18px; }
+.note-card-title { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.14em; font-weight:900; margin-bottom:10px; }
+.note-list { display:flex; flex-direction:column; gap:14px; }
+.arrow { margin-left:6px; }
+.belief.open .arrow { transform:rotate(180deg); }
+
+/* === Asset-specific layout grids === */
+.overview-grid,
+.monitor-grid,
+.log-grid { display:grid; gap:24px; }
+.overview-grid { grid-template-columns:minmax(0, 1.7fr) minmax(300px, .9fr); align-items:start; }
+.monitor-grid,
+.log-grid { grid-template-columns:minmax(0, 1.45fr) minmax(280px, .85fr); align-items:start; }
+
+/* === Tree Visualization === */
+.tree { display:flex; flex-direction:column; align-items:center; padding:6px 0 2px; }
+.tree-line { width:2px; height:40px; background:linear-gradient(180deg, rgba(94,95,218,.6), rgba(94,95,218,.12)); }
+.tree-root {
+  width:min(100%, 760px);padding:20px 24px;
+  background:var(--bg-1);
+  border:1px solid rgba(94,95,218,.2);border-radius:var(--radius);text-align:left;
+  box-shadow:0 2px 10px rgba(18,20,27,.06), inset 0 1px 0 rgba(94,95,218,.06);
+}
+.tree-branch { display:flex; gap:14px; position:relative; padding-top:32px; width:100%; justify-content:center; overflow-x:auto; }
+.tree-branch::before { content:''; position:absolute; top:0; left:14%; right:14%; height:2px; background:linear-gradient(90deg, rgba(94,95,218,.15), rgba(94,95,218,.6), rgba(94,95,218,.15)); }
+.tree-branch .tree-node { position:relative; }
+.tree-branch .tree-node::before { content:''; position:absolute; top:-32px; left:50%; width:2px; height:32px; background:linear-gradient(180deg, rgba(94,95,218,.6), rgba(94,95,218,.12)); }
+.tree-root-top { display:flex; flex-direction:column; gap:14px; }
+.tree-root-left { display:flex; flex-direction:column; gap:8px; }
+.tree-root-title { font-size:22px; font-weight:700; line-height:1; letter-spacing:-.02em; text-transform:uppercase; }
+.tree-root-summary { font-size:12px; color:var(--text2); line-height:1.7; }
+.tree-h {
+  flex:1;min-width:160px;max-width:280px;flex:1 1 0;padding:20px;
+  background:var(--bg-2);
+  border:1px solid var(--border);border-radius:var(--radius);text-align:left;
+  cursor:pointer;transition:all .18s ease;box-shadow:var(--shadow-sm);
+  --layer-color:var(--accent);
+}
+.tree-h::after { content:'';position:absolute;left:20px;right:20px;top:0;height:2px;border-radius:999px;background:linear-gradient(90deg, var(--layer-color), rgba(0,0,0,0));opacity:.9; }
+.tree-h:hover { border-color:var(--border-hover); transform:translateY(-2px); box-shadow:0 4px 14px rgba(18,20,27,.08); }
+.tree-h-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; }
+.tree-h-title { font-size:15px; font-weight:800; line-height:1.35; margin-top:12px; }
+.tree-h-sub { font-size:12px; color:var(--text2); line-height:1.8; margin-top:12px; }
+.tree-h .tp-list { margin-top:14px; display:flex; flex-direction:column; gap:6px; }
+.tree-h .tp-mini { display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;padding:8px 10px;background:var(--bg-panel);border-radius:var(--radius-sm);border:1px solid rgba(0,0,0,.06); }
+.tree-h .tp-mini-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; border:2px solid currentColor; background:transparent; }
+
+/* === Metric Row === */
+.metric-row { display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px; }
+.metric-row:last-child { border-bottom:none; }
+.metric-row .k { color:var(--text3); font-size:11px; text-transform:uppercase; letter-spacing:.12em; font-weight:800; }
+.metric-row .v { font-family:var(--mono); font-weight:700; font-size:16px; text-align:right; }
+.metric-note { display:block; margin-top:6px; font-size:11px; color:var(--text3); font-family:var(--font); font-weight:600; max-width:30ch; }
+
+/* === Indicator Grid === */
+.indicator-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; }
+.indicator-card { background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.06); border-radius:8px; padding:12px 14px; }
+.indicator-label { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.12em; font-weight:800; margin-bottom:6px; }
+.indicator-current { font-family:var(--mono); font-weight:700; font-size:15px; color:var(--text); }
+.indicator-signal { font-size:11px; font-weight:600; margin-top:4px; }
+
+/* === Belief (Scored Collapsible) === */
+.belief { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); }
+.belief-head { padding:22px 24px 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;cursor:pointer;user-select:none;position:relative;--layer-color:var(--accent); }
+.belief-head::before { content:'';position:absolute;left:24px;right:24px;top:0;height:2px;border-radius:999px;background:linear-gradient(90deg, var(--layer-color), rgba(0,0,0,0)); }
+.belief-head:hover { background:rgba(0,0,0,.03); }
+.belief-body { padding:0 24px 24px; display:none; }
+.belief.open .belief-body { display:block; }
+.belief-title { font-size:24px; font-weight:800; line-height:1.08; margin-top:12px; }
+.belief-desc { font-size:12px; color:var(--text3); margin-top:8px; text-transform:uppercase; letter-spacing:.12em; font-weight:800; }
+.belief-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.belief-score { text-align:right; }
+.belief-score-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.14em; font-weight:800; }
+.belief-score-value { font-size:22px; margin-top:4px; }
+.belief-progress { width:120px; margin-top:10px; }
+.belief-block-title { margin-top:18px; margin-bottom:10px; font-size:11px; font-weight:900; color:var(--text3); text-transform:uppercase; letter-spacing:.16em; }
+
+/* === Tipping Point (extended) === */
+.tp { display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--bg-panel);border-radius:var(--radius);margin-top:8px;border:1px solid rgba(0,0,0,.04); }
+.tp-main { flex:1; display:flex; flex-direction:column; gap:4px; }
+.tp-text { flex:1; font-size:14px; font-weight:700; line-height:1.5; font-family:var(--font); }
+.tp-meta { display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--text3); font-family:var(--font); }
+.tp-sig { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.08em; font-family:var(--mono); }
+.tp-outcome { font-size:12px; line-height:1.5; color:var(--text2); font-family:var(--font); }
+.tp-outcome strong { color:var(--text); }
+
+/* === Event Log === */
+.ev-item { display:flex;gap:10px;padding:10px 0;font-size:13px;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.05); }
+.ev-item:last-child { border-bottom:none; }
+.ev-icon { color:var(--green); flex-shrink:0; width:18px; text-align:center; font-weight:900; }
+
+/* === Insight Boxes === */
+.ins { padding:15px 16px;border-radius:14px;font-size:12px;border:1px solid;display:flex;gap:12px;align-items:flex-start; }
+.ins strong { color:var(--text); margin-right:8px; text-transform:uppercase; letter-spacing:.08em; }
+.ins.bull { background:rgba(4,120,87,.07); border-color:rgba(4,120,87,.22); color:var(--green); }
+.ins.bear { background:rgba(211,31,31,.08); border-color:rgba(211,31,31,.25); color:var(--red); }
+.ins.warn { background:rgba(154,94,6,.10); border-color:rgba(154,94,6,.25); color:var(--yellow); }
+.ins.info { background:rgba(37,99,235,.08); border-color:rgba(37,99,235,.30); color:var(--blue); }
+
+/* === Monitor/Log Tables === */
+.mon-tbl,.log-tbl { width:100%; border-collapse:collapse; font-size:12px; min-width:680px; }
+.mon-tbl th,.mon-tbl td,.log-tbl th,.log-tbl td { padding:15px 16px; text-align:left; border-bottom:1px solid rgba(0,0,0,.06); vertical-align:top; }
+.mon-tbl th,.log-tbl th { font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.16em;font-weight:900;background:rgba(0,0,0,.035); }
+.mon-tbl tbody tr:hover,.log-tbl tbody tr:hover { background:rgba(0,0,0,.04); }
+
+/* === Timeline (asset variant) === */
+.tl-event { color:var(--text2); }
+.tl-item:last-child .tl-event { color:var(--text); font-weight:700; }
+
+/* === Pills === */
+.pill-row { display:flex; flex-wrap:wrap; gap:8px; }
+
+/* === Responsive === */
+@media (max-width:1080px) {
+  .overview-grid,.monitor-grid,.log-grid,.split-grid { grid-template-columns:1fr; }
+}
+@media (max-width:768px) {
+  .dashboard { padding:20px 16px 56px; }
+  .header { align-items:flex-start; }
+  .header h1 { max-width:none; }
+  .header-right { justify-content:flex-start; }
+  .tree-branch { flex-direction:column; align-items:center; padding-top:0; }
+  .tree-branch::before { display:none; }
+  .tree-branch .tree-node::before { display:none; }
+  .tree-root { padding:24px 18px; }
+  .tree-root-top { grid-template-columns:1fr; }
+  .tabs { overflow-x:auto; flex-wrap:nowrap; padding-bottom:8px; }
+  .tab { flex:0 0 auto; }
+  .belief-head { flex-direction:column; }
+  .belief-score { text-align:left; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../../universe.html" class="active">仓库</a></li>
+      <li><a href="../../methodology/index.html">方法论</a></li>
+      <li><a href="../../beliefs.html">信念</a></li>
+      <li><a href="../../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="dashboard" id="app"></div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../../assets/app.js"></script>
+<script src="../../assets/dashboard.js"></script>
+<script>
+const D = {"title": "SYRUP", "position": "none", "conviction_level": "low", "sector": "crypto-rwa", "type": "Token", "updated_at": "2026-06-17", "one_liner": "L2 私募信贷层龙头（distributed 23.4%）+ 唯一卡住④underwriting 权利 + 真实 25% 收入回购的 RWA token，但真实 protocol revenue 口径下定价公允非低估", "what_it_is": "Maple Finance 治理/价值捕获代币。Maple 是链上机构信贷龙头，撮合机构借款方与稳定币 LP，Maple Direct 自营 underwriting，25% protocol revenue 回购 SYRUP。", "core_summary": "层内最强（distributed 第一 + 唯一④档 + 唯一真实回购）但本质⑤档担信用风险薄利的 binary 协议 alpha。本次推翻 S4 的'深度低估'——marketing 的 ARR $100M 是 gross fee 幻觉，真实 protocol revenue 仅 ~$14M，P/S ~12x 公允。verdict watch，valuation_level 从 undervalued 下调到 fair。缺独立 catalyst + 信用尾部 + Cantor 反身性杠杆。", "conviction": "", "sector_hypothesis": "", "hypotheses": [{"id": "SYRUP-H1", "title": "underwriting 护城河真实但浅", "layer": "river", "statement": "Maple Direct 自营④档 underwriting 执行被验证（Oct 2025 史上最大清算零损失）但借款方高度集中在少数 crypto-native 交易公司，单笔违约=killshot，且④档可被资本（Apollo/KKR via Goldfinch Prime）买到", "why": "决定 SYRUP 是否真有不可复制护城河——L2 全层护城河无一维度≥4，Maple 最强也仅 3 分", "status": "open", "confidence": "60", "state": "watch", "tipping_points": [{"id": "SYRUP-H1-TP1", "event": "在贷借款方集中度（前3/前5 占比）", "current": "完全黑箱（最大信息缺口）", "quantitative": "前3 > 60% = killshot 高危", "qualitative": "单一大借款方 + crypto-native 交易公司集中", "data_source": "https://maple.finance;keyword:Maple Proof of Reserves borrower @Dune", "if_triggered": "H1 → falsified（集中度极高+单户出问题）", "if_failed": "H1 → confirmed（分散化验证护城河）", "weight": "40", "score_status": "watching", "tp_type": "threshold"}, {"id": "SYRUP-H1-TP2", "event": "零违约记录延续 + Oct 2025 清算零损失", "current": "2026 零新违约；Oct 2025 史上最大清算零损失（自报）", "quantitative": "任一笔违约 = 推翻", "qualitative": "超额抵押 + Maple Direct 自营尽调", "data_source": "https://app.rwa.xyz/private-credit", "if_triggered": "H1 → confirmed", "if_failed": "H1 → falsified", "weight": "35", "score_status": "strong", "tp_type": "event"}, {"id": "SYRUP-H1-TP3", "event": "Goldfinch Prime × Apollo/KKR 机构资金规模化", "current": "Apollo 与 DTCC/Fidelity 同台出现在 RedStone TokenizeThis 代币化大会（与 Maple 同场）——机构 RWA networking 活跃，但无 Goldfinch Prime/Apollo 链上 distributed 规模数据，未达 >$1B 阈值", "quantitative": "Apollo/KKR 链上信贷 distributed > $1B", "qualitative": "真实世界私募信贷 pedigree 抬高整层天花板", "data_source": "keyword:Goldfinch Prime Apollo KKR onchain credit @TheBlock", "if_triggered": "H1 → falsified（④档被资本买到）", "if_failed": "H1 → confirmed（Maple 守住份额）", "weight": "25", "score_status": "watching", "tp_type": "event"}, {"event": "在贷借款方集中度（前3/前5 占比）", "current": "完全黑箱（最大信息缺口）", "quantitative": "前3 > 60% = killshot 高危", "qualitative": "单一大借款方 + crypto-native 交易公司集中", "data_source": "https://maple.finance;keyword:Maple Proof of Reserves borrower @Dune", "if_triggered": "H1 → falsified（集中度极高+单户出问题）", "if_failed": "H1 → confirmed（分散化验证护城河）", "tp_type": "threshold", "weight": "40", "score_status": "watching"}, {"event": "零违约记录延续 + Oct 2025 清算零损失", "current": "2026 零新违约；Oct 2025 史上最大清算零损失（自报）", "quantitative": "任一笔违约 = 推翻", "qualitative": "超额抵押 + Maple Direct 自营尽调", "data_source": "https://app.rwa.xyz/private-credit", "if_triggered": "H1 → confirmed", "if_failed": "H1 → falsified", "tp_type": "event", "weight": "35", "score_status": "strong"}, {"event": "Goldfinch Prime × Apollo/KKR 机构资金规模化", "current": "Goldfinch Prime 转型中，机构资金尚未规模化上链", "quantitative": "Apollo/KKR 链上信贷 distributed > $1B", "qualitative": "真实世界私募信贷 pedigree 抬高整层天花板", "data_source": "keyword:Goldfinch Prime Apollo KKR onchain credit @TheBlock", "if_triggered": "H1 → falsified（④档被资本买到）", "if_failed": "H1 → confirmed（Maple 守住份额）", "tp_type": "event", "weight": "25", "score_status": "watching"}]}, {"id": "SYRUP-H2", "title": "真实价值捕获但量级被高估", "layer": "river", "statement": "25% 收入回购真实执行（Q1 $827K）但真实 protocol revenue 仅 ~$14M（非 gross fee $120M），回购 ~2.5% MC 被 5% drip 通胀抵消成净稀释，回购是 quality 信号非价格引擎", "why": "SYRUP 相对其他 L2 token 的核心 edge 是回购，但若量级托不住价，edge 被高估", "status": "open", "confidence": "75", "state": "watch", "tipping_points": [{"id": "SYRUP-H2-TP1", "event": "月 protocol revenue（真实口径，非 gross fee）", "current": "May $1.4M / Apr $793K（run-rate ~$14M）", "quantitative": "连续 2 月 \u003c $1M", "qualitative": "CEO 年底 $25M run-rate 指引", "data_source": "keyword:Maple Finance protocol revenue @DLNews;Token Terminal", "if_triggered": "H2 → confirmed（指引兑现）", "if_failed": "H2 → falsified（收入萎缩）", "weight": "45", "score_status": "watching", "tp_type": "threshold"}, {"id": "SYRUP-H2-TP2", "event": "回购实际执行 vs drip 通胀净额", "current": "Q1 回购 $827K（~2.5% MC/年）vs 5% drip 通胀 = 净 -2.5%/年稀释", "quantitative": "回购暂停 / 跳过任一月", "qualitative": "净供给方向（通缩 or 稀释）", "data_source": "https://tokenomist.ai/syrup/buyback", "if_triggered": "H2 → confirmed", "if_failed": "H2 → falsified", "weight": "30", "score_status": "weakening", "tp_type": "threshold"}, {"id": "SYRUP-H2-TP3", "event": "drip 通胀到期（2026-09 treasury emissions 结束）", "current": "treasury drip 到 2026-09，之后净供给改善", "quantitative": "2026-09 后 emissions 归零", "qualitative": "净通缩转正", "data_source": "https://defillama.com/unlocks/maple-finance", "if_triggered": "H2 → confirmed（通胀到期后回购净通缩）", "if_failed": "H2 → falsified（emissions 延期）", "weight": "25", "score_status": "watching", "tp_type": "event"}, {"event": "月 protocol revenue（真实口径，非 gross fee）", "current": "May $1.4M / Apr $793K（run-rate ~$14M）", "quantitative": "连续 2 月 \u003c $1M", "qualitative": "CEO 年底 $25M run-rate 指引", "data_source": "keyword:Maple Finance protocol revenue @DLNews;Token Terminal", "if_triggered": "H2 → confirmed（指引兑现）", "if_failed": "H2 → falsified（收入萎缩）", "tp_type": "threshold", "weight": "45", "score_status": "watching"}, {"event": "回购实际执行 vs drip 通胀净额", "current": "Q1 回购 $827K（~2.5% MC/年）vs 5% drip 通胀 = 净 -2.5%/年稀释", "quantitative": "回购暂停 / 跳过任一月", "qualitative": "净供给方向（通缩 or 稀释）", "data_source": "https://tokenomist.ai/syrup/buyback", "if_triggered": "H2 → confirmed", "if_failed": "H2 → falsified", "tp_type": "threshold", "weight": "30", "score_status": "weakening"}, {"event": "drip 通胀到期（2026-09 treasury emissions 结束）", "current": "treasury drip 到 2026-09，之后净供给改善", "quantitative": "2026-09 后 emissions 归零", "qualitative": "净通缩转正", "data_source": "https://defillama.com/unlocks/maple-finance", "if_triggered": "H2 → confirmed（通胀到期后回购净通缩）", "if_failed": "H2 → falsified（emissions 延期）", "tp_type": "event", "weight": "25", "score_status": "watching"}]}, {"id": "SYRUP-H3", "title": "当前定价公允非低估", "layer": "river", "statement": "$0.143 对应 P/protocol-rev ~12x（≈Aave 9.5x + 信贷常态 8-15x），两模型收敛 $165M≈当前 MC。上行 76% 需 CEO 指引兑现+叙事回暖双中，下行 -44% 需信用事件，赔率 1:1.3 不构成重仓", "why": "推翻 S4 的'深度低估'——是 watch 不是 buy 的核心估值依据", "status": "open", "confidence": "70", "state": "watch", "tipping_points": [{"id": "SYRUP-H3-TP1", "event": "P/protocol-rev 倍数", "current": "~12x（MC $170.8M / rev ~$14M）", "quantitative": "\u003c7x 低估买点 / >18x 高估", "qualitative": "vs Aave 9.5x + 信贷常态 8-15x", "data_source": "https://www.coingecko.com/en/coins/maple-finance;keyword:Maple protocol revenue Token Terminal", "if_triggered": "H3 → 维持公允（12x 区间内）", "if_failed": "H3 → 转低估或高估", "weight": "50", "score_status": "watching", "tp_type": "threshold"}, {"id": "SYRUP-H3-TP2", "event": "价格 vs 安全边际买点", "current": "$0.143（离 fair value $0.139 太近，无安全边际）", "quantitative": "$0.10-0.115 才出现 1:2.5+ 赔率", "qualitative": "macro beta 主导，接近 ATL $0.085 才是买点", "data_source": "https://www.coingecko.com/en/coins/maple-finance", "if_triggered": "到 $0.10-0.115 → 出现买点", "if_failed": "维持 $0.14+ → 继续 watch", "weight": "50", "score_status": "watching", "tp_type": "threshold"}, {"event": "P/protocol-rev 倍数", "current": "~12x（MC $170.8M / rev ~$14M）", "quantitative": "\u003c7x 低估买点 / >18x 高估", "qualitative": "vs Aave 9.5x + 信贷常态 8-15x", "data_source": "https://www.coingecko.com/en/coins/maple-finance;keyword:Maple protocol revenue Token Terminal", "if_triggered": "H3 → 维持公允（12x 区间内）", "if_failed": "H3 → 转低估或高估", "tp_type": "threshold", "weight": "50", "score_status": "watching"}, {"event": "价格 vs 安全边际买点", "current": "$0.143（离 fair value $0.139 太近，无安全边际）", "quantitative": "$0.10-0.115 才出现 1:2.5+ 赔率", "qualitative": "macro beta 主导，接近 ATL $0.085 才是买点", "data_source": "https://www.coingecko.com/en/coins/maple-finance", "if_triggered": "到 $0.10-0.115 → 出现买点", "if_failed": "维持 $0.14+ → 继续 watch", "tp_type": "threshold", "weight": "50", "score_status": "watching"}]}, {"id": "SYRUP-H1-F1", "title": "Cantor BTC 反身性 + syrupBTC 上线", "layer": "fork", "statement": "Maple 是 Cantor $2B BTC facility 的借款方（against BTC 提杠杆喂 syrupBTC），BTC 大跌触发追保反身性冲击；Core 争议已暴露 BTC 产品线资产隔离边界", "why": "BTC 产品线最被低估的暗线，叠加信用+运营双风险", "status": "open", "confidence": "50", "state": "watch", "tipping_points": [{"id": "SYRUP-H1-F1-TP1", "event": "syrupBTC 上线 + Cantor BTC facility 反身性", "current": "Core 诉讼 2026-05-22 settled 后 syrupBTC 可行；Maple 是 Cantor $2B BTC 借款方", "quantitative": "BTC 大跌 >30% 触发追保观察", "qualitative": "资产隔离 / 第三方 PoR 是否扎实", "data_source": "https://maple.finance/insights/maple-cantor;keyword:Maple syrupBTC Cantor @CoinDesk", "if_triggered": "C 路径 → 硬退出", "if_failed": "A 路径 → 上调 H1", "weight": "100", "score_status": "watching", "tp_type": "event"}, {"event": "syrupBTC 上线 + Cantor BTC facility 反身性", "current": "Core 诉讼 2026-05-22 settled 后 syrupBTC 可行；Maple 是 Cantor $2B BTC 借款方", "quantitative": "BTC 大跌 >30% 触发追保观察", "qualitative": "资产隔离 / 第三方 PoR 是否扎实", "data_source": "https://maple.finance/insights/maple-cantor;keyword:Maple syrupBTC Cantor @CoinDesk", "if_triggered": "C 路径 → 硬退出", "if_failed": "A 路径 → 上调 H1", "tp_type": "event", "weight": "100", "score_status": "watching", "path_signals": {"A": "利好", "B": "中性", "C": "利空"}}]}], "asset_judgment": "verdict watch；估值 fair（非 S4 的 undervalued）。观望/极轻仓 0-3%；$0.10-0.115 才出现安全边际买点，当前 $0.143 不是买点。depends_on CRWA-H5-F1/CRWA-H3-F1/SYRUP-H1-F1。", "bull_case": "L2 私募信贷层龙头（distributed 23.4%，Goldfinch/TrueFi 全崩后份额集中）+ 唯一卡住④underwriting 权利（Maple Direct 自营，Oct 2025 史上最大清算零损失）+ 唯一真实 token 价值捕获（25% 收入回购真实执行）+ 近全流通无 VC cliff + 机构资金入场（Cantor $2B BTC/Sky-Spark/Bitwise/Revolut 70M）。若 protocol revenue 斜率延续（Q2 +154%），CEO $25M 指引或保守→P/S 降到 ~4x 真低估。", "main_risk": "本质⑤档担信用风险薄利的 binary 协议 alpha（护城河无一维度≥4）。①信用违约 killshot（2022 Orthogonal $36M 前科 + 借款方集中度黑箱）②Cantor BTC facility 反身性（Maple 是借款方，BTC 跌→追保→自伤）+ Core 争议暴露资产隔离边界 ③真实 protocol revenue 仅 ~$14M（$100M ARR 是 gross fee 幻觉），定价已公允无上行空间 ④回购 2.5% MC 被 5% drip 通胀抵消成净稀释 ⑤Goldfinch Prime × Apollo/KKR 万亿资金抢同批 LP。", "mispricing": "S4 标'深度低估'是 gross-fee 口径幻觉（用 marketing ARR $100M 算 P/S ~1.7x）。换真实 protocol revenue ~$14M，P/S ~12x = 公允（≈Aave 9.5x + 信贷常态 8-15x）。市场边际定价者已用真实口径。真正预期差不在估值（已公允），在借款方集中度黑箱（killshot 概率被忽视）。", "more_bullish": "", "more_bearish": "", "falsification": "", "change_if_false": "", "update_chain": [], "valuation_framework": "P/S（protocol revenue 真实口径，非 gross fee）为主 + 改良 DCF sanity check + 相对估值（对标 Aave 9.5x）。两模型独立收敛 $165M ≈ 当前 MC $170.8M。bear $0.08/base $0.139/bull $0.252。", "valuation_methods": [], "valuation_conclusion": "", "related_sector": "crypto-rwa", "related_insight": "", "key_metrics": [], "monitoring_metrics": [], "inflection_points": [], "timeline": [{"date": "2026-06-17", "event": "SYRUP 首次深度研究（crypto-lead）：L2 私募信贷龙头，verdict watch / fair（推翻 S4 深度低估，ARR $100M 是 gross fee 幻觉，真实 P/S ~12x）", "type": "research", "status": "done"}], "hypothesis_log": [], "linked_hypotheses": [], "decisions": [], "strategy_pages": []};
+function nl2lines(s) { return (s||'').split('\n').filter(Boolean); }
+function badgeCls(level) { return {high:'b-g',medium:'b-y',low:'b-o',negative:'b-r',none:'b-gr',holding:'b-b',exited:'b-r'}[level]||'b-gr'; }
+function firstLine(text) { return nl2lines(text)[0] || ''; }
+function otherLines(text) { return nl2lines(text).slice(1); }
+function layerBadge(label, color) {
+  const cls = color === 'var(--purple)' ? 'b-p' : color === 'var(--orange)' ? 'b-o' : color === 'var(--accent)' ? 'b-a' : 'b-g';
+  return `<span class="b ${cls}">${e(hLabel(label))}</span>`;
+}
+function hLabel(id) {
+  // PR-H1 → 假设 1, EL-H2 → 假设 2, etc.
+  const m = String(id||'').match(/H(\d+)$/i);
+  if (m) return '假设 ' + m[1];
+  return id;
+}
+function statusBadge(status) {
+  const s = String(status || 'open').toLowerCase();
+  const cls = s === 'confirmed' ? 'b-g' : s === 'mixed' ? 'b-y' : s === 'falsified' ? 'b-r' : 'b-gr';
+  return `<span class="b ${cls}">${e(status || 'open')}</span>`;
+}
+function confidenceBadge(hypothesis) {
+  const conf = hypothesis.confidence;
+  if (!conf) return statusBadge(hypothesis.status);
+  const n = parseInt(conf);
+  const cls = n >= 70 ? 'b-g' : n >= 50 ? 'b-y' : n >= 30 ? 'b-o' : 'b-r';
+  return `<span class="b ${cls}">${n}%</span>`;
+}
+const hypotheses = normalizeHypotheses();
+const allTippingPoints = hypotheses.flatMap(h => (h.tipping_points || []).map(tp => ({ ...tp, hypothesis_id: h.id, hypothesis_title: h.title, hypothesis_status: h.status })));
+if (!allTippingPoints.length && (D.inflection_points || []).length) {
+  for (const tp of D.inflection_points) allTippingPoints.push(tp);
+}
+
+function formatLogChange(log) {
+  if (log.status_before || log.status_after) return `${log.status_before || '—'} → ${log.status_after || '—'}`;
+  if (log.state_before || log.state_after) return `${log.state_before || '—'} → ${log.state_after || '—'}`;
+  return '结构更新';
+}
+function fmtPct(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  const n = Number(v);
+  if (Number.isNaN(n)) return String(v);
+  return `${Math.round(n)}%`;
+}
+function fmtDelta(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  const n = Number(v);
+  if (Number.isNaN(n)) return String(v);
+  return `${n >= 0 ? '+' : ''}${Math.round(n)}%`;
+}
+
+// ─── Build HTML ───
+let h = '';
+
+// Header
+h += `<header class="header">
+  <div>
+    <div class="eyebrow">Research Dashboard</div>
+    <h1>${e(D.title || '未命名')} 信念看板</h1>
+    <div class="header-sub">${[D.sector, D.type, D.updated_at ? '更新 ' + D.updated_at : ''].filter(Boolean).map(e).join(' · ')}</div>
+  </div>
+  <div class="header-right">
+    <span class="b ${badgeCls(D.conviction_level)}">Conviction: ${e(D.conviction_level)}</span>
+  </div>
+</header>`;
+
+// Tabs
+h += `<div class="tabs">
+  <button class="tab active" onclick="showTab('overview',this)">总览</button>
+  <button class="tab" onclick="showTab('detail',this)">详情</button>
+  <button class="tab" onclick="showTab('valuation',this)">估值</button>
+  <button class="tab" onclick="showTab('monitor',this)">监控</button>
+  <button class="tab" onclick="showTab('log',this)">日志</button>
+</div>`;
+
+// ═══ TAB 1: OVERVIEW ═══
+h += '<div id="overview" class="page-panel active">';
+// Tree: conviction → hypotheses → asset judgment (full width, above grid)
+h += '<div class="tree"><div class="tree-node tree-root">';
+h += '<div class="tree-root-top"><div class="tree-root-left">';
+h += `<div class="tree-root-title">${e(D.title)} Conviction</div>`;
+h += `<div class="tree-root-summary">${md(D.conviction || D.core_summary || '暂无核心摘要')}</div>`;
+h += '</div></div></div><div class="tree-line"></div>';
+
+// L2: Hypothesis branches
+h += '<div class="tree-branch">';
+for (const hypothesis of hypotheses) {
+  const ips = hypothesis.tipping_points || [];
+  h += `<div class="tree-node tree-h" onclick="showTab('detail',document.querySelectorAll('.tab')[1])">`;
+  h += '<div class="tree-h-head">';
+  h += `<div>${layerBadge(hypothesis.id, 'var(--accent)')}<div class="tree-h-title">${md(hypothesis.title || firstLine(hypothesis.statement) || '暂无假设')}</div></div>`;
+  h += confidenceBadge(hypothesis);
+  h += '</div>';
+  // Show statement only if different from title
+  const stmtLine = firstLine(hypothesis.statement) || '';
+  if (stmtLine && stmtLine !== (hypothesis.title || '')) {
+    h += `<div class="tree-h-sub">${md(stmtLine)}</div>`;
+  }
+  if (ips.length) {
+    h += '<div class="tp-list">';
+    for (const ip of ips.slice(0, 3)) {
+      const state = ipState(ip);
+      const dotColor = state === 'confirmed' || state === 'strong' ? 'var(--green)' : state === 'approaching' ? 'var(--yellow)' : state === 'weakening' || state === 'failing' ? 'var(--red)' : 'var(--text3)';
+      h += `<div class="tp-mini" style="color:${dotColor}"><span class="tp-mini-dot"></span><span style="color:var(--text)">${e(ip.event)}</span></div>`;
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+}
+h += '</div>';
+
+// L2→L3 connector
+h += '<div class="tree-line"></div>';
+
+// L3: Asset Judgment (bottom node)
+h += `<div class="tree-node tree-root" style="width:min(100%,760px);padding:18px 24px;border-color:var(--orange);background:linear-gradient(180deg, rgba(194,65,12,.06), transparent 60%), var(--bg-2);box-shadow:0 2px 10px rgba(18,20,27,.06), inset 0 1px 0 rgba(194,65,12,.08)">`;
+h += `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px">`;
+h += `<div>${layerBadge('Asset Judgment', 'var(--orange)')}<div style="font-size:14px;color:var(--text);margin-top:10px;line-height:1.7">${md(D.asset_judgment || '暂无结论')}</div></div>`;
+h += `<div>${statusBadge(D.conviction_level || 'open')}</div>`;
+h += `</div></div>`;
+
+h += '</div>'; // end tree
+
+h += '<div style="margin-top:32px"></div>';
+h += '<div class="overview-grid">';
+h += '<div class="section-stack">';
+
+// Key Metrics card
+if ((D.key_metrics||[]).length) {
+  h += '<div class="panel"><div class="panel-title">核心数据</div><div class="panel-body">';
+  h += '<div class="km-grid">';
+  for (const m of D.key_metrics) {
+    h += `<div class="km-item"><div class="km-label">${e(m.label)}</div><div class="km-value">${md(m.value)}</div>${m.note ? `<div class="km-note">${md(m.note)}</div>` : ''}</div>`;
+  }
+  h += '</div>';
+  h += '</div></div>';
+}
+
+// Bull / Bear insights
+h += '<div class="split-grid">';
+h += '<div class="panel"><div class="panel-title">多头逻辑</div><div class="panel-body">';
+for (const line of nl2lines(D.bull_case)) h += `<div class="ev-item"><span class="ev-icon">+</span><span>${md(line)}</span></div>`;
+h += '</div></div>';
+h += '<div class="panel"><div class="panel-title">空头逻辑</div><div class="panel-body">';
+for (const line of nl2lines(D.main_risk)) h += `<div class="ev-item"><span class="ev-icon" style="color:var(--red)">-</span><span>${md(line)}</span></div>`;
+h += '</div></div></div>';
+
+
+h += '</div>';
+h += '<aside class="section-stack">';
+if (allTippingPoints.length) {
+  h += '<div class="panel"><div class="panel-title">近期关注拐点</div><div class="panel-body">';
+  for (const ip of allTippingPoints) {
+    const state = ipState(ip);
+    h += `<div class="tp">
+      <span class="tp-dot ${state}"></span>
+      <div class="tp-main">
+        <div class="tp-text">${md(ip.event)}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11px;margin-top:4px">
+          ${ip.hypothesis_id ? `<span class="tp-sig" style="color:var(--green)">${e(hLabel(ip.hypothesis_id))}</span>` : ''}
+          ${ip.current ? `<span style="color:var(--green-strong)">${md(ip.current)}</span>` : ''}
+          ${ip.quantitative ? `<span style="color:var(--text3)">→ ${md(ip.quantitative)}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+  h += '</div></div>';
+}
+h += '</aside></div>';
+h += '</div>'; // end overview
+
+// ═══ TAB 2: DETAIL ═══
+h += '<div id="detail" class="page-panel">';
+h += '<div class="section-stack">';
+
+// Conviction — top layer, distinct style
+h += `<div class="belief open" id="b-conviction" style="border-left:4px solid var(--purple)">`;
+h += `<div class="belief-head" onclick="this.parentElement.classList.toggle('open')" style="--layer-color:var(--purple)">`;
+h += `<div>${layerBadge('Conviction', 'var(--purple)')}<div class="belief-title">${md(firstLine(D.conviction)||'暂无判断')}</div></div>`;
+h += `<div class="belief-right"><span class="arrow">▼</span></div>`;
+h += '</div><div class="belief-body">';
+for (const line of otherLines(D.conviction)) h += `<div class="ev-item"><span class="ev-icon">·</span><span>${md(line)}</span></div>`;
+h += '</div></div>';
+
+// Hypotheses — second layer, each with tipping points
+for (const hypothesis of hypotheses) {
+  const ips = hypothesis.tipping_points || [];
+  h += `<div class="belief open" id="b-${e(hypothesis.id)}" style="border-left:4px solid var(--accent)">`;
+  h += `<div class="belief-head" onclick="this.parentElement.classList.toggle('open')" style="--layer-color:var(--accent)">`;
+  h += `<div>${layerBadge(hypothesis.id, 'var(--accent)')}<div class="belief-title">${md(hypothesis.title || firstLine(hypothesis.statement) || '暂无假设')}</div></div>`;
+  h += `<div class="belief-right">${confidenceBadge(hypothesis)}<span class="arrow">▼</span></div>`;
+  h += '</div><div class="belief-body">';
+  for (const line of nl2lines(hypothesis.statement)) h += `<div class="ev-item"><span class="ev-icon">·</span><span>${md(line)}</span></div>`;
+  if (hypothesis.why) h += `<div class="ins info" style="margin-top:14px"><strong>为什么重要</strong><span>${md(hypothesis.why)}</span></div>`;
+  // Confidence breakdown bar
+  if (hypothesis.confidence && ips.some(ip => ip.weight)) {
+    const SMAP = {confirmed:1.0, strong:0.8, approaching:0.6, watching:0.4, weakening:0.2, failing:0.0};
+    const CMAP = {confirmed:'var(--green)', strong:'var(--green)', approaching:'var(--yellow)', watching:'var(--text3)', weakening:'var(--red)', failing:'var(--red)'};
+    h += `<div style="margin-top:14px;padding:12px 14px;background:rgba(0,0,0,.04);border-radius:8px;border:1px solid rgba(0,0,0,.06)">`;
+    h += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12px;font-weight:700;color:var(--text3)">置信度分解</span><span style="font-family:var(--mono);font-size:14px;font-weight:700">${e(hypothesis.confidence)}%</span></div>`;
+    // Stacked bar
+    h += '<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;background:rgba(0,0,0,.06);gap:1px">';
+    for (const ip of ips) {
+      if (!ip.weight) continue;
+      const w = parseInt(ip.weight);
+      const ss = ip.score_status || 'watching';
+      const score = SMAP[ss] || 0.4;
+      const color = CMAP[ss] || 'var(--text3)';
+      h += `<div style="width:${w}%;background:${color};opacity:${0.4 + score * 0.6}" title="${e(ip.event)} (w${w} × ${statusCn(ss)})"></div>`;
+    }
+    h += '</div>';
+    // Legend rows
+    h += '<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:2px 10px;margin-top:8px;font-size:11px">';
+    for (const ip of ips) {
+      if (!ip.weight) continue;
+      const ss = ip.score_status || 'watching';
+      const score = SMAP[ss] || 0.4;
+      const contrib = Math.round(parseInt(ip.weight) * score);
+      const color = CMAP[ss] || 'var(--text3)';
+      h += `<span style="color:var(--text2)">${e(ip.event)}</span>`;
+      h += `<span style="font-family:var(--mono);color:var(--text3)">w${e(ip.weight)}</span>`;
+      h += `<span style="font-family:var(--mono);color:${color}">${statusCn(ss)}</span>`;
+      h += `<span style="font-family:var(--mono);font-weight:600;text-align:right">+${contrib}</span>`;
+    }
+    h += '</div></div>';
+  }
+  if (ips.length) {
+    h += '<div class="belief-block-title">拐点</div>';
+    for (const ip of ips) {
+      const state = ipState(ip);
+      h += '<div class="tp">';
+      h += `<span class="tp-dot ${state}"></span>`;
+      h += '<div class="tp-main">';
+      h += `<div style="display:flex;align-items:center;gap:8px"><span class="tp-text">${md(ip.event)}</span>${ip.tp_type ? `<span style="font-size:9px;padding:1px 5px;border-radius:3px;font-family:var(--mono);letter-spacing:.04em;${ip.tp_type==='event'?'color:var(--cyan);background:rgba(14,116,144,.10);border:1px solid rgba(14,116,144,.22)':'color:var(--yellow);background:rgba(154,94,6,.10);border:1px solid rgba(154,94,6,.22)'}">${ip.tp_type==='event'?'事件':'指标'}</span>` : ''}${ip.weight ? `<span style="font-size:10px;color:var(--text3);font-family:var(--mono);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">w${e(ip.weight)}</span>` : ''}${ip.score_status ? `<span style="font-size:10px;color:${state==='strong'||state==='confirmed'?'var(--green)':state==='approaching'?'var(--yellow)':state==='weakening'||state==='failing'?'var(--red)':'var(--text3)'};font-family:var(--mono)">${statusCn(ip.score_status)}</span>` : ''}</div>`;
+      // Structured grid for tipping point details
+      h += '<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px;font-family:var(--font);margin-top:6px">';
+      if (ip.current) h += `<span style="color:var(--text3)">当前</span><span style="color:var(--green-strong);font-family:var(--mono)">${md(ip.current)}</span>`;
+      if (ip.quantitative) h += `<span style="color:var(--text3)">阈值</span><span style="font-family:var(--mono)">${md(ip.quantitative)}</span>`;
+      if (ip.qualitative) h += `<span style="color:var(--text3)">定性</span><span style="color:var(--text2)">${md(ip.qualitative)}</span>`;
+      if (ip.data_source) {
+        const ds = ip.data_source;
+        const isUrl = /^https?:\/\//.test(ds);
+        h += `<span style="color:var(--text3)">数据源</span><span style="font-size:11px">${isUrl ? `<a href="${e(ds)}" target="_blank" rel="noopener noreferrer" style="color:var(--purple)">${e(ds.replace(/^https?:\/\/(www\.)?/,'').split('/').slice(0,2).join('/'))}</a>` : `<span style="color:var(--purple)">${md(ds)}</span>`}</span>`;
+      }
+      h += '</div>';
+      // Outcome row: triggered / failed side by side
+      if (ip.if_triggered || ip.if_failed) {
+        h += '<div style="display:flex;gap:16px;margin-top:6px;font-size:11px">';
+        if (ip.if_triggered) h += `<div style="flex:1;padding:6px 10px;border-radius:6px;background:rgba(4,120,87,.08);border:1px solid rgba(4,120,87,.15)"><span style="color:var(--green)">✓ 触发</span><span style="color:var(--text2);margin-left:6px">${md(ip.if_triggered)}</span></div>`;
+        if (ip.if_failed) h += `<div style="flex:1;padding:6px 10px;border-radius:6px;background:rgba(211,31,31,.06);border:1px solid rgba(211,31,31,.12)"><span style="color:var(--red)">✗ 失败</span><span style="color:var(--text2);margin-left:6px">${md(ip.if_failed)}</span></div>`;
+        h += '</div>';
+      }
+      h += '</div></div>';
+    }
+  }
+
+  h += '</div></div>';
+}
+
+// Asset Judgment — bottom layer output, distinct orange
+h += `<div class="belief open" id="b-judgment" style="border-left:4px solid var(--orange)">`;
+h += `<div class="belief-head" onclick="this.parentElement.classList.toggle('open')" style="--layer-color:var(--orange)">`;
+h += `<div>${layerBadge('Asset Judgment', 'var(--orange)')}<div class="belief-title">${md(firstLine(D.asset_judgment)||'暂无结论')}</div></div>`;
+h += `<div class="belief-right">${statusBadge(D.conviction_level || 'open')}<span class="arrow">▼</span></div>`;
+h += '</div><div class="belief-body">';
+for (const line of otherLines(D.asset_judgment)) h += `<div class="ev-item"><span class="ev-icon">·</span><span>${md(line)}</span></div>`;
+h += '</div></div>';
+
+// Valuation
+if (D.valuation_framework) {
+  h += '<div class="panel"><div class="panel-title">估值框架</div><div class="panel-body">';
+  h += `<div style="font-size:13px;color:var(--text2);line-height:1.8">${md(D.valuation_framework).replace(/\n/g,'<br>')}</div>`;
+  if (D.related_sector) {
+    const slug = D.related_sector.toLowerCase().trim().replace(/[\s/]+/g,'-').replace(/[^a-z0-9_-]/g,'').replace(/-{2,}/g,'-').replace(/^-|-$/g,'');
+    h += `<div style="margin-top:12px;font-size:12px;color:var(--text3)">关联赛道: <a href="${slug}.html">${e(D.related_sector)}</a></div>`;
+  }
+  h += '</div></div>';
+}
+
+// Strategy sub-pages
+const stratPages = D.strategy_pages || [];
+if (stratPages.length) {
+  h += '<div class="panel"><div class="panel-title">📋 策略看板</div><div class="panel-body">';
+  for (const sp of stratPages) {
+    h += `<div style="margin-bottom:8px"><a href="${e(sp.href)}" style="font-size:14px;font-weight:600">${e(sp.title)} →</a></div>`;
+  }
+  h += '</div></div>';
+}
+h += '</div>';
+h += '</div>'; // end detail
+
+// ═══ TAB 3: VALUATION ═══
+h += '<div id="valuation" class="page-panel">';
+const vm = D.valuation_methods || [];
+if (vm.length) {
+  // Summary conclusion
+  if (D.valuation_conclusion) {
+    h += `<div class="panel" style="border:1px solid var(--border-strong);background:linear-gradient(180deg, rgba(109,40,217,.04), transparent 60%)">`;
+    h += `<div class="panel-title" style="color:var(--purple)">估值结论</div>`;
+    h += `<div class="panel-body"><div style="font-size:15px;line-height:1.8">${md(D.valuation_conclusion)}</div></div>`;
+    h += '</div>';
+  }
+
+  // Valuation range bar
+  const ranges = vm.filter(m => m.low != null && m.high != null && !isNaN(parseFloat(m.low)) && !isNaN(parseFloat(m.high))).map(m => ({name: m.name, low: parseFloat(m.low), high: parseFloat(m.high), weight: parseInt(m.weight || '0')}));
+  if (ranges.length) {
+    const allLow = Math.min(...ranges.map(r => r.low));
+    const allHigh = Math.max(...ranges.map(r => r.high));
+    const pad = (allHigh - allLow) * 0.15 || allHigh * 0.1;
+    const min = Math.max(0, allLow - pad);
+    const max = allHigh + pad;
+    const span = max - min || 1;
+    const pct = v => ((v - min) / span * 100).toFixed(1);
+    const colors = ['var(--green)', 'var(--blue)', 'var(--purple)', 'var(--orange)', 'var(--cyan)'];
+    const colorRgb = ['4,120,87', '37,99,235', '109,40,217', '194,65,12', '14,116,144'];
+
+    h += '<div class="panel"><div class="panel-title">估值区间</div><div class="panel-body">';
+
+    // Scale ticks
+    const ticks = 5;
+    h += '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:12px;padding:0 0 0 140px">';
+    for (let i = 0; i <= ticks; i++) { const v = min + (max - min) * i / ticks; h += `<span>$${(v/1e9).toFixed(1)}B</span>`; }
+    h += '</div>';
+
+    // Each method as a row: label | bar
+    ranges.forEach((r, i) => {
+      const left = pct(r.low);
+      const right = pct(r.high);
+      const width = (right - left).toFixed(1);
+      const color = colors[i % colors.length];
+      const rgb = colorRgb[i % colorRgb.length];
+      h += '<div style="display:flex;align-items:center;gap:0;margin-bottom:10px">';
+      // Label column (fixed width)
+      h += `<div style="min-width:140px;flex-shrink:0;font-size:12px;font-family:var(--font);color:var(--text2);padding-right:12px;text-align:right">${e(r.name)}<br><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">w${r.weight}</span></div>`;
+      // Bar column
+      h += '<div style="flex:1;position:relative;height:28px">';
+      // Background track
+      h += '<div style="position:absolute;left:0;right:0;top:12px;height:4px;background:rgba(0,0,0,.04);border-radius:2px"></div>';
+      // Range bar
+      h += `<div style="position:absolute;left:${left}%;width:${width}%;height:20px;top:4px;background:rgba(${rgb},.09);border:1px solid rgba(${rgb},.27);border-radius:6px;display:flex;align-items:center;justify-content:space-between;padding:0 8px">`;
+      h += `<span style="font-size:11px;font-family:var(--mono);color:${color};font-weight:600">$${(r.low/1e9).toFixed(1)}B</span>`;
+      h += `<span style="font-size:11px;font-family:var(--mono);color:${color};font-weight:600">$${(r.high/1e9).toFixed(1)}B</span>`;
+      h += '</div>';
+      h += '</div></div>';
+    });
+
+    h += '</div></div>';
+  }
+  // Method cards — orphan last card as full-width if alone in row
+  const vmGrid = vm.length % 3 === 1 && vm.length > 1 ? vm.slice(0, -1) : vm;
+  const vmOrphan = vm.length % 3 === 1 && vm.length > 1 ? vm[vm.length - 1] : null;
+  h += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px">`;
+  for (let mi = 0; mi < vmGrid.length; mi++) {
+    const m = vmGrid[mi];
+    const color = m.weight && parseInt(m.weight) >= 30 ? 'var(--green)' : 'var(--text3)';
+    h += `<div class="panel">`;    h += `<div class="panel-title" style="display:flex;justify-content:space-between;align-items:center">`;
+    h += `<span>${md(m.name)}</span>`;
+    h += `<span style="font-family:var(--mono);font-size:12px;color:${color}">${m.weight ? `w${e(m.weight)}` : ''}</span>`;
+    h += `</div><div class="panel-body">`;
+    if (m.formula) h += `<div style="font-size:12px;color:var(--purple);font-family:var(--mono);margin-bottom:8px;padding:6px 10px;background:rgba(109,40,217,.06);border-radius:6px">${md(m.formula)}</div>`;
+    if (m.linked_hypothesis) {
+      const lh = hypotheses.find(hyp => hyp.id === m.linked_hypothesis);
+      if (lh) {
+        const conf = lh.confidence ? `${lh.confidence}%` : lh.status || '—';
+        const confCls = lh.confidence ? (parseInt(lh.confidence) >= 70 ? 'var(--green)' : parseInt(lh.confidence) >= 50 ? 'var(--yellow)' : 'var(--red)') : 'var(--text3)';
+        h += `<div style="font-size:11px;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="color:var(--text3)">依赖假设</span><span class="b b-g" style="font-size:10px">${e(hLabel(m.linked_hypothesis))}</span><span style="color:var(--text2)">${e(lh.title)}</span><span style="font-family:var(--mono);color:${confCls};font-weight:600">${conf}</span></div>`;
+      }
+    }
+    if (m.comps) h += `<div style="font-size:12px;color:var(--text2);margin-bottom:6px">${md(m.comps)}</div>`;
+    if (m.result) h += `<div style="font-size:16px;font-weight:700;font-family:var(--mono);margin:8px 0">${md(m.result)}</div>`;
+    if (m.note) h += `<div style="font-size:11px;color:var(--text3)">${md(m.note)}</div>`;
+    h += '</div></div>';
+  }
+  h += '</div>';
+  // Orphan card (full-width outside grid)
+  if (vmOrphan) {
+    const m = vmOrphan;
+    const color = m.weight && parseInt(m.weight) >= 30 ? 'var(--green)' : 'var(--text3)';
+    h += `<div class="panel" style="margin-top:16px">`;
+    h += `<div class="panel-title" style="display:flex;justify-content:space-between;align-items:center">`;
+    h += `<span>${md(m.name)}</span>`;
+    h += `<span style="font-family:var(--mono);font-size:12px;color:${color}">${m.weight ? `w${e(m.weight)}` : ''}</span>`;
+    h += `</div><div class="panel-body">`;
+    if (m.formula) h += `<div style="font-size:12px;color:var(--purple);font-family:var(--mono);margin-bottom:8px;padding:6px 10px;background:rgba(109,40,217,.06);border-radius:6px">${md(m.formula)}</div>`;
+    if (m.linked_hypothesis) {
+      const lh = hypotheses.find(hyp => hyp.id === m.linked_hypothesis);
+      if (lh) {
+        const conf = lh.confidence ? `${lh.confidence}%` : lh.status || '—';
+        const confCls = lh.confidence ? (parseInt(lh.confidence) >= 70 ? 'var(--green)' : parseInt(lh.confidence) >= 50 ? 'var(--yellow)' : 'var(--red)') : 'var(--text3)';
+        h += `<div style="font-size:11px;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="color:var(--text3)">依赖假设</span><span class="b b-g" style="font-size:10px">${e(hLabel(m.linked_hypothesis))}</span><span style="color:var(--text2)">${e(lh.title)}</span><span style="font-family:var(--mono);color:${confCls};font-weight:600">${conf}</span></div>`;
+      }
+    }
+    if (m.comps) h += `<div style="font-size:12px;color:var(--text2);margin-bottom:6px">${md(m.comps)}</div>`;
+    if (m.result) h += `<div style="font-size:16px;font-weight:700;font-family:var(--mono);margin:8px 0">${md(m.result)}</div>`;
+    if (m.note) h += `<div style="font-size:11px;color:var(--text3)">${md(m.note)}</div>`;
+    h += '</div></div>';
+  }
+} else {
+  h += '<div class="panel"><div class="panel-body" style="color:var(--text3);text-align:center;padding:40px">暂无估值数据</div></div>';
+}
+h += '</div>'; // end valuation
+
+// ═══ TAB 4: MONITOR ═══
+h += '<div id="monitor" class="page-panel">';
+h += '<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em">';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot confirmed" style="width:8px;height:8px"></span>已验证</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot strong" style="width:8px;height:8px"></span>趋势向好</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot approaching" style="width:8px;height:8px"></span>接近触发</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot watching" style="width:8px;height:8px"></span>观察中</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot weakening" style="width:8px;height:8px"></span>转弱</span>';
+h += '<span style="display:flex;align-items:center;gap:6px"><span class="tp-dot failing" style="width:8px;height:8px"></span>证伪</span>';
+h += '</div>';
+h += '<div class="section-stack">';
+// All tipping points as unified monitor
+if (allTippingPoints.length) {
+  h += '<div class="panel"><div class="panel-title">拐点监控</div><div class="table-wrap"><table class="mon-tbl"><thead><tr><th>拐点</th><th>当前</th><th>阈值</th><th>假设</th><th>权重</th><th>数据源</th><th>状态</th></tr></thead><tbody>';
+  for (const ip of allTippingPoints) {
+    const state = ipState(ip);
+    const dotHtml = `<span class="tp-dot ${state}" style="width:8px;height:8px;display:inline-block;vertical-align:middle;margin-right:6px"></span>`;
+    const ds = ip.data_source || '';
+    const isUrl = /^https?:\/\//.test(ds);
+    const dsHtml = isUrl ? `<a href="${e(ds)}" target="_blank" rel="noopener noreferrer" style="color:var(--purple);font-size:11px">${e(ds.replace(/^https?:\/\/(www\.)?/,'').split('/').slice(0,2).join('/'))}</a>` : `<span style="color:var(--text3);font-size:11px">${e(ds || '—')}</span>`;
+    h += `<tr><td style="font-weight:600">${e(ip.event)}</td><td class="mono" style="color:var(--green-strong)">${e(ip.current || '—')}</td><td>${e(ip.quantitative || ip.qualitative || '—')}</td><td style="color:var(--green);white-space:nowrap">${ip.hypothesis_id ? e(hLabel(ip.hypothesis_id)) : '—'}</td><td class="mono">${e(ip.weight || '—')}</td><td>${dsHtml}</td><td style="white-space:nowrap">${dotHtml}${statusCn(state)}</td></tr>`;
+  }
+  h += '</tbody></table></div></div>';
+}
+h += '</div>'; // end section-stack
+h += '</div>'; // end monitor
+
+// ═══ TAB 4: LOG ═══
+h += '<div id="log" class="page-panel">';
+const hasStructuredLogs = (D.event_log||[]).length || (D.hypothesis_updates||[]).length || (D.hypothesis_versions||[]).length || (D.hypothesis_log||[]).length;
+h += hasStructuredLogs ? '<div class="log-grid"><div class="section-stack">' : '<div class="section-stack">';
+
+// Timeline + Decisions merged
+const timelineItems = (D.timeline||[]).map(t => ({date: t.date, type: 'timeline', event: t.event, status: t.status || ''}));
+const decisionItems = (D.decisions||[]).map(d => {
+  const TYPE_CN = {participate:'分配', return:'归还', update:'更新', exit:'退出', add:'加仓', reduce:'减仓'};
+  const typeCn = TYPE_CN[d.decision_type] || d.decision_type;
+  const amt = Number(d.amount);
+  const amtStr = d.amount != null && !isNaN(amt) ? `$${amt.toLocaleString()}` : '';
+  const pctStr = d.amount_pct ? `(${d.amount_pct}%)` : '';
+  const reasons = Array.isArray(d.reasons) ? d.reasons.join('；') : (d.reasons || '');
+  return {date: d.date, type: 'decision', decision_type: d.decision_type, typeCn, event: d.strategy_name || d.name, amount: amtStr, pct: pctStr, reasons, outcome: d.outcome, review: d.review};
+});
+const mergedTimeline = [...timelineItems, ...decisionItems].sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+
+if (mergedTimeline.length) {
+  h += '<div class="panel"><div class="panel-title">时间线</div>';
+  // Legend
+  h += '<div style="display:flex;gap:12px;margin:0 16px 12px;font-size:11px;color:var(--text3)">';
+  h += '<span>● 事件</span>';
+  h += '<span style="color:var(--green)">● 分配/加仓</span>';
+  h += '<span style="color:var(--red)">● 归还/退出</span>';
+  h += '<span style="color:var(--blue)">● 更新</span>';
+  h += '</div>';
+  h += '<div class="timeline">';
+  for (const t of mergedTimeline) {
+    if (t.type === 'decision') {
+      const color = t.decision_type === 'participate' || t.decision_type === 'add' ? 'var(--green)' : t.decision_type === 'return' || t.decision_type === 'exit' || t.decision_type === 'reduce' ? 'var(--red)' : 'var(--blue)';
+      h += `<div class="tl-item" style="border-left:3px solid ${color};padding-left:12px;margin-left:-3px">`;
+      h += `<span class="tl-date" style="color:${color}">${e(t.date)}</span>`;
+      h += `<span class="tl-event"><span style="color:${color};font-weight:700">[${e(t.typeCn)}]</span> ${e(t.event)}`;
+      if (t.amount) h += ` <span style="font-family:var(--mono);color:${color};font-weight:600">${e(t.amount)}</span>`;
+      if (t.pct) h += ` <span style="font-family:var(--mono);color:var(--text3);font-size:11px">${e(t.pct)}</span>`;
+      if (t.reasons) h += `<div style="font-size:11px;color:var(--text3);margin-top:2px">原因：${e(t.reasons)}</div>`;
+      if (t.review) h += `<div style="font-size:11px;color:var(--text2);margin-top:2px">复盘：${e(t.review)}</div>`;
+      h += '</span></div>';
+    } else {
+      const isDone = t.status === 'done' || t.status === 'completed';
+      h += `<div class="tl-item"><span class="tl-date">${e(t.date)}</span><span class="tl-event${isDone ? ' style="color:var(--text3)"' : ''}">${e(t.event)}</span></div>`;
+    }
+  }
+  h += '</div></div>';
+}
+
+// Event log (future daily hypothesis pipeline)
+if ((D.event_log||[]).length) {
+  h += '<div class="panel"><div class="panel-title">事件日志</div><div class="table-wrap"><table class="log-tbl"><thead><tr><th>日期</th><th>事件</th><th>类型</th><th>信息源</th><th>AI 判断</th><th>人工判断</th></tr></thead><tbody>';
+  for (const ev of D.event_log) {
+    const src = [ev.source_label, ev.source_type].filter(Boolean).join(' · ');
+    h += `<tr><td class="mono" style="white-space:nowrap;color:var(--text3)">${e(ev.date)}</td><td><div style="font-weight:600">${e(ev.event || ev.summary || '—')}</div>${ev.summary ? `<div style="font-size:12px;color:var(--text3);margin-top:4px">${e(ev.summary)}</div>` : ''}</td><td>${e(ev.kind || '—')}</td><td>${ev.source_url ? `<a href="${e(ev.source_url)}" target="_blank" rel="noopener noreferrer" style="color:var(--green)">${e(src || '链接')}</a>` : e(src || '—')}</td><td style="color:var(--text2)">${e(ev.ai_judgment || '—')}</td><td style="color:var(--text2)">${e(ev.human_judgment || '—')}</td></tr>`;
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// Hypothesis updates (future main format)
+if ((D.hypothesis_updates||[]).length) {
+  h += '<div class="panel"><div class="panel-title">假设更新流</div><div class="table-wrap"><table class="log-tbl"><thead><tr><th>日期</th><th>假设</th><th>状态</th><th>Confidence</th><th>Δ</th><th>原因</th></tr></thead><tbody>';
+  for (const u of D.hypothesis_updates) {
+    const hyp = u.hypothesis_id ? `${u.hypothesis_id}${u.hypothesis_title ? ' · ' + u.hypothesis_title : ''}` : (u.hypothesis_title || '—');
+    h += `<tr><td class="mono" style="white-space:nowrap;color:var(--text3)">${e(u.date)}</td><td style="color:var(--green-strong)">${e(hyp)}</td><td class="mono" style="white-space:nowrap">${e(formatLogChange(u))}</td><td class="mono" style="white-space:nowrap">${e(fmtPct(u.confidence_before))} → ${e(fmtPct(u.confidence_after))}</td><td class="mono" style="white-space:nowrap;color:${Number(u.delta||0) >= 0 ? 'var(--green)' : 'var(--red)'}">${e(fmtDelta(u.delta))}</td><td><div style="color:var(--text2)">${e(u.reasoning || u.ai_judgment || '—')}</div>${u.human_judgment ? `<div style="font-size:12px;color:var(--text3);margin-top:4px">Fred: ${e(u.human_judgment)}</div>` : ''}</td></tr>`;
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// Hypothesis versions (definition changes)
+if ((D.hypothesis_versions||[]).length) {
+  h += '<div class="panel"><div class="panel-title">假设版本变更</div><div class="table-wrap"><table class="log-tbl"><thead><tr><th>日期</th><th>假设</th><th>字段</th><th>变更</th><th>原因</th></tr></thead><tbody>';
+  for (const v of D.hypothesis_versions) {
+    h += `<tr><td class="mono" style="white-space:nowrap;color:var(--text3)">${e(v.date)}</td><td style="color:var(--green-strong)">${e(v.hypothesis_id || '—')}</td><td class="mono">${e(v.field || '—')}</td><td><div style="font-size:12px;color:var(--text3)">Before: ${e(v.before || '—')}</div><div style="margin-top:4px">After: ${e(v.after || '—')}</div></td><td style="color:var(--text2)">${e(v.reason || '—')}</td></tr>`;
+  }
+  h += '</tbody></table></div></div>';
+}
+
+// Legacy hypothesis log
+if ((D.hypothesis_log||[]).length) {
+  h += '<div class="panel"><div class="panel-title">假设更新日志（兼容旧版）</div><div class="table-wrap"><table class="log-tbl"><thead><tr><th>日期</th><th>事件</th><th>假设</th><th>变化</th><th>原因</th></tr></thead><tbody>';
+  for (const l of D.hypothesis_log) {
+    h += `<tr><td class="mono" style="white-space:nowrap;color:var(--text3)">${e(l.date)}</td><td>${e(l.event)}</td><td style="color:var(--green-strong)">${e(l.hypothesis)}</td><td class="mono" style="white-space:nowrap">${e(formatLogChange(l))}</td><td style="color:var(--text2)">${e(l.reasoning)}</td></tr>`;
+  }
+  h += '</tbody></table></div></div>';
+}
+if (hasStructuredLogs) {
+  h += '</div><aside class="section-stack">';
+  const lastUpdate = (D.hypothesis_updates||[])[0] || (D.hypothesis_log||[])[0];
+  if (lastUpdate) {
+    h += `<div class="note-card"><div class="note-card-title">最近更新</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><div class="mono" style="color:var(--green-strong);font-size:12px;margin-bottom:8px">${e(lastUpdate.date || '—')}</div>${e(lastUpdate.event || lastUpdate.hypothesis_title || '暂无更新')}</div></div>`;
+  }
+  h += `<div class="note-card"><div class="note-card-title">日志结构</div><div style="font-size:12px;color:var(--text3);line-height:1.8">事件日志 = 发生了什么<br>假设更新流 = 判断怎么变<br>假设版本变更 = 假设定义怎么改</div></div>`;
+  h += '</aside></div>';
+} else {
+  h += '</div>';
+}
+h += '</div>'; // end log
+
+$('app').innerHTML = h;
+document.title = (D.title || '未命名') + ' — Cortex';
+
+</script>
+</body>
+</html>

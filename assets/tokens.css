@@ -1,64 +1,96 @@
-/* ═══════════ CORTEX DESIGN TOKENS v3 ═══════════ */
+/* ═══════════ CORTEX DESIGN TOKENS v4 · LIGHT (Cold White / Editorial) ═══════════ */
 /* 纯变量定义。不含 reset / body / 排版 — 那些在 base.css */
+/* v4 Cold White: 纯白/冷白 surface ladder + hairline border + 单色 indigo-ink accent
+   + 衬线 display（Newsreader）+ 数据 mono。区别于 v3 Archive Paper 的暖米白。
+   语义色全部保证 #fff 底 WCAG AA（4.5:1+）。 */
 
 :root {
-  /* --- Surfaces --- */
-  --bg-0: #08080a;
-  --bg-1: #0f0f12;
-  --bg-2: #16161a;
-  --bg-3: #1e1e23;
-  --bg-hover: #22222a;
-  --bg-soft: #0f0f12;
-  --bg-panel: rgba(15,15,18,0.92);
-  --border: rgba(255,255,255,0.06);
-  --border-hover: rgba(255,255,255,0.12);
-  --border-strong: rgba(255,255,255,0.12);
+  /* --- Surfaces (cold white ladder: canvas #fafafa → panel #fff 浮起一档) --- */
+  --bg-0: #fafafa;          /* canvas，冷白 */
+  --bg-1: #ffffff;          /* panel，纯白浮起 */
+  --bg-2: #f4f4f5;          /* muted/inset 块 */
+  --bg-3: #ebebee;          /* 更深，hover/inset 深一档 */
+  --bg-hover: #f4f4f5;
+  --bg-soft: #ffffff;
+  --bg-panel: #ffffff;
+  --border: rgba(18,20,27,0.09);
+  --border-hover: rgba(18,20,27,0.20);
+  --border-strong: rgba(18,20,27,0.14);
 
-  /* --- Text --- */
-  --text-1: #ededef;
-  --text-2: #a0a0ab;
-  --text-3: #62626b;
-  --text-4: #3e3e45;
+  /* --- Text (cold ink scale) --- */
+  --text-1: #17181c;        /* 主文字，冷墨 */
+  --text-2: #45474f;        /* 副文字 */
+  --text-3: #6b6e78;        /* muted */
+  --text-4: #989ba4;        /* 最弱 — 仅装饰性微元素,真实文字最低用 text-3 */
 
-  /* --- Accent --- */
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-dim: rgba(99,102,241,0.12);
-  --accent-glow: rgba(99,102,241,0.25);
+  /* --- Accent (indigo ink, 单色克制 UI accent · 白底 AA) --- */
+  --accent: #4a4dc0;
+  --accent-light: #5e5fda;
+  --accent-dim: rgba(94,95,218,0.08);
+  --accent-glow: rgba(94,95,218,0.10);
 
-  /* --- Semantic Colors --- */
-  --green: #34d399;
-  --green-dim: rgba(52,211,153,0.10);
-  --green-strong: #7de2a9;
-  --red: #f87171;
-  --red-dim: rgba(248,113,113,0.10);
-  --amber: #fbbf24;
-  --amber-dim: rgba(251,191,36,0.10);
-  --cyan: #22d3ee;
-  --cyan-dim: rgba(34,211,238,0.10);
-  --yellow: #facc15;
-  --yellow-dim: rgba(250,204,21,0.10);
-  --blue: #4d8dff;
-  --orange: #d69552;
-  --purple: #b39bff;
+  /* --- Semantic Colors (white-tuned: 全部提暗保证纯白底 AA 对比度) --- */
+  --green: #047857;
+  --green-dim: rgba(4,120,87,0.08);
+  --green-strong: #04845a;
+  --red: #d31f1f;
+  --red-dim: rgba(211,31,31,0.08);
+  --amber: #b45309;
+  --amber-dim: rgba(180,83,9,0.08);
+  --cyan: #0e7490;
+  --cyan-dim: rgba(14,116,144,0.08);
+  --yellow: #9a5e06;
+  --yellow-dim: rgba(154,94,6,0.08);
+  --blue: #2563eb;
+  --orange: #c2410c;
+  --purple: #6d28d9;
 
-  /* --- Typography --- */
+  /* --- Typography (sans UI + serif display + mono data) --- */
   --font: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-display: 'Newsreader', 'Songti SC', Georgia, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 
+  /* --- Type Scale --- */
+  --fs-caption:  10px;
+  --fs-label:    11px;
+  --fs-body-sm:  12px;
+  --fs-body:     13px;
+  --fs-body-lg:  14px;
+  --fs-card:     16px;
+  --fs-headline: 22px;
+  --fs-display:  36px;
+
   /* --- Spacing / Layout --- */
-  --radius: 12px;
-  --radius-sm: 6px;
-  --radius-xs: 4px;
+  --radius-xs:   3px;
+  --radius-sm:   5px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   10px;
+  --radius-pill: 9999px;
+  --radius:      8px;
   --max-width: 980px;
   --max-width-wide: 1280px;
 
-  /* --- Elevation --- */
-  --shadow: 0 22px 48px rgba(0,0,0,.34);
-  --shadow-sm: 0 12px 28px rgba(0,0,0,.24);
+  /* --- Elevation (hairline first, shadow 极轻: 白底 max alpha ≈ 0.06) --- */
+  --shadow: 0 2px 8px rgba(18,20,27,0.05);
+  --shadow-sm: 0 1px 2px rgba(18,20,27,0.04);
 
-  /* ═══ Transition Aliases ═══ */
-  /* 旧 dashboard 变量名 → v3 变量名。Phase 6 删除。 */
+  /* --- Glass deprecated; solid white 替代 (panel = white, km-item = inset) --- */
+  --glass-panel:    #ffffff;          /* = panel */
+  --glass-card:     #f7f7f8;          /* km-item inset (panel 内下沉一档) */
+  --glass-soft:     #f4f4f5;
+  --glass-blur:     0px;
+  --glass-blur-sm:  0px;
+  --glass-border:   rgba(18,20,27,0.09);
+  --glow-accent-line: rgba(94,95,218,0.22);
+
+  /* --- Motion --- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+
+  /* ═══ Transition Aliases (legacy) ═══ */
   --bg: var(--bg-0);
   --bg2: var(--bg-1);
   --bg3: var(--bg-2);
@@ -73,5 +105,4 @@
   --white: #fff;
 }
 
-/* Dashboard scope override removed in v2. All pages now share :root tokens.
-   Green is semantic-only (status dots, badges, positive signals). */
+/* All pages share :root tokens. Sentinel module 内部保留自己的语义色映射（protected）。 */

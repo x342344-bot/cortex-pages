@@ -6,7 +6,7 @@
 <title>仓库 — Cortex</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./assets/tokens.css">
 <link rel="stylesheet" href="./assets/base.css">
 <link rel="stylesheet" href="./assets/components.css">
@@ -18,9 +18,10 @@
   padding: 72px 32px 16px;
 }
 .page-header h1 {
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--text-1);
   margin-bottom: 8px;
 }
@@ -56,7 +57,7 @@
 }
 @media (max-width: 768px) {
   .page-header { padding: 48px 20px 12px; }
-  .page-header h1 { font-size: 24px; }
+  .page-header h1 { font-size: 30px; }
   .universe-section { padding: 16px 20px 32px; }
   .river-legend { flex-direction: column; gap: 6px; }
 }
@@ -92,8 +93,17 @@
 
 <div class="universe-section"><h2>赛道</h2>
 <div class="card-grid grid-2">
+<a class="card" href="./universe/sector/crypto-rwa.html">
+        <div class="card-tags"><span class="tag tag-sector">赛道报告</span></div>
+        <div class="card-title">CRYPTO-RWA</div>
+        <div class="card-desc">把传统资产（国债/信贷/股票/衍生品）换轨道上链的赛道——alpha 在权利档位，不在资产类</div>
+        <div class="card-meta">
+          <span>6 Riverbank · 9 River · 12 Fork</span>
+          <span>2026-06-18</span>
+        </div>
+      </a>
 <a class="card" href="./universe/sector/global-payments.html">
-        <div class="card-tags"><span class="tag tag-sector">赛道报告</span> <span class="tag tag-rating">B+</span></div>
+        <div class="card-tags"><span class="tag tag-sector">赛道报告</span></div>
         <div class="card-title">全球支付</div>
         <div class="card-desc">**价值转移的信任基础设施**——利润沉淀在规则制定+争议解决层，三轨并行（卡/A2A/稳定币）提供分层下注机会</div>
         <div class="card-meta">
@@ -101,8 +111,17 @@
           <span>2026-04-25</span>
         </div>
       </a>
+<a class="card" href="./universe/sector/memory-storage.html">
+        <div class="card-tags"><span class="tag tag-sector">赛道报告</span></div>
+        <div class="card-title">MEMORY-STORAGE 赛道研究</div>
+        <div class="card-desc">**AI 把存储从&#x27;成本中心&#x27;反转为&#x27;算力的物理速率瓶颈&#x27;**——HBM 物理硬约束 + 三巨头自律 capex + EAR 隔离让上游 IDM 议价权从&#x27;被周期摆弄&#x27;变成&#x27;卡 hyperscaler 脖子&#x27;，赛道进入 **AI Memory Supercycle** (2024-2027)。</div>
+        <div class="card-meta">
+          <span>5 Riverbank · 13 River · 15 Fork</span>
+          <span>2026-05-11</span>
+        </div>
+      </a>
 <a class="card" href="./universe/sector/space-economy.html">
-        <div class="card-tags"><span class="tag tag-sector">赛道报告</span> <span class="tag tag-rating">B</span></div>
+        <div class="card-tags"><span class="tag tag-sector">赛道报告</span></div>
         <div class="card-title">太空经济 (Space Economy)</div>
         <div class="card-desc">**物理层垄断租金 + 政府合同锁定 + 网络效应溢价**，6 层结构中 **L4 国防太空**是风险调整后最优层</div>
         <div class="card-meta">
@@ -112,6 +131,18 @@
       </a>
 </div></div>
 
+<div class="universe-section"><h2>标的</h2>
+<div class="card-grid grid-1">
+<a class="card" href="./universe/crypto/syrup.html">
+        <span class="tag tag-asset">标的</span>
+        <div class="card-title">SYRUP</div>
+        <div class="card-desc">L2 私募信贷层龙头（distributed 23.4%）+ 唯一卡住④underwriting 权利 + 真实 25% 收入回购的 RWA token，但真实 protocol revenue 口径下定价公允非低估</div>
+        <div class="card-meta">
+          <span>crypto-rwa</span>
+          <span>0 个关联假设</span>
+        </div>
+      </a>
+</div></div>
 
 
 

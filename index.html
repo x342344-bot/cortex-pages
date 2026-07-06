@@ -6,7 +6,7 @@
 <title>Cortex — 投研认知中枢</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./assets/tokens.css">
 <link rel="stylesheet" href="./assets/base.css">
 <link rel="stylesheet" href="./assets/components.css">
@@ -16,17 +16,7 @@
   position: relative;
   overflow: hidden;
 }
-.hero-wrap::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 600px;
-  background: radial-gradient(ellipse, var(--accent-glow) 0%, rgba(167,139,250,0.08) 40%, transparent 70%);
-  pointer-events: none;
-}
+.hero-wrap::before { display: none; }
 .hero {
   position: relative;
   max-width: var(--max-width-wide);
@@ -34,39 +24,28 @@
   padding: 80px 32px 56px;
 }
 .hero-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  display: inline-block;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--accent-light);
-  margin-bottom: 24px;
-}
-.hero-label::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  box-shadow: 0 0 8px var(--accent-glow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 20px;
 }
 .hero h1 {
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  margin-bottom: 16px;
-  background: linear-gradient(180deg, var(--text-1) 0%, var(--text-2) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-display);
+  font-size: 60px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.06;
+  margin-bottom: 18px;
+  color: var(--text-1);
 }
 .hero-desc {
   font-size: 16px;
   color: var(--text-2);
-  max-width: 480px;
-  line-height: 1.7;
+  max-width: 520px;
+  line-height: 1.75;
 }
 
 /* Four Layers */
@@ -84,7 +63,7 @@
   right: 40px;
   height: 1px;
   background: linear-gradient(90deg, var(--cyan), var(--accent-light), var(--amber), var(--green));
-  opacity: 0.25;
+  opacity: 0.18;
 }
 .layer {
   display: flex;
@@ -142,14 +121,14 @@
 .layer-tools {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--text-4);
+  color: var(--text-3);
   letter-spacing: 0.01em;
   line-height: 1.7;
   margin-top: auto;
 }
 @media (max-width: 768px) {
   .hero { padding: 56px 20px 40px; }
-  .hero h1 { font-size: 32px; }
+  .hero h1 { font-size: 38px; }
   .layers {
     grid-template-columns: 1fr 1fr;
     gap: 24px;
@@ -158,7 +137,7 @@
   .layer-arrow { display: none; }
 }
 @media (max-width: 480px) {
-  .hero h1 { font-size: 28px; }
+  .hero h1 { font-size: 32px; }
   .layers { grid-template-columns: 1fr; }
 }
 </style>
@@ -202,7 +181,7 @@
   <div class="layers">
     <div class="layer">
       <div class="layer-dot-wrap">
-        <div class="layer-dot" style="background: var(--cyan); box-shadow: 0 0 12px var(--cyan-dim)"></div>
+        <div class="layer-dot" style="background: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-dim)"></div>
         <span class="layer-arrow">&rarr;</span>
       </div>
       <div class="layer-content">
@@ -215,7 +194,7 @@
 
     <div class="layer">
       <div class="layer-dot-wrap">
-        <div class="layer-dot" style="background: var(--accent-light); box-shadow: 0 0 12px var(--accent-dim)"></div>
+        <div class="layer-dot" style="background: var(--accent-light); box-shadow: 0 0 0 3px var(--accent-dim)"></div>
         <span class="layer-arrow">&rarr;</span>
       </div>
       <div class="layer-content">
@@ -228,7 +207,7 @@
 
     <div class="layer">
       <div class="layer-dot-wrap">
-        <div class="layer-dot layer-dot-human" style="background: var(--amber); box-shadow: 0 0 12px var(--amber-dim)"></div>
+        <div class="layer-dot layer-dot-human" style="background: var(--amber); box-shadow: 0 0 0 3px var(--amber-dim)"></div>
         <span class="layer-arrow">&rarr;</span>
       </div>
       <div class="layer-content">
@@ -241,7 +220,7 @@
 
     <div class="layer">
       <div class="layer-dot-wrap">
-        <div class="layer-dot" style="background: var(--green); box-shadow: 0 0 12px var(--green-dim)"></div>
+        <div class="layer-dot" style="background: var(--green); box-shadow: 0 0 0 3px var(--green-dim)"></div>
       </div>
       <div class="layer-content">
         <div class="layer-name" style="color: var(--green)">追踪层</div>

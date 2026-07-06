@@ -16,8 +16,8 @@ function e(s) {
 /* --- Markdown-lite: **bold**, `code`, [link](url) --- */
 function md(s) {
   let h = e(s);
-  h = h.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fff;font-weight:600">$1</strong>');
-  h = h.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;font-size:0.92em">$1</code>');
+  h = h.replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text-1);font-weight:700">$1</strong>');
+  h = h.replace(/`([^`]+)`/g, '<code style="background:var(--bg-2);color:var(--text-1);padding:1px 5px;border-radius:3px;font-size:0.92em;font-family:var(--font-mono)">$1</code>');
   h = h.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   return h;
 }
