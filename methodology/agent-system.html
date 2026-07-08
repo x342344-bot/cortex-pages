@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent 系统 — Cortex</title>
+<title>Agent 系统 — 成为更好的自己 — Cortex</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet">
@@ -508,7 +508,7 @@
 <section class="page-hero">
   <div class="container">
     <div class="hero-breadcrumb"><a href="../index.html">首页</a> / <a href="../methodology/index.html">方法论</a></div>
-    <h1>Agent 系统</h1>
+    <h1>Agent 系统 — 成为更好的自己</h1>
     <p class="page-subtitle">如何用 Claude Code + 自建 Agent 体系构建 24/7 投研认知中枢。</p>
   </div>
 </section>
@@ -517,20 +517,116 @@
 <div class="page-layout">
   <article class="page-content">
     <div class="md-body">
+<blockquote>
+<p>全文回答四个问题：分身是什么（命题 + 能力模型）→ 怎么让它可信（闭环 + 三路验证）→ 认知怎么沉淀（记忆架构）→ 边界在哪（建什么，不建什么）。日常操作规则收在末尾的协作守则，持续追加。</p>
+</blockquote>
+<hr />
 <h2>核心命题：数字分身 vs 工具</h2>
 <p>大多数人把 AI 当工具用——"帮我查个数据"、"帮我写段代码"。这浪费了 90% 的价值。</p>
 <p>Agent 的正确定位是<strong>数字分身</strong>：模仿你的思维方式，放大你的能力边界，观察你的盲点，在该反对时反对。工具等你发号施令；分身替你思考、替你盯盘、替你发现你没注意到的东西。</p>
 <p>区别不在技术实现，在<strong>设计意图</strong>。同样一个 prompt，写成"你是一个投研助手"和"你是我的数字分身，用我的投资哲学来思考"，产出完全不同。</p>
+<p>分身的终点也不是"像我"——只会复制我的分身，会把我的盲点和坏习惯一起复制。真正的目标是 <strong>Better Me</strong>：比我多看一层（我陷入 confirmation bias 时它没有）、比我记得全（每次判断都调得出完整历史）、比我敢说（该反对时不讨好）。</p>
 <h2>四层能力模型</h2>
 <p>按价值递增排列：</p>
 <ul>
 <li><strong>模仿</strong> — 用我的框架分析问题（赔率&gt;胜率、贝叶斯更新、第一性原理），用我的标准输出（结论置顶、有框架、可操作）。这是基础层，没有这层其他都是空的</li>
-<li><strong>放大</strong> — 做我做不到的事：24/7 监控、多线程并行研究、秒级检索、完整记忆。纯算力优势，但已经是巨大的杠杆</li>
+<li><strong>放大</strong> — 做我做不到的事：24/7 监控、多线程并行研究、秒级检索、完整记忆、从任务板自己领活（见协作守则）。纯算力优势，但已经是巨大的杠杆</li>
 <li><strong>观察</strong> — 发现我看不到的：思维盲点（confirmation bias、循环论证）、工作流低效、系统异常。这需要 Agent 真正理解我的模式，才能识别偏离</li>
 <li><strong>挑战</strong> — 该反对就反对。投研报告附反向论证，重大判断质疑假设。<strong>关心结果比讨好重要</strong> — 这是最难设计但最有价值的一层</li>
 </ul>
-<p>大部分 Agent 系统只做到前两层。后两层才是分身和工具的分水岭。</p>
-<h2>任务路由：什么时候 spawn，什么时候自己做</h2>
+<p>大部分 Agent 系统只做到前两层。后两层才是分身和工具的分水岭——而观察和挑战不能靠自觉，要靠机制。下面两节就是机制。</p>
+<hr />
+<h2>从 Pipeline 到控制论闭环</h2>
+<p>早期设计全是开环 pipeline：抓数据 → 分析 → 输出报告，跑完就完了。问题是：输出对不对？质量在变好还是变差？没人知道。</p>
+<p>正确的架构是控制论闭环：</p>
+<pre><code>目标函数 → 传感器（采集执行数据）→ 比较器（actual vs target）
+    → 控制器（生成优化提案）→ 执行器（改 prompt/参数）→ 反馈
+</code></pre>
+<p>闭环的第一要素是<strong>目标函数</strong>。投研 Agent 的目标不是"写出高质量报告"，是让真实决策变好，可衡量：</p>
+<ul>
+<li>是否提前发现重要主题</li>
+<li>是否减少无效研究</li>
+<li>是否提高 thesis 更新速度</li>
+<li>是否提高高 conviction 机会的捕捉率</li>
+<li>是否减少"研究很多但没动作"</li>
+</ul>
+<p>没有目标函数，比较器无从比较，闭环只是画在纸上。</p>
+<p>具体落地：</p>
+<ul>
+<li><strong>投研报告</strong>：初稿完成后 spawn 独立 agent 做对抗审查，修正后才交付</li>
+<li><strong>假设系统</strong>：置信度是数学算的（加权拐点分数），不是 AI 拍脑袋。每个拐点有 weight + score_status，假设置信度 = Σ(weight × 分值)</li>
+<li><strong>Agent 自迭代</strong>：采集每次执行的质量数据，和目标对比，生成 prompt 优化提案，人确认后执行</li>
+</ul>
+<p>关键原则：<strong>人在回路</strong>。闭环的"执行器"必须等人确认，不 auto-apply。AI 可以建议，不能替你决策。</p>
+<h2>三路验证</h2>
+<p>闭环要转得起来，先得有可靠的输入。所有重要输出经过三路交叉验证：</p>
+<ul>
+<li><strong>环境反馈</strong> — 外部信号（健康检查、监控告警、用户反馈）告诉你系统是否正常运行</li>
+<li><strong>执行错误</strong> — 关键路径有 fallback + 自愈机制，单点依赖 = 灾难</li>
+<li><strong>自我验证</strong> — 最容易偷懒也最重要的一路。挑刺已进化成<strong>多轮对抗 loop</strong>：challenge agent 打最脆弱的 2-3 个点 → 主 session 修正或 defend → 下一轮打修正后暴露的新矛盾 → 直到收敛出结构化评分。一次性挑战只能扫出表面漏洞，嵌套假设和隐含矛盾要靠多轮逼出来。此外：关键数字交叉验证；重大判断附反向论证（"如果我错了，最可能因为…"）<ul>
+<li>实证教训：真漏洞往往在<strong>两套机制的交叉处</strong> — 单项测试全过、静态审查无 finding 不代表安全，要用端到端 + 质疑视角再走一遍</li>
+</ul>
+</li>
+</ul>
+<p>多 agent 对抗有个天然限制：challenge agent 和主 session 是同一个模型、看同样的材料，"独立视角"有一部分是设计出来的幻觉。所以对抗只是逼出隐含假设的手段，<strong>真正的验证必须锚到外部证据</strong>——原始数据、市场价格、公告财报，不能停在 agent 互相说服。</p>
+<hr />
+<h2>记忆架构</h2>
+<p>闭环和验证管质量，记忆管沉淀。AI 对话的根本问题：<strong>对话会消失，但认知必须沉淀。</strong></p>
+<p>两层记忆 + 一个知识库解决这个问题。记忆是第一人称的——我经历了什么、学到了什么；知识库是对象化的——世界是什么样：</p>
+<ul>
+<li><strong>Daily notes</strong>（<code>0-journal/</code>）— 发生了什么，每天写，流水账</li>
+<li><strong>Long-term memory</strong>（自动加载）— 精炼的事实和教训，跨 session 持久化。Daily notes 蒸馏而来</li>
+<li><strong>Knowledge base</strong>（<code>3-universe/</code>）— 结构化的标的/赛道/方法论知识，由研究流程沉淀，不走记忆管道</li>
+</ul>
+<p>Daily notes 的记录流程（当前实践）：</p>
+<ol>
+<li>
+<p><strong>实时自治记录</strong> — agent 主动判断什么值得记，不等指令：决定、偏好、人物、日程、项目进展、新的思维模式进 daily notes；一次性问答、调试过程、纯闲聊不进</p>
+</li>
+<li>
+<p><strong>兜底提取</strong> — session 上下文压缩时由 hook 自动提取对话要点补记，防止长对话丢内容。但这只是保险，重要内容仍然实时记——短 session 不触发压缩，依赖兜底就等于丢</p>
+</li>
+<li>
+<p><strong>账本纪律</strong> — append-only，按事件<strong>实际发生日</strong>归档，不按记录当天；修改历史条目必须显式说明并经人确认</p>
+</li>
+<li>
+<p><strong>周度蒸馏</strong> — 每周定时任务通读一周 daily notes，提炼值得进长期记忆的内容，输出建议，人确认后才写入核心记忆文件</p>
+</li>
+</ol>
+<p>Daily notes 是唯一记录入口，长期记忆只从这里蒸馏——不存在绕过日记直接写长期记忆的路径。</p>
+<p>存哪之外还要管<strong>什么有资格进</strong>。记忆是判断的先验——错误结论一旦自动沉淀，偏见会跟着每次调用复利。写入规则：只有经过验证或复盘、来源明确、未来可复用的内容才进长期记忆；未验证的假设标注状态，过期事实定期清理。</p>
+<p>写下来 &gt; 记心里。只存在对话里的信息 = 不存在。</p>
+<p>知识库还有一条升级路径：<strong>研究资产化</strong>。报告是一次性快照，写完就开始过期；把研究产物做成资产——知识页、tracker、dashboard、监控项——接上数据源和监控后它持续更新，研究寿命从"发布那天"延长到"逻辑失效那天"。一个成熟的研究流程收尾不是交报告，是交一套能自己活着的资产：研究 → 表达 → 监控 → 资产化。</p>
+<hr />
+<h2>建什么，不建什么</h2>
+<p>同一个问题的三个刻度：生死线问"这个模块该不该活"，OS 层问"什么能力值得长期投"，红线问"怎么建才不被锁死"。</p>
+<h3>模块生死线</h3>
+<p>闭环回答的是"怎么把一个 agent 做好"，系统层面还缺一个更上游的比较器：<strong>这个模块该不该活</strong>。每个模块定期过四问：</p>
+<ul>
+<li>是否直接提升投研结果？</li>
+<li>是否减少重复劳动？</li>
+<li>是否形成迁移后仍保留的资产？</li>
+<li>是否值得长期维护？</li>
+</ul>
+<p>答不上来就不扩。"看起来有用"不等于"会被用"——说不出具体使用场景的功能，上线之日就是废弃之始。系统建设最大的坑：工具越来越帅，决策质量的复利没跟上。</p>
+<h3>押注 OS 层，不押注编排层</h3>
+<p>Agent 系统里的能力分两层，模型每次升级都在重新划分它们的价值：</p>
+<ul>
+<li><strong>OS 层</strong> — session 管理、任务系统、记忆分层、路由、监控、review 机制、知识沉淀。这些是围绕模型的基础设施，模型越强它们越值钱</li>
+<li><strong>编排层</strong> — prompt 技巧、多步编排、为绕过模型短板做的 workaround。模型升级会直接抹平这些</li>
+</ul>
+<p>判断投入方向的两个问题：迁移优先问"换平台还带得走吗"，这条问"<strong>模型升级后还剩什么</strong>"。长期只押注两个问题都答得上来的东西。</p>
+<h3>设计红线</h3>
+<ul>
+<li><strong>迁移优先</strong> — 每做一件事先问：明天换平台，能带走吗？记忆文件、方法论、Agent 设计模式 = 带得走。平台特定调度 = 框架依赖</li>
+<li><strong>独立可运行</strong> — 每个模块能脱离平台独立跑</li>
+<li><strong>纯文本优先</strong> — 记忆、文档、Agent spec 都用 Markdown，不绑格式</li>
+<li><strong>一个信息一个地方</strong> — 重复维护 = 迟早不一致</li>
+</ul>
+<hr />
+<h2>协作守则：什么时候做什么</h2>
+<p><em>操作层的判断规则都收在这里，持续追加。</em></p>
+<h3>什么时候 spawn，什么时候自己做</h3>
 <p>默认主 session 自己做。spawn sub-agent 只有三个理由：</p>
 <ol>
 <li>
@@ -545,41 +641,22 @@
 </ol>
 <p>不 spawn 的情况：一个 read 能解决的小问题、边界模糊说不清目标的任务、强依赖当前对话上下文的连续推理。</p>
 <p><strong>Spawn 合同</strong>是关键设计：每个 sub-agent 启动时必须写清输入、输出、禁止列表（不能删什么、不能改什么）。没有合同的 spawn = 定时炸弹。</p>
-<h2>从 Pipeline 到控制论闭环</h2>
-<p>早期设计全是开环 pipeline：抓数据 → 分析 → 输出报告，跑完就完了。问题是：输出对不对？质量在变好还是变差？没人知道。</p>
-<p>正确的架构是控制论闭环：</p>
-<pre><code>目标函数 → 传感器（采集执行数据）→ 比较器（actual vs target）
-    → 控制器（生成优化提案）→ 执行器（改 prompt/参数）→ 反馈
-</code></pre>
-<p>具体落地：</p>
+<p>Spawn 是对话内的派活方式，成熟形态还有第二条触发路径：<strong>任务板</strong> — 任务拆成带状态机的执行节点（就绪 → 进行中 → 待审 → 完成），调度器周期扫板，把就绪的节点自动派给 agent。分身从"被叫才动"进化到"自己领活"，人只在定义任务和验收时出现。</p>
+<h3>什么时候对抗验证</h3>
 <ul>
-<li><strong>投研报告</strong>：初稿完成后 spawn 独立 agent 做对抗审查，修正后才交付</li>
-<li><strong>假设系统</strong>：置信度是数学算的（加权拐点分数），不是 AI 拍脑袋。每个拐点有 weight + score_status，假设置信度 = Σ(weight × 分值)</li>
-<li><strong>Agent 自迭代</strong>：采集每次执行的质量数据，和目标对比，生成 prompt 优化提案，人确认后执行</li>
+<li>投研报告必须过验证 agent 挑刺后才交付；日常问答不需要</li>
+<li>重大投资决策、高 conviction 判断、估值 → 上多轮对抗 loop（见三路验证）</li>
+<li>数据推算：显式写出推算过程、标注假设，关键数字交叉验证</li>
 </ul>
-<p>关键原则：<strong>人在回路</strong>。闭环的"执行器"必须等人确认，不 auto-apply。AI 可以建议，不能替你决策。</p>
-<h2>三路验证</h2>
-<p>所有重要输出经过三路交叉验证：</p>
+<h3>什么时候等人确认</h3>
 <ul>
-<li><strong>环境反馈</strong> — 外部信号（健康检查、监控告警、用户反馈）告诉你系统是否正常运行</li>
-<li><strong>执行错误</strong> — 关键路径有 fallback + 自愈机制，单点依赖 = 灾难</li>
-<li><strong>自我验证</strong> — 最容易偷懒也最重要的一路。投研报告 spawn verification agent 挑刺；关键数字交叉验证；重大判断附反向论证（"如果我错了，最可能因为…"）</li>
+<li>判断标准是<strong>可逆性</strong>：可逆的小事先做再汇报，不可逆操作和大方案先说方案等确认</li>
+<li>auto-apply 类动作（改 prompt、动假设置信度、增删长期任务）一律人确认</li>
 </ul>
-<h2>记忆架构</h2>
-<p>AI 对话的根本问题：<strong>对话会消失，但认知必须沉淀。</strong></p>
-<p>三层记忆解决这个问题：</p>
+<h3>什么时候推送</h3>
 <ul>
-<li><strong>Daily notes</strong>（<code>0-journal/</code>）— 发生了什么，每天写，流水账</li>
-<li><strong>Long-term memory</strong>（自动加载）— 精炼的事实和教训，跨 session 持久化</li>
-<li><strong>Knowledge base</strong>（<code>3-universe/</code>）— 结构化的标的/赛道/方法论知识</li>
-</ul>
-<p>写下来 &gt; 记心里。只存在对话里的信息 = 不存在。</p>
-<h2>设计红线</h2>
-<ul>
-<li><strong>迁移优先</strong> — 每做一件事先问：明天换平台，能带走吗？记忆文件、方法论、Agent 设计模式 = 带得走。平台特定调度 = 框架依赖</li>
-<li><strong>独立可运行</strong> — 每个模块能脱离平台独立跑</li>
-<li><strong>纯文本优先</strong> — 记忆、文档、Agent spec 都用 Markdown，不绑格式</li>
-<li><strong>一个信息一个地方</strong> — 重复维护 = 迟早不一致</li>
+<li>默认静默：只有"有价值的新信息"才推送；进度、调试、"无需处理"走日志</li>
+<li>推送噪音是信任杀手——告警泛滥之后，真告警也没人看</li>
 </ul>
     </div>
   </article>

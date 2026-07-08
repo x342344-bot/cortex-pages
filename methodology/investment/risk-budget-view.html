@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仓位管理 · 风险归一化计算 — Cortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+/* ═══════════ PAGE: RISK BUDGET VIEW ═══════════ */
+.wrap { max-width: var(--max-width); margin: 0 auto; padding: 64px 32px 64px; }
+
+/* Hero */
+.hero-breadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+}
+.hero-breadcrumb a { color: var(--text-3); text-decoration: none; }
+.hero-breadcrumb a:hover { color: var(--text-1); }
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+h1 {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  margin-bottom: 20px;
+  color: var(--text-1);
+}
+h1 em { font-style: normal; color: var(--red); }
+.lede {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.75;
+  max-width: 720px;
+  margin-bottom: 48px;
+}
+.lede b { color: var(--text-1); font-weight: 700; }
+.lede .hot { color: var(--red); font-weight: 700; }
+
+/* Section heading */
+h2 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 56px 0 8px;
+}
+h2 .step {
+  display: inline-block;
+  width: 22px; height: 22px;
+  line-height: 22px;
+  text-align: center;
+  background: var(--red);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.h2-sub { font-size: 13px; color: var(--text-3); margin-bottom: 20px; line-height: 1.6; }
+.h2-sub b { color: var(--text-1); }
+
+/* Formula card */
+.formula-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 44px 32px 32px;
+  text-align: center;
+}
+.formula-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
+  font-family: var(--font-mono);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.formula-block { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.formula-block .label,
+.formula-block .var {
+  font-size: 30px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  line-height: 1;
+}
+.formula-block .label {
+  color: var(--red);
+  background: var(--red-dim);
+  border: 1px solid rgba(211,31,31,0.25);
+}
+.formula-block .var {
+  color: var(--text-1);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+}
+.formula-block .cap {
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: var(--font-sans, Inter);
+  font-weight: 700;
+}
+.formula-op {
+  font-size: 26px;
+  color: var(--text-4);
+  font-weight: 400;
+  padding: 12px 0;
+  font-family: var(--font-mono);
+}
+.formula-divider { height: 1px; background: var(--border); margin: 28px auto 24px; max-width: 520px; }
+.formula-note { list-style: none; padding: 0; margin: 0 auto; max-width: 640px; text-align: left; }
+.formula-note li {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  padding: 6px 0 6px 22px;
+  position: relative;
+}
+.formula-note li::before {
+  content: '';
+  position: absolute;
+  left: 6px; top: 14px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.formula-note li b { color: var(--text-1); font-weight: 700; }
+.formula-note li .key { color: var(--red); font-weight: 700; }
+
+/* Calc table */
+.calc {
+  background: var(--bg-1);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.legend-bar {
+  display: flex;
+  gap: 24px;
+  padding: 14px 28px;
+  background: var(--bg-2);
+  font-size: 12px;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.legend-bar .swatch {
+  display: inline-block;
+  width: 14px; height: 10px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.legend-bar .sw-risk { background: linear-gradient(90deg, #d31f1f, #a01818); }
+.legend-bar .sw-cushion { background: #b9cbdc; }
+.legend-bar .scale { margin-left: auto; font-family: var(--font-mono); color: var(--text-4); font-size: 11px; }
+
+.row {
+  display: grid;
+  grid-template-columns: 220px 1fr 200px;
+  gap: 20px;
+  align-items: center;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+}
+.row.row-header { padding: 12px 28px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+.row.row-header > div {
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.row.row-header .row-math {
+  color: var(--text-3);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+.row.row-header .row-math .result { color: var(--red); }
+.row:last-child { border-bottom: none; }
+.row-name { font-size: 14px; color: var(--text-1); font-weight: 500; }
+.row-name small { display: block; font-size: 11px; color: var(--text-3); margin-top: 3px; font-weight: 400; }
+.row-name .cat {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-3);
+  margin-right: 6px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.row-track {
+  position: relative;
+  background: var(--bg-2);
+  height: 26px;
+  border-radius: 3px;
+  overflow: visible;
+}
+.nominal {
+  position: relative;
+  height: 100%;
+  background: #b9cbdc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.nominal.zero { background: transparent; border: 1px dashed #b9cbdc; border-radius: 3px; }
+.risk {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, #d31f1f 0%, #a01818 100%);
+  border-radius: 3px 0 0 3px;
+}
+/* Budget tier markers — 风险预算光谱(因人而异) */
+.budget-tier {
+  position: absolute;
+  top: -6px; bottom: -6px;
+  width: 0;
+  border-left: 1px dashed rgba(211,31,31,0.5);
+  z-index: 2;
+}
+.budget-tier::after {
+  position: absolute;
+  top: -22px; left: 4px;
+  font-size: 9px;
+  color: rgba(211,31,31,0.8);
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.budget-tier.t-cons { left: 18%; }
+.budget-tier.t-cons::after { content: '保守 ~18%'; top: -34px; }
+.budget-tier.t-bal  { left: 30%; border-left-style: solid; border-left-color: var(--red); }
+.budget-tier.t-bal::after { content: '均衡 ~30%'; color: var(--red); }
+.budget-tier.t-agg  { left: 50%; }
+.budget-tier.t-agg::after { content: '激进 ~50%'; top: -34px; }
+
+.row-math {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-3);
+}
+.row-math .mul { color: var(--text-4); margin: 0 4px; }
+.row-math .eq { color: var(--text-4); margin: 0 6px; }
+.row-math .result { color: var(--red); font-weight: 700; }
+
+.row.total {
+  background: var(--bg-2);
+  border-top: 2px solid var(--red);
+  padding: 50px 28px 22px;
+}
+.row.total .row-name { font-weight: 700; font-size: 15px; }
+.row.total .row-track { height: 36px; background: var(--bg-3); }
+.row.total .row-math { font-size: 14px; }
+.row.total .row-math .result { font-size: 17px; }
+
+.calc-note { font-size: 12px; color: var(--text-3); margin-top: 14px; line-height: 1.7; }
+.calc-note b { color: var(--text-1); }
+
+/* Side-by-side configs */
+.configs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.config-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+.config-card.danger { border-color: rgba(211,31,31,0.35); box-shadow: 0 0 0 1px rgba(211,31,31,0.08) inset; }
+.config-title { font-size: 14px; font-weight: 700; color: var(--text-1); margin-bottom: 4px; letter-spacing: -0.01em; }
+.config-subtitle { font-size: 11px; color: var(--text-3); margin-bottom: 18px; letter-spacing: 0.04em; }
+
+.config-section-label {
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.config-bar {
+  display: flex;
+  height: 38px;
+  border-radius: 3px;
+  overflow: visible;
+  margin-bottom: 14px;
+}
+.config-bar .seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.1;
+  overflow: visible;
+  padding: 0 2px;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+.config-bar .seg:first-child { border-radius: 3px 0 0 3px; }
+.config-bar .seg:last-child { border-radius: 0 3px 3px 0; }
+/* 极窄段:数字外移到右侧空白处 */
+.config-bar .seg.tiny { font-size: 0; z-index: 2; }
+.config-bar .seg.tiny::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 50%; left: 100%;
+  transform: translateY(-50%);
+  padding-left: 4px;
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.config-bar .empty {
+  background: repeating-linear-gradient(45deg, var(--bg-2), var(--bg-2) 5px, var(--bg-3) 5px, var(--bg-3) 10px);
+  color: var(--text-3);
+}
+.config-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.config-total-label { font-size: 12px; color: var(--text-3); }
+.config-total-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--green);
+}
+.config-card.danger .config-total-value { color: var(--red); }
+.config-detail { font-size: 11px; color: var(--text-3); margin-top: 6px; line-height: 1.5; font-family: var(--font-mono); }
+.config-note { font-size: 10px; color: var(--text-3); margin-top: 6px; line-height: 1.5; }
+.config-note b { color: var(--text-2); }
+.bar-axis {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 10px;
+  color: var(--text-4);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+.bar-axis .end { color: var(--text-3); }
+
+/* Color palette - asset class semantics */
+.c-cash    { background: #3d5a70; }   /* 现金/债 */
+.c-arb     { background: #33768a; }   /* 套利 */
+.c-value   { background: #5a5fa3; }   /* 价值股 */
+.c-index   { background: #35855c; }   /* 大盘指数 */
+.c-gold    { background: #a87c2f; }   /* 黄金/大宗 */
+.c-eth     { background: #bd8527; }   /* 蓝筹crypto */
+.c-growth  { background: #c15a2b; }   /* 高beta成长 */
+.c-alt     { background: #b03e2f; }   /* alt/中市值 */
+.c-mine    { background: #96343f; }   /* 一级/VC */
+.c-opt     { background: #822a44; }   /* 期权/杠杆 */
+
+/* Punch */
+.punch {
+  background: var(--red-dim);
+  border-left: 4px solid var(--red);
+  padding: 28px 32px;
+  border-radius: 4px;
+  margin: 32px 0;
+}
+.punch p { font-size: 18px; font-weight: 600; line-height: 1.6; color: var(--text-1); }
+.punch .red { color: var(--red); }
+.punch .dim { color: var(--text-3); font-weight: 400; }
+
+/* Takeaways */
+.takeaways { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.tk {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+}
+.tk-num { font-size: 11px; color: var(--red); font-weight: 700; letter-spacing: 0.14em; margin-bottom: 10px; }
+.tk-title { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 8px; line-height: 1.35; }
+.tk-body { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.tk-body b { color: var(--text-1); }
+.tk-body code {
+  font-family: var(--font-mono);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--amber);
+  font-size: 12px;
+}
+
+.page-footnote {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-4);
+  text-align: center;
+}
+
+@media (max-width: 880px) {
+  .wrap { padding: 48px 18px 48px; }
+  h1 { font-size: 30px; }
+  .lede { font-size: 15px; }
+  .row { grid-template-columns: 130px 1fr 130px; gap: 10px; padding: 12px 14px; }
+  .row-name { font-size: 12px; }
+  .row-math { font-size: 11px; }
+  .configs { grid-template-columns: 1fr; }
+  .takeaways { grid-template-columns: 1fr; }
+  .punch p { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../index.html">
+      <div class="logo-mark">C</div>
+      <span class="logo-text">Cortex</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../../universe.html">仓库</a></li>
+      <li><a href="../../methodology/index.html" class="active">方法论</a></li>
+      <li><a href="../../beliefs.html">信念</a></li>
+      <li><a href="../../faq.html">Q&amp;A</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="hero-breadcrumb"><a href="../index.html">方法论</a> / <a href="./index.html">投资方法论</a> / 仓位管理</div>
+  <div class="eyebrow">仓位管理 · 计算方式</div>
+  <h1><em>风险仓位</em>:<br>决定名义仓位的唯一尺子。</h1>
+  <p class="lede">
+    同样花 1% 总资产 —— 买短期美债极端场景跌 2%,总资产亏 <b>0.02%</b>;买个股期权极端场景归零(跌 100%),总资产亏 <b>1%</b>。<span class="hot">同样的「1% 仓位」,风险仓位差 50 倍。</span>
+    把不同类型资产、不同策略直接加在一起算名义占比 = 完全失效。<br><br>
+    解法:每个仓位乘上它在 <b>99% 置信区间</b>下的最大亏损幅度 <b>D</b>,得到「风险仓位」。任何资产 —— 股、债、crypto、商品、衍生品 —— 都能归到同一把尺子上,可比、可加、可优化。
+  </p>
+
+  <h2><span class="step">1</span>公式</h2>
+  <div class="formula-card">
+    <div class="formula-main">
+      <div class="formula-block">
+        <div class="label">风险仓位</div>
+        <div class="cap">实际承担</div>
+      </div>
+      <div class="formula-op">=</div>
+      <div class="formula-block">
+        <div class="var">名义占比</div>
+        <div class="cap">投入资金</div>
+      </div>
+      <div class="formula-op">&times;</div>
+      <div class="formula-block">
+        <div class="var">D</div>
+        <div class="cap">极端最大亏损</div>
+      </div>
+    </div>
+
+    <div class="formula-divider"></div>
+
+    <ul class="formula-note">
+      <li><b>D</b> = 该资产 / 策略在 <span class="key">99% 置信区间下</span>的最大亏损幅度,即极端场景下的尾部亏损(不是平均回撤)。</li>
+      <li>估算三处取严:<b>历史最深回撤</b> · <b>结构性归零路径</b> · <b>流动性折扣</b>。</li>
+      <li><b>D 因策略风格 / 周期而异</b> —— 同一资产,长期持有 vs 主动止损 vs 高频日内的 D 完全不同。按你自己的策略周期和止损纪律反推,<b>不要照搬别人的 D</b>。</li>
+      <li><b>宁可高估亏损,不要低估</b> —— 风险仓位错估的代价远大于资金效率的损失。</li>
+    </ul>
+  </div>
+
+  <h2><span class="step">2</span>逐项计算 · 跨品类示例组合</h2>
+  <p class="h2-sub">8 类资产混合配置,合计名义 100%。逐行算风险仓位,看合计是否触及你的风险预算上限。每行一个代表标的(实际可换成同类的其他)。</p>
+  <div class="calc">
+    <div class="legend-bar">
+      <span><span class="swatch sw-cushion"></span>名义占比(灰蓝长度)</span>
+      <span><span class="swatch sw-risk"></span>风险仓位(红色长度 = 名义 × D)</span>
+      <span class="scale">横轴刻度 = 0 → 100% 总资产</span>
+    </div>
+
+    <div class="row row-header">
+      <div>资产 / 代表标的</div>
+      <div>风险分布</div>
+      <div class="row-math">名义<span class="mul">×</span>D<span class="eq">=</span><span class="result">风险仓位</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">现金</span>USDT<small>稳定币 / 短债</small></div>
+      <div class="row-track"><div class="nominal zero" style="width: 25%"></div></div>
+      <div class="row-math">25%<span class="mul">×</span>0%<span class="eq">=</span><span class="result">0.0%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">套利</span>资费套利<small>Delta-neutral</small></div>
+      <div class="row-track"><div class="nominal" style="width: 15%"><div class="risk" style="width: 5%"></div></div></div>
+      <div class="row-math">15%<span class="mul">×</span>5%<span class="eq">=</span><span class="result">0.75%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">大宗</span>黄金<small>GLD,历史 -25%</small></div>
+      <div class="row-track"><div class="nominal" style="width: 10%"><div class="risk" style="width: 25%"></div></div></div>
+      <div class="row-math">10%<span class="mul">×</span>25%<span class="eq">=</span><span class="result">2.5%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">价值股</span>BRK<small>防御性蓝筹</small></div>
+      <div class="row-track"><div class="nominal" style="width: 10%"><div class="risk" style="width: 30%"></div></div></div>
+      <div class="row-math">10%<span class="mul">×</span>30%<span class="eq">=</span><span class="result">3.0%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">大盘</span>SPY<small>标普 500 指数</small></div>
+      <div class="row-track"><div class="nominal" style="width: 15%"><div class="risk" style="width: 35%"></div></div></div>
+      <div class="row-math">15%<span class="mul">×</span>35%<span class="eq">=</span><span class="result">5.25%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">成长股</span>TSLA<small>高 beta,主动止损 -50%</small></div>
+      <div class="row-track"><div class="nominal" style="width: 10%"><div class="risk" style="width: 50%"></div></div></div>
+      <div class="row-math">10%<span class="mul">×</span>50%<span class="eq">=</span><span class="result">5.0%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">蓝筹币</span>ETH<small>历史最深 -80%</small></div>
+      <div class="row-track"><div class="nominal" style="width: 10%"><div class="risk" style="width: 75%"></div></div></div>
+      <div class="row-math">10%<span class="mul">×</span>75%<span class="eq">=</span><span class="result">7.5%</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-name"><span class="cat">衍生品</span>个股期权<small>短期 ATM,可归零</small></div>
+      <div class="row-track"><div class="nominal" style="width: 5%"><div class="risk" style="width: 100%"></div></div></div>
+      <div class="row-math">5%<span class="mul">×</span>100%<span class="eq">=</span><span class="result">5.0%</span></div>
+    </div>
+
+    <div class="row total">
+      <div class="row-name">合计<small>名义满配 100% → 风险仓位 29.0%</small></div>
+      <div class="row-track">
+        <div class="nominal" style="width: 100%"><div class="risk" style="width: 29.0%"></div></div>
+        <div class="budget-tier t-cons"></div>
+        <div class="budget-tier t-bal"></div>
+        <div class="budget-tier t-agg"></div>
+      </div>
+      <div class="row-math">100%<span class="eq">→</span><span class="result">29.0%</span></div>
+    </div>
+  </div>
+  <p class="calc-note">
+    该组合合计风险仓位 = <b>29.0%</b>,正好压在「均衡」档(~30%)的边上。<b>三条虚线只是参考刻度,不是规则</b> —— 保守型(退休 / 稳定收入需求)可能压到 ~18% 以下,均衡 ~30%,激进 ~50%+,极端进攻可到 70%+。<b>没有标准答案,只有「该组合是否在你自己定的预算内」</b>。
+  </p>
+
+  <h2><span class="step">3</span>配置对比 · 同名义结构,风险差 2.5 倍</h2>
+  <p class="h2-sub">这是最颠覆直觉的点 —— 两个组合<b>名义结构一模一样</b>(40% 现金 + 30% A + 20% B + 10% C),只是 A/B/C 选了不同资产,风险仓位差 2.5 倍。</p>
+
+  <div class="configs">
+    <div class="config-card">
+      <div class="config-title">组合 A · 防御型</div>
+      <div class="config-subtitle">40% 现金 / 30% 价值股 / 20% SPY / 10% 黄金</div>
+
+      <div class="config-section-label">名义占比 100%</div>
+      <div class="config-bar">
+        <div class="seg c-cash"  style="flex: 40">现金<br>40%</div>
+        <div class="seg c-value" style="flex: 30">价值股<br>30%</div>
+        <div class="seg c-index" style="flex: 20">SPY<br>20%</div>
+        <div class="seg c-gold"  style="flex: 10">黄金<br>10%</div>
+      </div>
+
+      <div class="config-section-label">风险仓位 · 占总资产</div>
+      <div class="config-bar">
+        <div class="seg c-value" style="flex: 9.0">9.0%</div>
+        <div class="seg c-index" style="flex: 7.0">7.0%</div>
+        <div class="seg c-gold tiny" data-label="2.5%" style="flex: 2.5"></div>
+        <div class="seg empty"   style="flex: 81.5">— 剩余 81.5% 是未消耗的安全垫 —</div>
+      </div>
+      <div class="bar-axis"><span class="end">满刻度 = 100% 总资产</span></div>
+
+      <div class="config-total">
+        <span class="config-total-label">合计风险仓位</span>
+        <span class="config-total-value">18.5%</span>
+      </div>
+      <div class="config-detail">30% × 30 + 20% × 35 + 10% × 25 = 18.5%</div>
+    </div>
+
+    <div class="config-card danger">
+      <div class="config-title">组合 B · 进攻型</div>
+      <div class="config-subtitle">40% 现金 / 30% 成长股 / 20% Crypto 中市值 / 10% 期权</div>
+
+      <div class="config-section-label">名义占比 100%</div>
+      <div class="config-bar">
+        <div class="seg c-cash"   style="flex: 40">现金<br>40%</div>
+        <div class="seg c-growth" style="flex: 30">成长股<br>30%</div>
+        <div class="seg c-alt"    style="flex: 20">中市值<br>20%</div>
+        <div class="seg c-opt"    style="flex: 10">期权<br>10%</div>
+      </div>
+
+      <div class="config-section-label">风险仓位 · 占总资产</div>
+      <div class="config-bar">
+        <div class="seg c-growth" style="flex: 21">21%</div>
+        <div class="seg c-alt"    style="flex: 15">15%</div>
+        <div class="seg c-opt"    style="flex: 10">10%</div>
+        <div class="seg empty"    style="flex: 54">— 剩余 54% 安全垫,仅极进攻型预算能承受 —</div>
+      </div>
+      <div class="bar-axis"><span class="end">满刻度 = 100% 总资产</span></div>
+
+      <div class="config-total">
+        <span class="config-total-label">合计风险仓位</span>
+        <span class="config-total-value">46.0%</span>
+      </div>
+      <div class="config-detail">30%×70 + 20%×75 + 10%×100 = 46.0%</div>
+      <div class="config-note">注:成长股按<b>长期持有(无止损)D=70%</b>。Step 4 演示的「TSLA 主动止损 D=50%」是同一资产另一种策略风格。</div>
+    </div>
+  </div>
+
+  <div class="punch">
+    <p>
+      <span class="dim">两个组合的名义结构 100% 一致 —— 都是「40% 现金 + 60% 投资」——</span><br>
+      <span class="red">但风险仓位 18.5% vs 46%,差 2.5 倍。组合 B 在 99% 极端场景下会亏掉近一半总资产。</span>
+    </p>
+  </div>
+
+  <h2><span class="step">4</span>反推下注规模 · 该买多少</h2>
+  <p class="h2-sub">前面的对比说明了名义占比骗人。<b>实战上,公式倒过来用就是下注决策工具</b> —— 先定「这笔我愿意承担多少风险仓位」,直接算出「实际该下多少钱」。<br>下例:面对常见的二选一(BTC vs TSLA),决定承担 <b style="color:var(--red)">1% 风险仓位</b>,各自该下多少:</p>
+
+  <div class="configs">
+    <div class="config-card">
+      <div class="config-title">买 BTC?</div>
+      <div class="config-subtitle">D = 75% · 长期持有</div>
+
+      <div class="config-section-label">该下注多少 · 名义仓位:</div>
+      <div class="config-bar">
+        <div class="seg c-eth" style="flex: 44.3">1.33%</div>
+        <div class="seg empty" style="flex: 55.7"></div>
+      </div>
+      <div class="bar-axis"><span class="end">满刻度 = 3% 总资产</span></div>
+
+      <div class="config-total">
+        <span class="config-total-label">1% ÷ 75% =</span>
+        <span class="config-total-value">下 1.33%</span>
+      </div>
+    </div>
+
+    <div class="config-card">
+      <div class="config-title">买 TSLA?</div>
+      <div class="config-subtitle">D = 50% · 主动止损 -50%</div>
+
+      <div class="config-section-label">该下注多少 · 名义仓位:</div>
+      <div class="config-bar">
+        <div class="seg c-growth" style="flex: 66.7">2.0%</div>
+        <div class="seg empty" style="flex: 33.3"></div>
+      </div>
+      <div class="bar-axis"><span class="end">满刻度 = 3% 总资产</span></div>
+
+      <div class="config-total">
+        <span class="config-total-label">1% ÷ 50% =</span>
+        <span class="config-total-value">下 2.0%</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="h2-sub" style="margin-top: 14px;">
+    同样承担 1% 风险仓位:BTC(长期持有,D=75%)下 <b>1.33% 总资产</b>,TSLA(主动止损,D=50%)下 <b>2.0% 总资产</b>。TSLA 因为有止损,D 更小,等风险下名义仓位可以放更大。<br><b>同一资产,策略风格变了,下注规模也跟着变 —— 这套尺子让「日常二选一」直接变算术,不再凭感觉拍。</b>
+  </p>
+
+  <h2><span class="step">5</span>这套尺子改变了什么</h2>
+  <div class="takeaways">
+    <div class="tk">
+      <div class="tk-num">01</div>
+      <div class="tk-title">建仓两步法</div>
+      <div class="tk-body"><code>① 定风险</code> — 这笔愿意承担多少风险仓位,即总资产在极端场景下最大可承受的回撤<br><code>② 算名义</code> — <code>名义 = 风险 ÷ D</code>,反推该买多少</div>
+    </div>
+    <div class="tk">
+      <div class="tk-num">02</div>
+      <div class="tk-title">跨品类可比</div>
+      <div class="tk-body">股 / 债 / crypto / 大宗 / 衍生品全部归到 <code>风险仓位</code> 这一把尺子上,第一次可比、可加、可优化。不再隔行靠感觉。</div>
+    </div>
+    <div class="tk">
+      <div class="tk-num">03</div>
+      <div class="tk-title">风险预算因人而异</div>
+      <div class="tk-body">没有标准答案 —— 保守 <code>~18%</code> / 均衡 <code>~30%</code> / 激进 <code>~50%+</code> / 极端进攻 <code>70%+</code>。框架不替你定上限,但让你在自己定的上限里,<b>把风险花在赔率最高的地方</b>。</div>
+    </div>
+  </div>
+
+  <div class="page-footnote">组合数据为虚构教学示例 · D 为 99% 置信区间下最大亏损的估算(非精确 VaR) · 仅演示「名义视图 → 风险视图」的归一化原理</div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <div class="footer-mark">C</div>
+    <span class="footer-text">Cortex &middot; 2026</span>
+  </div>
+</footer>
+
+<script src="../../assets/app.js"></script>
+</body>
+</html>
